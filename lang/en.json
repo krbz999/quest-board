@@ -1,0 +1,92 @@
+{
+  "QUESTBOARD": {
+    "REWARD": {
+      "DIALOG": {
+        "ACTOR": {
+          "label": "Target",
+          "hint": "Choose the actor that will receive the rewards."
+        },
+        "content": "Grant the rewards from the '{name}' quest? The quest will also be marked as complete.",
+        "title": "Grant Rewards"
+      },
+      "MESSAGE": {
+        "CONTENT": {
+          "completed": "The party completed the '{name}' quest!",
+          "rewarded": "The rewards were added to {name}."
+        }
+      },
+      "WARNING": {
+        "actor": "You cannot grant the quest rewards to an actor you do not have ownership of.",
+        "party": "There is no primary party to receive the rewards.",
+        "rewards": "No rewards are configured for this quest!"
+      },
+      "label": "Reward",
+      "hint": "Grant the rewards of this quest to the primary party or an assigned player character."
+    },
+    "QUESTTYPES": {
+      "Major": {
+        "label": "Major Quest",
+        "labelPl": "Major Quests"
+      },
+      "Side": {
+        "label": "Side Quest",
+        "labelPl": "Side Quests"
+      },
+      "Minor": {
+        "label": "Minor Quest",
+        "labelPl": "Minor Quests"
+      }
+    },
+    "SHEET": {
+      "HINTS": {
+        "dropItems": "Drop item rewards here.",
+        "content": "The public description of the quest is visible to any users able to view the page."
+      },
+      "LABEL": "Quest Page Sheet",
+      "LEGENDS": {
+        "currencies": "Currencies",
+        "items": "Items",
+        "objectives": "Objectives"
+      },
+      "TABS": {
+        "configuration": "Configuration",
+        "details": "Details",
+        "notes": "Notes",
+        "rewards": "Rewards"
+      },
+      "TITLE": "Quest: {name}"
+    },
+    "PAGE": {
+      "FIELDS": {
+        "complete": {
+          "label": "Complete",
+          "hint": "Whether this quest is completed."
+        },
+        "description": {
+          "private": {
+            "hint": "Private information written here is visible only game masters, and only game masters can edit it."
+          }
+        },
+        "type": {
+          "label": "Quest Type"
+        }
+      }
+    },
+    "VIEW": {
+      "HEADERS": {
+        "complete": "COMPLETE",
+        "private": "Private Information",
+        "objectives": "Objectives"
+      },
+      "CONTEXT": {
+        "award": "Grant Rewards",
+        "complete": "Complete Quest"
+      }
+    }
+  },
+  "TYPES": {
+    "JournalEntryPage": {
+      "quest-board.quest": "Quest Page"
+    }
+  }
+}

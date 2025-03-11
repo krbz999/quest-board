@@ -1,0 +1,44 @@
+<div>
+  <header class="journal-page-header quest-board quest">
+    <h1 {{#if page.system.complete}}class="dashed"{{/if}}>
+      <span class="name">{{name}}</span> {{#if page.system.complete}}&mdash; {{localize "QUESTBOARD.VIEW.HEADERS.complete"}}{{/if}}
+    </h1>
+    <p class="quest-type">{{questType}}</p>
+  </header>
+  <section class="journal-page-content quest-board quest-content">
+
+    {{#if fields.public.enriched}} {{{fields.public.enriched}}} {{/if}}
+
+    {{#if objectives.length}}
+    <div class="fvtt narrative">
+      <h4>{{localize "QUESTBOARD.VIEW.HEADERS.objectives"}}</h4>
+      <ul class="objectives">
+        {{#each objectives}}
+        <li>
+          <dnd5e-checkbox {{checked checked}}></dnd5e-checkbox>
+          {{label}}
+          {{#if objectives.length}}
+          <ul class="objectives">
+            {{#each objectives}}
+            <li>
+              <dnd5e-checkbox {{checked checked}}></dnd5e-checkbox>
+              {{label}}
+            </li>
+            {{/each}}
+          </ul>
+          {{/if}}
+        </li>
+        {{/each}}
+      </ul>
+    </div>
+    {{/if}}
+
+    {{#if fields.private.enriched}}
+    <aside class="fvtt notable quest-board">
+      <h4>{{localize "QUESTBOARD.VIEW.HEADERS.private"}}</h4>
+      {{{fields.private.enriched}}}
+    </aside>
+    {{/if}}
+
+  </section>
+</div>

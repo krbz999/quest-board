@@ -1,0 +1,61 @@
+.quest-board.application .window-content {
+  padding: 1rem;
+
+  /* Temp fix for v13 borked css */
+  .prosemirror .editor-content { overflow: auto; }
+
+  & legend:has(button) {
+    display: flex;
+    align-items: center;
+    gap: 0.5em;
+
+    & button {
+      flex: 0;
+      border: 0;
+      padding: 0;
+      background: none;
+      height: unset;
+    }
+  }
+
+  .form-group.nested {
+    margin-left: 1rem;
+  }
+
+  .currencies {
+    flex-direction: row;
+
+    .currency {
+      flex-direction: column-reverse;
+      gap: 0;
+    }
+  }
+
+  .rewards-empty {
+    text-align: center;
+  }
+}
+
+.journal-entry-page .quest-board.quest {
+  .dashed .name {
+    text-decoration: line-through;
+  }
+
+  .quest-type {
+    font-style: italic;
+  }
+}
+.journal-entry-page .quest-board.quest-content {
+  & ul.objectives {
+    list-style: none;
+    padding-left: 0;
+
+    & ul.objectives {
+      padding-left: 1rem;
+    }
+  }
+
+  & dnd5e-checkbox {
+    pointer-events: none;
+  }
+}
