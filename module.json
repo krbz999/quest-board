@@ -1,0 +1,71 @@
+{
+  "id": "quest-board",
+  "title": "Quest Board",
+  "description": "A module for the dnd5e system that adds a new Quest journal entry page type.",
+  "version": "AUTOMATIC",
+  "compatibility": {
+    "minimum": "13",
+    "verified": "13"
+  },
+  "authors": [
+    {
+      "name": "Zhell",
+      "url": "https://github.com/krbz999",
+      "discord": "zhell9201",
+      "ko-fi": "https://ko-fi.com/zhell",
+      "patreon": "https://patreon.com/zhell"
+    }
+  ],
+  "relationships": {
+    "systems": [
+      {
+        "id": "dnd5e"
+      }
+    ]
+  },
+  "esmodules": [
+    "module.mjs"
+  ],
+  "styles": [
+    "styles/module.css"
+  ],
+  "languages": [
+    {
+      "lang": "en",
+      "name": "English",
+      "path": "lang/en.json"
+    }
+  ],
+  "url": "https://github.com/krbz999/quest-board",
+  "manifest": "https://github.com/krbz999/quest-board/releases/latest/download/system.json",
+  "download": "AUTOMATIC",
+  "license": "LICENSE.txt",
+  "changelog": "CHANGELOG.md",
+  "flags": {
+    "hotReload": {
+      "extensions": [
+        "css",
+        "hbs",
+        "json"
+      ],
+      "paths": [
+        "lang/en.json",
+        "styles/*.css",
+        "templates/**/*.hbs"
+      ]
+    }
+  },
+  "documentTypes": {
+    "JournalEntryPage": {
+      "quest": {
+        "htmlFields": [
+          "description.private"
+        ],
+        "gmOnly": [
+          "description.private"
+        ]
+      },
+      "shop": {}
+    }
+  }
+}

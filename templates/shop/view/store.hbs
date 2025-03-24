@@ -1,0 +1,31 @@
+<section>
+  <table>
+    <thead>
+      <tr>
+        <th>{{localize "QUESTBOARD.SHOP.VIEW.HEADERS.name"}}</th>
+        <th>{{localize "QUESTBOARD.SHOP.VIEW.HEADERS.available"}}</th>
+        <th>{{localize "QUESTBOARD.SHOP.VIEW.HEADERS.price"}}</th>
+        <th>
+          <a data-action="changeCustomer" class="icon fa-solid fa-cog"></a>
+        </th>
+      </tr>
+    </thead>
+    <tbody>
+      {{#each stock}}
+      <tr data-uuid="{{item.uuid}}">
+        <td>{{{link}}}</td>
+        <td class="center">&times; {{quantity}}</td>
+        <td class="center price">
+          <span class="each">{{price.each.value}} {{price.each.denomination}}</span>
+          {{#if (gt quantity 1)}}
+          <span class="stack">({{price.stack.value}} {{price.stack.denomination}})</span>
+          {{/if}}
+        </td>
+        <td>
+          <button type="button" data-action="purchase" class="icon fa-solid fa-cart-shopping" {{disabled disabled}}></button>
+        </td>
+      </tr>
+      {{/each}}
+    </tbody>
+  </table>
+</section>
