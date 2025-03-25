@@ -1,0 +1,38 @@
+<section class="{{tabs.configuration.cssClass}}" data-group="{{tabs.configuration.group}}" data-tab="{{tabs.configuration.id}}">
+  <fieldset>
+    {{> "modules/quest-board/templates/shared/edit/basics.hbs"}}
+    {{formGroup fields.type.field value=fields.type.value rootId=rootId}}
+    {{#if isGM}}
+    {{formGroup fields.complete.field value=fields.complete.value rootId=rootId}}
+    {{/if}}
+  </fieldset>
+
+  <fieldset>
+    <legend>
+      <span>{{localize "QUESTBOARD.QUEST.EDIT.LEGENDS.objectives"}}</span>
+      <button type="button" data-action="addObjective" class="icon fa-solid fa-square-plus"></button>
+    </legend>
+    {{#each objectives.objectives}}
+    <div class="form-group">
+      <div class="form-fields">
+        {{formInput @root.objectives.fields.checked value=checked name=(concat prefix "checked") disabled=(gt objectives.length 0)}}
+        {{formInput @root.objectives.fields.label value=label name=(concat prefix "label") placeholder="Label"}}
+        <button type="button" data-action="addObjectiveNested" data-objective="{{id}}" class="icon fa-solid fa-plus"></button>
+        <button type="button" data-action="removeObjective" data-objective="{{id}}" class="icon fa-solid fa-minus"></button>
+      </div>
+    </div>
+
+    {{#if objectives.length}}
+    {{#each objectives}}
+    <div class="form-group nested">
+      <div class="form-fields">
+        {{formInput @root.objectives.fields.checked value=checked name=(concat prefix "checked")}}
+        {{formInput @root.objectives.fields.label value=label name=(concat prefix "label") placeholder="Label"}}
+        <button type="button" data-action="removeObjectiveNested" data-objective="{{parent}}" data-nested="{{id}}" class="icon fa-solid fa-minus"></button>
+      </div>
+    </div>
+    {{/each}}
+    {{/if}}
+    {{/each}}
+  </fieldset>
+</section>

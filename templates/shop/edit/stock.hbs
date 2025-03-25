@@ -1,0 +1,25 @@
+<section class="{{tabs.stock.cssClass}}" data-group="{{tabs.stock.group}}" data-tab="{{tabs.stock.id}}">
+  <fieldset class="drop-area">
+    {{#if stock.length}}
+    {{#each stock}}
+    <div class="form-group" data-uuid="{{item.uuid}}">
+      <span class="img">
+        <img src="{{item.img}}" alt="{{item.name}}">
+      </span>
+      <span class="label">{{item.name}}</span>
+      <span class="price">
+        <span class="each">{{price.each.value}} {{price.each.denomination}}</span>
+        {{#if (gt quantity 1)}}
+        <span class="stack">({{price.stack.value}} {{price.stack.denomination}})</span>
+        {{/if}}
+      </span>
+      <span class="quantity">&times; {{quantity}}</span>
+      <button type="button" data-action="editStock" class="icon fa-solid fa-cog"></button>
+      <button type="button" data-action="removeStock" class="icon fa-solid fa-trash"></button>
+    </div>
+    {{/each}}
+    {{else}}
+    <p class="hint empty">{{localize "QUESTBOARD.SHOP.EDIT.HINTS.dropItems"}}</p>
+    {{/if}}
+  </fieldset>
+</section>
