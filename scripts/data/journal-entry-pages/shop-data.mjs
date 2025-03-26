@@ -110,17 +110,33 @@ export default class ShopData extends foundry.abstract.TypeDataModel {
 
     const item = stock.item;
     const itemData = [];
+    const itemUpdates = [];
 
     if (item.type === "container") {
+      // Containers get created multiple times.
       const Cls = foundry.utils.getDocumentClass("Item");
       for (let i = 0; i < configuration.quantity; i++) {
         const data = await Cls.createWithContents([item]);
         itemData.push(...data);
       }
     } else {
-      itemData.push(foundry.utils.mergeObject(game.items.fromCompendium(item), {
-        "system.quantity": configuration.quantity,
-      }));
+      // Check for existing stack of consumable items.
+      const existing = customer.itemTypes.consumable.find(c => {
+        return c._stats.compendiumSource
+          && (c.name === item.name)
+          && (c._stats.compendiumSource === item.uuid);
+      });
+      if (existing) {
+        const update = itemUpdates.find(u => u._id === existing.id) ?? {
+          _id: existing.id, "system.quantity": existing.system.quantity,
+        };
+        if (!itemUpdates.includes(update)) itemUpdates.push(update);
+        update["system.quantity"] += configuration.quantity;
+      } else {
+        itemData.push(foundry.utils.mergeObject(game.items.fromCompendium(item), {
+          "system.quantity": configuration.quantity,
+        }));
+      }
     }
 
     if (isStack) {
@@ -134,6 +150,7 @@ export default class ShopData extends foundry.abstract.TypeDataModel {
     await Promise.all([
       customer.update({ [`system.currency.${denomination}`]: available - value }),
       customer.createEmbeddedDocuments("Item", itemData, { keepId: true }),
+      customer.updateEmbeddedDocuments("Item", itemUpdates),
     ]);
 
     return { success: true };
