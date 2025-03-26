@@ -29,15 +29,15 @@ export default class ShopData extends foundry.abstract.TypeDataModel {
         alias: new StringField({ required: true }),
         price: new SchemaField({
           each: new SchemaField({
-            value: new NumberField({ required: true, step: 0.1, nullable: false, positive: true }),
-            denomination: new StringField({ required: true, initial: "gp", choices: CONFIG.DND5E.currencies }),
+            value: new NumberField({ required: true, step: 0.1, min: 0 }),
+            denomination: new StringField({ required: true, blank: true, choices: CONFIG.DND5E.currencies }),
           }),
           stack: new SchemaField({
             value: new NumberField({ required: true, step: 0.1, min: 0 }),
-            denomination: new StringField({ required: true, initial: "gp", choices: CONFIG.DND5E.currencies }),
+            denomination: new StringField({ required: true, blank: true, choices: CONFIG.DND5E.currencies }),
           }),
         }),
-        quantity: new NumberField({ integer: true, nullable: false, initial: 1, positive: true }),
+        quantity: new NumberField({ required: true, step: 1, min: 0 }),
         uuid: new DocumentUUIDField({ type: "Item", embedded: false }),
       })),
     };
@@ -73,14 +73,15 @@ export default class ShopData extends foundry.abstract.TypeDataModel {
   static #query = async (configuration) => {
     const page = await foundry.utils.fromUuid(configuration.pageUuid);
 
-    /** @type {TYPES.ShopStockEntry} */
-    const stock = page.system.stock.find(s => s.uuid === configuration.stockUuid);
+    let stock = page.system.stock.find(s => s.uuid === configuration.stockUuid);
     if (!stock) {
       return {
         success: false,
         reason: game.i18n.localize("QUESTBOARD.PURCHASE.WARNING.stockNotFound"),
       };
     }
+    stock = await ShopData.loadSingleStock(stock);
+
     if (configuration.quantity > stock.quantity) {
       return {
         success: false,
@@ -107,7 +108,7 @@ export default class ShopData extends foundry.abstract.TypeDataModel {
       };
     }
 
-    const item = await foundry.utils.fromUuid(stock.uuid);
+    const item = stock.item;
     const itemData = [];
 
     if (item.type === "container") {
@@ -167,14 +168,6 @@ export default class ShopData extends foundry.abstract.TypeDataModel {
         continue;
       }
 
-      const source = this._source.stock.find(s => s.uuid === stock.uuid);
-
-      // If the stack price is not explicitly set, multiply the each price.
-      if (!source.price.stack.value) {
-        stock.price.stack.value = (stock.price.each.value * stock.quantity).toNearest(0.1);
-        stock.price.stack.denomination = stock.price.each.denomination;
-      }
-
       stock.label = stock.alias ? stock.alias : item.name;
     }
   }
@@ -182,16 +175,48 @@ export default class ShopData extends foundry.abstract.TypeDataModel {
   /* -------------------------------------------------- */
 
   /**
-   * Load the stock.
-   * @returns {Promise<object[]>}   A promise that resolves to an object describing the stock.
+   * Load the stock. This retrieves the item and configures shop data for the item.
+   * @returns {Promise<object[]>}   A promise that resolves to objects describing the full stock.
    */
   async loadStock() {
     const loaded = [];
     for (const stock of this.stock) {
-      const item = await foundry.utils.fromUuid(stock.uuid);
-      loaded.push({ item, ...stock });
+      const entry = await ShopData.loadSingleStock(stock);
+      loaded.push(entry);
     }
     return loaded;
+  }
+
+  /* -------------------------------------------------- */
+
+  /**
+   * Load a stock and prepare it for rendering.
+   * @param {Object} stock        The unprepared stock entry.
+   * @returns {Promise<object>}   A promise that resolves to an object describing the stock.
+   */
+  static async loadSingleStock(stock) {
+    stock = foundry.utils.deepClone(stock);
+    stock.item = await foundry.utils.fromUuid(stock.uuid);
+
+    // Set fallback quantity.
+    if (!stock.quantity) stock.quantity = stock.item.system.quantity;
+
+    // Set fallback unit price.
+    if (!Number.isNumeric(stock.price.each.value)) {
+      stock.price.each.value = stock.item.system.price.value;
+    }
+    if (!stock.price.each.denomination) {
+      stock.price.each.denomination = stock.item.system.price.denomination;
+    }
+
+    // Set fallback stack price.
+    if (!Number.isNumeric(stock.price.stack.value)) {
+      stock.price.stack.value = (stock.price.each.value * stock.quantity).toNearest(0.1);
+    }
+    if (!stock.price.stack.denomination) {
+      stock.price.stack.denomination = stock.price.each.denomination;
+    }
+    return stock;
   }
 
   /* -------------------------------------------------- */
@@ -208,16 +233,12 @@ export default class ShopData extends foundry.abstract.TypeDataModel {
     }
     const stock = this.toObject().stock;
     const index = stock.findIndex(item => item.uuid === uuid);
-    if (index === -1) stock.push({
-      uuid,
-      price: {
-        each: { ...item.system._source.price },
-      },
-      quantity: item.system._source.quantity,
-    });
-    else stock[index] = foundry.utils.mergeObject(stock[index], {
-      quantity: stock[index].quantity + item.system._source.quantity,
-    }, { inplace: false });
+    if (index === -1) {
+      stock.push({ uuid });
+    } else {
+      const quantity = (stock[index].quantity ?? item.system._source.quantity) + item.system._source.quantity;
+      stock[index] = foundry.utils.mergeObject(stock[index], { quantity }, { inplace: false });
+    }
     return this.parent.update({ "system.stock": stock });
   }
 
@@ -262,21 +283,39 @@ export default class ShopData extends foundry.abstract.TypeDataModel {
     const getField = path => {
       const field = this.schema.getField(`stock.element.${path}`);
       const value = foundry.utils.getProperty(source, path);
-      return field.toFormGroup({}, { value, name: path }).outerHTML;
+      return { field, value, name: path };
     };
 
-    const fields = [];
-    fields.push(getField("alias"));
-    fields.push(getField("price.each.value"));
-    fields.push(getField("price.each.denomination"));
-    fields.push(getField("price.stack.value"));
-    fields.push(getField("price.stack.denomination"));
-    fields.push(getField("quantity"));
+    const prepared = await ShopData.loadSingleStock(this.stock.find(s => s.uuid === uuid));
+    const item = prepared.item;
+
+    const context = {
+      alias: getField("alias"),
+      pev: getField("price.each.value"),
+      ped: getField("price.each.denomination"),
+      psv: getField("price.stack.value"),
+      psd: getField("price.stack.denomination"),
+      quantity: getField("quantity"),
+    };
+    context.alias.placeholder = item.name;
+    context.pev.placeholder = item.system.price.value;
+    context.ped.blank = game.i18n.format("QUESTBOARD.STOCK.DIALOG.DEFAULT", {
+      value: CONFIG.DND5E.currencies[item.system.price.denomination || "gp"].label,
+    });
+    context.psv.placeholder = Number(context.pev.value * context.quantity.value).toNearest(0.1);
+    context.psd.blank = game.i18n.format("QUESTBOARD.STOCK.DIALOG.DEFAULT", {
+      value: CONFIG.DND5E.currencies[context.ped.value || item.system.price.denomination || "gp"].label,
+    });
+    context.quantity.placeholder = item.system.quantity;
+    const html = await foundry.applications.handlebars.renderTemplate(
+      "modules/quest-board/templates/shop/edit/edit-stock.hbs",
+      context,
+    );
 
     const update = await foundry.applications.api.Dialog.input({
-      content: `<fieldset>${fields.join("")}</fieldset>`,
+      content: html,
       window: {
-        title: "QUESTBOARD.STOCK.DIALOG.TITLE",
+        title: game.i18n.format("QUESTBOARD.STOCK.DIALOG.TITLE", { name: item.name }),
       },
       position: {
         width: 400,

@@ -148,17 +148,18 @@ export default class QuestData extends foundry.abstract.TypeDataModel {
 
     const party = game.settings.get("dnd5e", "primaryParty")?.actor;
 
-    const actorField = new StringField({
-      required: true,
-      label: "QUESTBOARD.REWARD.DIALOG.ACTOR.label",
-      hint: "QUESTBOARD.REWARD.DIALOG.ACTOR.hint",
-    }).toFormGroup({ localize: true }, {
-      name: "actor",
-      value: party?.id,
-      blank: false,
-      options: Array.from(
-        new Set([party, ...game.users.map(user => user.character)].filter(_ => _)),
-      ).map(actor => ({ value: actor.id, label: actor.name, disabled: !actor.isOwner })),
+    const actorField = foundry.applications.fields.createFormGroup({
+      label: game.i18n.localize("QUESTBOARD.REWARD.DIALOG.ACTOR.label"),
+      hint: game.i18n.localize("QUESTBOARD.REWARD.DIALOG.ACTOR.hint"),
+      input: foundry.applications.fields.createSelectInput({
+        required: true,
+        name: "actor",
+        value: party?.id,
+        blank: false,
+        options: Array.from(
+          new Set([party, ...game.users.map(user => user.character)].filter(_ => _)),
+        ).map(actor => ({ value: actor.id, label: actor.name, disabled: !actor.isOwner })),
+      }),
     }).outerHTML;
 
     const result = await foundry.applications.api.Dialog.input({
@@ -317,7 +318,7 @@ export default class QuestData extends foundry.abstract.TypeDataModel {
 
   /** @inheritdoc */
   async toEmbed(config, options = {}) {
-    const sheet = new QUESTBOARD.applications.sheets.QuestPageSheet({
+    const sheet = new QUESTBOARD.applications.sheets.journal.QuestPageSheet({
       document: this.parent,
       mode: "view",
     });

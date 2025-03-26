@@ -192,7 +192,9 @@ export default class ShopPageSheet extends AbstractPageSheet {
     target.disabled = true;
     const uuid = target.closest("[data-uuid]").dataset.uuid;
 
-    const stock = this.document.system.stock.find(s => s.uuid === uuid);
+    const stock = await QUESTBOARD.data.journalEntryPages.ShopData.loadSingleStock(
+      this.document.system.stock.find(stock => stock.uuid === uuid),
+    );
     const quantity = await QUESTBOARD.applications.apps.PurchasePrompt.create(stock);
     if (!quantity) {
       target.disabled = false;
@@ -226,17 +228,20 @@ export default class ShopPageSheet extends AbstractPageSheet {
    * @param {PointerEvent} event    Initiating click event.
    */
   static async #changeCustomer(event) {
-    const result = await foundry.applications.api.Dialog.input({
-      content: new foundry.data.fields.StringField({
-        label: game.i18n.localize("QUESTBOARD.SHOP.VIEW.CUSTOMER.label"),
-        hint: game.i18n.localize("QUESTBOARD.SHOP.VIEW.CUSTOMER.hint"),
+    const html = foundry.applications.fields.createFormGroup({
+      label: game.i18n.localize("QUESTBOARD.SHOP.VIEW.CUSTOMER.label"),
+      hint: game.i18n.localize("QUESTBOARD.SHOP.VIEW.CUSTOMER.hint"),
+      input: foundry.applications.fields.createSelectInput({
         required: true,
-      }).toFormGroup({}, {
         value: this.#customer?.id,
         options: game.actors.filter(actor => actor.isOwner).map(actor => ({ value: actor.id, label: actor.name })),
         name: "customer",
         autofocus: true,
-      }).outerHTML,
+      }),
+    }).outerHTML;
+
+    const result = await foundry.applications.api.Dialog.input({
+      content: html,
       window: {
         title: "QUESTBOARD.SHOP.VIEW.CUSTOMER.title",
       },

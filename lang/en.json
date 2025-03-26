@@ -104,21 +104,22 @@
           },
           "price": {
             "each": {
+              "label": "Unit Price",
               "value": {
-                "label": "Price",
-                "hint": "The price for one unit of this item."
+                "label": "Price"
               },
               "denomination": {
                 "label": "Denomination"
               }
             },
             "stack": {
+              "label": "Stack Price",
+              "hint": "The price for the entire remaining stock of this item. If blank, the unit price is multiplied by the quantity.",
               "value": {
-                "label": "Price (Stack)",
-                "hint": "The price for the entire remaining stock of this item. If blank, the unit price is multiplied by the quantity."
+                "label": "Price"
               },
               "denomination": {
-                "label": "Denomination (Stack)"
+                "label": "Denomination"
               }
             }
           },
@@ -158,7 +159,8 @@
     },
     "STOCK": {
       "DIALOG": {
-        "TITLE": "Configure Stock Entry"
+        "TITLE": "Configure Stock Entry: {name}",
+        "DEFAULT": "Default ({value})"
       }
     },
     "PURCHASE": {

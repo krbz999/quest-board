@@ -9,15 +9,17 @@
  * @typedef {Object} ShopStockEntry
  * @property {string} alias                     Alternative label for the entry.
  * @property {object} price                     Pricing data.
- * @property {object} price.each                Pricing data for individual unit.
- * @property {number} price.each.value          The monetary value.
- * @property {string} price.each.denomination   Currency denomination.
- * @property {object} price.stack               Pricing data for a full stack.
- * @property {number} price.stack.value         The monetary value.
- * @property {string} price.stack.denomination  Currency denomination.
+ * @property {PriceConfiguration} price.each    Pricing data for individual unit.
+ * @property {PriceConfiguration} price.stack   Pricing data for a full stack.
  * @property {number} quantity                  The stack size.
  * @property {string} uuid                      The uuid of the item.
  * @property {string} label                     The derived label, either alias or the item name.
+ */
+
+/**
+ * @typedef {Object} PriceConfiguration
+ * @property {number} value           The monetary value.
+ * @property {string} denomination    Currency denomination.
  */
 
 /**

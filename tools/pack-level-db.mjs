@@ -1,9 +1,9 @@
 import fs from "fs";
-import {readdir, readFile, writeFile} from "node:fs/promises";
+import { readdir, readFile, writeFile } from "node:fs/promises";
 import path from "path";
 import yargs from "yargs";
-import {hideBin} from "yargs/helpers";
-import {compilePack, extractPack} from "@foundryvtt/foundryvtt-cli";
+import { hideBin } from "yargs/helpers";
+import { compilePack, extractPack } from "@foundryvtt/foundryvtt-cli";
 
 /**
  * Folder where the compiled compendium packs should be located relative to the base module folder.
@@ -38,19 +38,19 @@ function packageCommand() {
       yargs.positional("action", {
         describe: "The action to perform.",
         type: "string",
-        choices: ["unpack", "pack", "clean"]
+        choices: ["unpack", "pack", "clean"],
       });
       yargs.positional("pack", {
         describe: "Name of the pack upon which to work.",
-        type: "string"
+        type: "string",
       });
       yargs.positional("entry", {
         describe: "Name of any entry within a pack upon which to work. Only applicable to extract & clean commands.",
-        type: "string"
+        type: "string",
       });
     },
     handler: async argv => {
-      const {action, pack, entry} = argv;
+      const { action, pack, entry } = argv;
       switch (action) {
         case "clean":
           return await cleanPacks(pack, entry);
@@ -59,7 +59,7 @@ function packageCommand() {
         case "unpack":
           return await extractPacks(pack, entry);
       }
-    }
+    },
   };
 }
 
@@ -73,11 +73,11 @@ function packageCommand() {
  * @param {object} [options]      Cleaning options.
  */
 function cleanPackEntry(data, options = {}) {
-  if ("ownership" in options) data.ownership = {default: options.ownership};
+  if ("ownership" in options) data.ownership = { default: options.ownership };
   delete data.flags?.importSource;
   delete data.flags?.exportSource;
 
-  if (data.pages) data.pages.forEach(i => cleanPackEntry(i, {ownership: -1}));
+  if (data.pages) data.pages.forEach(i => cleanPackEntry(i, { ownership: -1 }));
   if (data.name) data.name = cleanString(data.name);
 }
 
@@ -105,8 +105,8 @@ function cleanString(str) {
  */
 async function cleanPacks(packName, entryName) {
   entryName = entryName?.toLowerCase();
-  const folders = fs.readdirSync(PACK_SRC, {withFileTypes: true}).filter(file =>
-    file.isDirectory() && (!packName || (packName === file.name))
+  const folders = fs.readdirSync(PACK_SRC, { withFileTypes: true }).filter(file =>
+    file.isDirectory() && (!packName || (packName === file.name)),
   );
 
   /**
@@ -115,7 +115,7 @@ async function cleanPacks(packName, entryName) {
    * @yields {string}
    */
   async function* _walkDir(directoryPath) {
-    const directory = await readdir(directoryPath, {withFileTypes: true});
+    const directory = await readdir(directoryPath, { withFileTypes: true });
     for (const entry of directory) {
       const entryPath = path.join(directoryPath, entry.name);
       if (entry.isDirectory()) yield* _walkDir(entryPath);
@@ -126,15 +126,15 @@ async function cleanPacks(packName, entryName) {
   for (const folder of folders) {
     console.log(`Cleaning pack ${folder.name}`);
     for await (const src of _walkDir(path.join(PACK_SRC, folder.name))) {
-      const json = JSON.parse(await readFile(src, {encoding: "utf8"}));
+      const json = JSON.parse(await readFile(src, { encoding: "utf8" }));
       if (entryName && (entryName !== json.name.toLowerCase())) continue;
       if (!json._id || !json._key) {
         console.log(`Failed to clean \x1b[31m${src}\x1b[0m, must have _id and _key.`);
         continue;
       }
       cleanPackEntry(json);
-      fs.rmSync(src, {force: true});
-      writeFile(src, `${JSON.stringify(json, null, 2)}\n`, {mode: 0o664});
+      fs.rmSync(src, { force: true });
+      writeFile(src, `${JSON.stringify(json, null, 2)}\n`, { mode: 0o664 });
     }
   }
 }
@@ -152,15 +152,15 @@ async function cleanPacks(packName, entryName) {
  */
 async function compilePacks(packName) {
   // Determine which source folders to process
-  const folders = fs.readdirSync(PACK_SRC, {withFileTypes: true}).filter(file =>
-    file.isDirectory() && (!packName || (packName === file.name))
+  const folders = fs.readdirSync(PACK_SRC, { withFileTypes: true }).filter(file =>
+    file.isDirectory() && (!packName || (packName === file.name)),
   );
 
   for (const folder of folders) {
     const src = path.join(PACK_SRC, folder.name);
     const dest = path.join(PACK_DEST, folder.name);
     console.log(`Compiling pack ${folder.name}`);
-    await compilePack(src, dest, {recursive: true, log: true, transformEntry: cleanPackEntry});
+    await compilePack(src, dest, { recursive: true, log: true, transformEntry: cleanPackEntry });
   }
 }
 
@@ -181,7 +181,7 @@ async function extractPacks(packName, entryName) {
   entryName = entryName?.toLowerCase();
 
   // Load system.json.
-  const system = JSON.parse(fs.readFileSync("./system.json", {encoding: "utf8"}));
+  const system = JSON.parse(fs.readFileSync("./system.json", { encoding: "utf8" }));
 
   // Determine which source packs to process.
   const packs = system.packs.filter(p => !packName || (p.name === packName));
@@ -194,12 +194,12 @@ async function extractPacks(packName, entryName) {
     const containers = {};
     await extractPack(path.join(PACK_DEST, packInfo.name), dest, {
       log: false, transformEntry: e => {
-        if (e._key.startsWith("!folders")) folders[e._id] = {name: slugify(e.name), folder: e.folder};
+        if (e._key.startsWith("!folders")) folders[e._id] = { name: slugify(e.name), folder: e.folder };
         else if (e.type === "container") containers[e._id] = {
-          name: slugify(e.name), container: e.system?.container, folder: e.folder
+          name: slugify(e.name), container: e.system?.container, folder: e.folder,
         };
         return false;
-      }
+      },
     });
     const buildPath = (collection, entry, parentKey) => {
       let parent = collection[entry[parentKey]];
@@ -226,7 +226,7 @@ async function extractPacks(packName, entryName) {
         const outputName = slugify(entry.name);
         const parent = containers[entry.system?.container] ?? folders[entry.folder];
         return path.join(parent?.path ?? "", `${outputName}-${entry._id}.json`);
-      }
+      },
     });
   }
 }
