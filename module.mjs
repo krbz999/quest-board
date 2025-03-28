@@ -21,6 +21,9 @@ Hooks.once("init", () => {
     [`${QUESTBOARD.id}.shop`]: "fa-solid fa-shop",
   });
 
+  CONFIG.ui.calendar = applications.apps.CalendarView;
+  CONFIG.time.formatters.formatData = applications.apps.CalendarView.formatDateNatural;
+
   foundry.applications.apps.DocumentSheetConfig.registerSheet(
     foundry.documents.JournalEntryPage,
     QUESTBOARD.id,
