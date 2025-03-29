@@ -1,5 +1,5 @@
-import * as config from "./scripts/config.mjs";
 import * as applications from "./scripts/applications/_module.mjs";
+import * as config from "./scripts/config.mjs";
 import * as data from "./scripts/data/_module.mjs";
 
 globalThis.QUESTBOARD = {
@@ -53,20 +53,4 @@ Hooks.once("i18nInit", () => {
 
 /* -------------------------------------------------- */
 
-Hooks.on("getJournalSheetEntryContext", (sheet, options) => {
-  const getPage = li => sheet.document.pages.get(li.dataset.pageId);
-  options.push({
-    name: "QUESTBOARD.QUEST.VIEW.CONTEXT.award",
-    icon: "<i class='fa-solid fa-fw fa-award'></i>",
-    condition: li => game.user.isGM && (getPage(li).type === `${QUESTBOARD.id}.quest`),
-    callback: li => getPage(li).system.grantRewardsDialog(),
-  }, {
-    name: "QUESTBOARD.QUEST.VIEW.CONTEXT.complete",
-    icon: "<i class='fa-solid fa-fw fa-circle-check'></i>",
-    condition: li => {
-      const page = getPage(li);
-      return game.user.isGM && (page.type === `${QUESTBOARD.id}.quest`) && !page.system.complete;
-    },
-    callback: li => getPage(li).update({ "system.complete": true }),
-  });
-});
+Hooks.on("getJournalSheetEntryContext", data.journalEntryPages.QuestData.addContextMenuOptions);

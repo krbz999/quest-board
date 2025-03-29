@@ -332,4 +332,29 @@ export default class QuestData extends foundry.abstract.TypeDataModel {
 
     return content.children;
   }
+
+  /* -------------------------------------------------- */
+
+  /**
+   * Add context menu options in a journal entry for awarding and/or completing a quest.
+   * @param {Application|ApplicationV2} sheet   The journal entry sheet.
+   * @param {object[]} contextOptions           The context options.
+   */
+  static addContextMenuOptions(sheet, contextOptions) {
+    const getPage = li => sheet.document.pages.get(li.dataset.pageId);
+    contextOptions.push({
+      name: "QUESTBOARD.QUEST.VIEW.CONTEXT.award",
+      icon: "<i class='fa-solid fa-fw fa-award'></i>",
+      condition: li => game.user.isGM && (getPage(li).type === `${QUESTBOARD.id}.quest`),
+      callback: li => getPage(li).system.grantRewardsDialog(),
+    }, {
+      name: "QUESTBOARD.QUEST.VIEW.CONTEXT.complete",
+      icon: "<i class='fa-solid fa-fw fa-circle-check'></i>",
+      condition: li => {
+        const page = getPage(li);
+        return game.user.isGM && (page.type === `${QUESTBOARD.id}.quest`) && !page.system.complete;
+      },
+      callback: li => getPage(li).update({ "system.complete": true }),
+    });
+  }
 }
