@@ -62,7 +62,7 @@
   }
 
   /* Quest */
-  &.quest {
+  &.quest-page {
     .dashed .name {
       text-decoration: line-through;
     }
@@ -86,9 +86,13 @@
   }
 
   /* Shop */
-  &.shop {
+  &.shop-page {
     & table .center {
       text-align: center;
+    }
+
+    & table .center > * {
+      place-self: center;
     }
 
     & table .price .stack {

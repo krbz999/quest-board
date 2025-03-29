@@ -3,9 +3,9 @@
     <thead>
       <tr>
         <th>{{localize "QUESTBOARD.SHOP.VIEW.HEADERS.name"}}</th>
-        <th>{{localize "QUESTBOARD.SHOP.VIEW.HEADERS.available"}}</th>
-        <th>{{localize "QUESTBOARD.SHOP.VIEW.HEADERS.price"}}</th>
-        <th>
+        <th class="center">{{localize "QUESTBOARD.SHOP.VIEW.HEADERS.available"}}</th>
+        <th class="center">{{localize "QUESTBOARD.SHOP.VIEW.HEADERS.price"}}</th>
+        <th class="center">
           <a data-action="changeCustomer" class="icon fa-solid fa-cog"></a>
         </th>
       </tr>
@@ -21,7 +21,7 @@
           <span class="stack">({{price.stack.value}} {{price.stack.denomination}})</span>
           {{/if}}
         </td>
-        <td>
+        <td class="center">
           <button type="button" data-action="purchase" class="icon fa-solid fa-cart-shopping" {{disabled disabled}}></button>
         </td>
       </tr>

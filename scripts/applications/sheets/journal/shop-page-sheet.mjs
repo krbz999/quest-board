@@ -5,7 +5,7 @@ import AbstractPageSheet from "./abstract-page-sheet.mjs";
 export default class ShopPageSheet extends AbstractPageSheet {
   /** @inheritdoc */
   static DEFAULT_OPTIONS = {
-    viewClasses: ["shop"],
+    viewClasses: ["shop-page"],
     actions: {
       editStock: ShopPageSheet.#editStock,
       removeStock: ShopPageSheet.#removeStock,

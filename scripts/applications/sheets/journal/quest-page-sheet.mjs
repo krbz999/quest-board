@@ -3,7 +3,7 @@ import AbstractPageSheet from "./abstract-page-sheet.mjs";
 export default class QuestPageSheet extends AbstractPageSheet {
   /** @inheritdoc */
   static DEFAULT_OPTIONS = {
-    viewClasses: ["quest"],
+    viewClasses: ["quest-page"],
     actions: {
       addObjective: QuestPageSheet.#addObjective,
       addObjectiveNested: QuestPageSheet.#addObjectiveNested,
