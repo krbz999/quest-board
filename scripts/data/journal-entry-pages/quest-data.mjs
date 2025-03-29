@@ -30,7 +30,9 @@ export default class QuestData extends foundry.abstract.TypeDataModel {
         currency: new TypedObjectField(new NumberField({ min: 0, nullable: true, integer: true })),
       }),
       objectives: new QUESTBOARD.data.fields.ObjectiveField({
-        objectives: new QUESTBOARD.data.fields.ObjectiveField(),
+        objectives: new QUESTBOARD.data.fields.ObjectiveField({
+          optional: new BooleanField(),
+        }),
       }),
     };
   }
@@ -45,7 +47,7 @@ export default class QuestData extends foundry.abstract.TypeDataModel {
     for (const [k, v] of Object.entries(this.objectives)) {
       const nested = Object.values(v.objectives);
       if (!nested.length) continue;
-      v.checked = nested.every(n => n.checked);
+      v.checked = nested.every(n => n.checked || n.optional);
     }
 
     // Remove invalid currencies.

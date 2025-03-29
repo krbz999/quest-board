@@ -5,7 +5,7 @@ const {
 export default class ObjectiveField extends TypedObjectField {
   constructor(fields = {}) {
     super(new SchemaField({
-      label: new StringField({ required: true }),
+      text: new StringField({ required: true }),
       checked: new BooleanField(),
       sort: new IntegerSortField(),
       ...fields,

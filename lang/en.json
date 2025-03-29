@@ -54,6 +54,21 @@
             "hint": "Private information written here is visible only game masters, and only game masters can edit it."
           }
         },
+        "objectives": {
+          "checked": {
+            "label": "Checked"
+          },
+          "text": {
+            "label": "Text",
+            "placeholder": "Objective"
+          },
+          "optional": {
+            "label": "Optional"
+          },
+          "sort": {
+            "label": "Sort"
+          }
+        },
         "type": {
           "label": "Quest Type"
         }
@@ -74,6 +89,7 @@
           "rewards": "Rewards"
         },
         "TITLE": "Quest: {name}",
+        "OBJECTIVE_TITLE": "Configure Objective",
         "WARNING": {
           "onlyItems": "Only items can be added as a reward for a quest.",
           "onlyPack": "Only items stored in compendiums can be added as a reward for a quest."
@@ -88,7 +104,8 @@
         "CONTEXT": {
           "award": "Grant Rewards",
           "complete": "Complete Quest"
-        }
+        },
+        "optional": "Optional"
       }
     },
     "SHOP": {

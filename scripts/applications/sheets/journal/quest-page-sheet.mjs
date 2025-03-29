@@ -6,9 +6,9 @@ export default class QuestPageSheet extends AbstractPageSheet {
     viewClasses: ["quest-page"],
     actions: {
       addObjective: QuestPageSheet.#addObjective,
-      addObjectiveNested: QuestPageSheet.#addObjectiveNested,
+      addSubobjective: QuestPageSheet.#addSubobjective,
+      configureObjective: QuestPageSheet.#configureObjective,
       removeObjective: QuestPageSheet.#removeObjective,
-      removeObjectiveNested: QuestPageSheet.#removeObjectiveNested,
       deleteReward: QuestPageSheet.#deleteReward,
       grantRewards: QuestPageSheet.#grantRewards,
     },
@@ -112,7 +112,8 @@ export default class QuestPageSheet extends AbstractPageSheet {
     context.objectives = {
       fields: {
         checked: this.document.system.schema.getField("objectives.element.checked"),
-        label: this.document.system.schema.getField("objectives.element.label"),
+        text: this.document.system.schema.getField("objectives.element.text"),
+        textPlaceholder: game.i18n.localize("QUESTBOARD.QUEST.FIELDS.objectives.text.placeholder"),
         sort: this.document.system.schema.getField("objectives.element.sort"),
       },
       objectives: Object.entries(this.document.system.objectives).map(([k, v]) => {
@@ -127,9 +128,9 @@ export default class QuestPageSheet extends AbstractPageSheet {
               parent: k,
               prefix: `system.objectives.${k}.objectives.${u}.`,
             };
-          }),
+          }).sort((a, b) => a.sort - b.sort),
         };
-      }),
+      }).sort((a, b) => a.sort - b.sort),
     };
 
     const rewards = await this.document.system.retrieveRewards();
@@ -266,48 +267,101 @@ export default class QuestPageSheet extends AbstractPageSheet {
    */
   static #addObjective(event, target) {
     const id = foundry.utils.randomID();
-    this.document.update({ [`system.objectives.${id}.label`]: "" });
+    this.document.update({ [`system.objectives.${id}.text`]: "" });
   }
 
   /* -------------------------------------------------- */
 
   /**
-   * Add a second-level objective.
+   * Add a subobjective.
    * @this {QuestPageSheet}
    * @param {PointerEvent} event    Initiating click event.
    * @param {HTMLElement} target    The element that defined the [data-action].
    */
-  static #addObjectiveNested(event, target) {
-    const id = target.dataset.objective;
-    const nested = foundry.utils.randomID();
-    this.document.update({ [`system.objectives.${id}.objectives.${nested}.label`]: "" });
+  static #addSubobjective(event, target) {
+    const path = [
+      "system.objectives",
+      target.closest("[data-objective]").dataset.objective,
+      "objectives",
+      foundry.utils.randomID(),
+      "text",
+    ].filterJoin(".");
+    this.document.update({ [path]: "" });
   }
 
   /* -------------------------------------------------- */
 
   /**
-   * Remove a top-level objective.
+   * Configure an existing objective.
+   * @this {QuestPageSheet}
+   * @param {PointerEvent} event    Initiating click event.
+   * @param {HTMLElement} target    The element that defined the [data-action].
+   */
+  static async #configureObjective(event, target) {
+    const { objective: id, parentObjective } = target.closest("[data-objective]").dataset;
+    const path = [
+      "system.objectives",
+      parentObjective ? `${parentObjective}.objectives` : null,
+      id,
+    ].filterJoin(".");
+    const objective = foundry.utils.getProperty(this.document, path);
+    const isRoot = !parentObjective;
+
+    const {
+      checked, optional, text, sort,
+    } = this.document.system.schema.getField(isRoot ? "objectives.element" : "objectives.element.objectives.element").fields;
+
+    const html = [
+      text.toFormGroup({
+        label: game.i18n.localize("QUESTBOARD.QUEST.FIELDS.objectives.text.label"),
+      }, {
+        value: objective.text,
+        placeholder: game.i18n.localize("QUESTBOARD.QUEST.FIELDS.objectives.text.placeholder"),
+      }).outerHTML,
+      sort.toFormGroup({
+        label: game.i18n.localize("QUESTBOARD.QUEST.FIELDS.objectives.sort.label"),
+        hint: "",
+      }, { value: objective.sort, placeholder: "0" }).outerHTML,
+      checked.toFormGroup({
+        label: game.i18n.localize("QUESTBOARD.QUEST.FIELDS.objectives.checked.label"),
+      }, { value: objective.checked }).outerHTML,
+      optional?.toFormGroup({
+        label: game.i18n.localize("QUESTBOARD.QUEST.FIELDS.objectives.optional.label"),
+      }, { value: objective.optional }).outerHTML,
+    ].filterJoin("");
+
+    const update = await foundry.applications.api.Dialog.input({
+      window: {
+        title: "QUESTBOARD.QUEST.EDIT.OBJECTIVE_TITLE",
+      },
+      position: {
+        width: 400,
+      },
+      content: `<fieldset>${html}</fieldset>`,
+    });
+
+    this.document.update({ [path]: isRoot
+      ? foundry.utils.expandObject(update).system.objectives
+      : foundry.utils.expandObject(update).system.objectives.objectives,
+    });
+  }
+
+  /* -------------------------------------------------- */
+
+  /**
+   * Remove an objective.
    * @this {QuestPageSheet}
    * @param {PointerEvent} event    Initiating click event.
    * @param {HTMLElement} target    The element that defined the [data-action].
    */
   static #removeObjective(event, target) {
-    const id = target.dataset.objective;
-    this.document.update({ [`system.objectives.-=${id}`]: null });
-  }
-
-  /* -------------------------------------------------- */
-
-  /**
-   * Remove a second-level objective.
-   * @this {QuestPageSheet}
-   * @param {PointerEvent} event    Initiating click event.
-   * @param {HTMLElement} target    The element that defined the [data-action].
-   */
-  static #removeObjectiveNested(event, target) {
-    const id = target.dataset.objective;
-    const nested = target.dataset.nested;
-    this.document.update({ [`system.objectives.${id}.objectives.-=${nested}`]: null });
+    const { objective, parentObjective } = target.closest("[data-objective]").dataset;
+    const path = [
+      "system.objectives",
+      parentObjective ? `${parentObjective}.objectives` : null,
+      `-=${objective}`,
+    ].filterJoin(".");
+    this.document.update({ [path]: null });
   }
 
   /* -------------------------------------------------- */
