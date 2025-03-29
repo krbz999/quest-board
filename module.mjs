@@ -17,8 +17,8 @@ Hooks.once("init", () => {
     [`${QUESTBOARD.id}.shop`]: data.journalEntryPages.ShopData,
   });
   Object.assign(CONFIG.JournalEntryPage.typeIcons, {
-    [`${QUESTBOARD.id}.quest`]: "fa-solid fa-award",
-    [`${QUESTBOARD.id}.shop`]: "fa-solid fa-shop",
+    [`${QUESTBOARD.id}.quest`]: applications.sheets.journal.QuestPageSheet.DEFAULT_OPTIONS.window.icon,
+    [`${QUESTBOARD.id}.shop`]: applications.sheets.journal.ShopPageSheet.DEFAULT_OPTIONS.window.icon,
   });
 
   foundry.applications.apps.DocumentSheetConfig.registerSheet(

@@ -4,6 +4,9 @@ export default class QuestPageSheet extends AbstractPageSheet {
   /** @inheritdoc */
   static DEFAULT_OPTIONS = {
     viewClasses: ["quest-page"],
+    window: {
+      icon: "fa-solid fa-award",
+    },
     actions: {
       addObjective: QuestPageSheet.#addObjective,
       addSubobjective: QuestPageSheet.#addSubobjective,
