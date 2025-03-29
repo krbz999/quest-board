@@ -49,9 +49,9 @@
         "json"
       ],
       "paths": [
-        "lang/en.json",
-        "styles/*.css",
-        "templates/**/*.hbs"
+        "lang",
+        "styles",
+        "templates"
       ]
     }
   },
