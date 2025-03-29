@@ -149,6 +149,7 @@
       "EDIT": {
         "TABS": {
           "configuration": "Configuration",
+          "proprietor": "Proprietor",
           "stock": "Stock"
         },
         "TITLE": "Shop: {name}",

@@ -19,6 +19,7 @@ export default class ShopPageSheet extends AbstractPageSheet {
     primary: {
       tabs: [
         { id: "configuration", icon: "fa-solid fa-gears" },
+        { id: "proprietor", icon: "fa-solid fa-user" },
         { id: "stock", icon: "fa-solid fa-shop" },
       ],
       initial: "configuration",
@@ -36,6 +37,10 @@ export default class ShopPageSheet extends AbstractPageSheet {
     configuration: {
       template: "modules/quest-board/templates/shop/edit/configuration.hbs",
       templates: ["modules/quest-board/templates/shared/edit/basics.hbs"],
+      classes: ["tab"],
+    },
+    proprietor: {
+      template: "modules/quest-board/templates/shop/edit/proprietor.hbs",
       classes: ["tab"],
     },
     stock: {
@@ -99,8 +104,19 @@ export default class ShopPageSheet extends AbstractPageSheet {
 
     context.stock = await this.document.system.loadStock();
 
+    await this.#prepareContextProprietor(context);
+
     return context;
   }
+
+  /* -------------------------------------------------- */
+
+  /**
+   * Modify rendering context for the `proprietor` part.
+   * @param {object} context    Rendering context. **will be mutated**
+   * @returns {Promise}         A promise that resolves once the context has been prepared.
+   */
+  async #prepareContextProprietor(context) {}
 
   /* -------------------------------------------------- */
 
@@ -144,6 +160,24 @@ export default class ShopPageSheet extends AbstractPageSheet {
       element.querySelector("[data-action=changeCustomer]")
         .addEventListener("click", ShopPageSheet.#changeCustomer.bind(this));
     }
+  }
+
+  /* -------------------------------------------------- */
+
+  /** @inheritdoc */
+  _configureRenderParts(options) {
+    const parts = super._configureRenderParts(options);
+    if (!this.document.system.owner) delete parts.proprietor;
+    return parts;
+  }
+
+  /* -------------------------------------------------- */
+
+  /** @inheritdoc */
+  _prepareTabs(group) {
+    const tabs = super._prepareTabs(group);
+    if (!this.document.system.owner) delete tabs.proprietor;
+    return tabs;
   }
 
   /* -------------------------------------------------- */
