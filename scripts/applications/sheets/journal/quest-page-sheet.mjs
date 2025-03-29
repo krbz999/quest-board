@@ -344,6 +344,7 @@ export default class QuestPageSheet extends AbstractPageSheet {
       },
       content: `<fieldset>${html}</fieldset>`,
     });
+    if (!update) return;
 
     this.document.update({ [path]: isRoot
       ? foundry.utils.expandObject(update).system.objectives
