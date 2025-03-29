@@ -46,7 +46,8 @@ export default class AbstractPageSheet extends foundry.applications.sheets.journ
       isGM: game.user.isGM,
       rootId: this.document.uuid,
       fields: {
-        name: this._prepareField("name"),
+        // TODO: remove label once https://github.com/foundryvtt/foundryvtt/issues/12272 is resolved
+        name: { ...this._prepareField("name"), label: "Name" },
         titleLevel: {
           ...this._prepareField("title.level"),
           label: game.i18n.localize("JOURNALENTRYPAGE.HeadingLevel"),
