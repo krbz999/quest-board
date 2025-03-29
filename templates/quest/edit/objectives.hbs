@@ -1,0 +1,32 @@
+<section class="{{tabs.objectives.cssClass}}" data-group="{{tabs.objectives.group}}" data-tab="{{tabs.objectives.id}}">
+  <fieldset>
+    <legend>
+      <span>{{localize "QUESTBOARD.QUEST.EDIT.LEGENDS.objectives"}}</span>
+      <button type="button" data-action="addObjective" class="icon fa-solid fa-square-plus"></button>
+    </legend>
+    {{#each objectives.objectives}}
+    <div class="form-group" data-objective="{{id}}">
+      <div class="form-fields">
+        {{formInput @root.objectives.fields.checked value=checked name=(concat prefix "checked") disabled=(gt objectives.length 0)}}
+        {{formInput @root.objectives.fields.text value=text name=(concat prefix "text") placeholder=@root.objectives.fields.textPlaceholder}}
+        <button type="button" data-action="addSubobjective" class="icon fa-solid fa-plus"></button>
+        <button type="button" data-action="removeObjective" class="icon fa-solid fa-minus"></button>
+        <button type="button" data-action="configureObjective" class="icon fa-solid fa-cog"></button>
+      </div>
+    </div>
+
+    {{#if objectives.length}}
+    {{#each objectives}}
+    <div class="form-group nested" data-objective="{{id}}" data-parent-objective="{{parent}}">
+      <div class="form-fields">
+        {{formInput @root.objectives.fields.checked value=checked name=(concat prefix "checked")}}
+        {{formInput @root.objectives.fields.text value=text name=(concat prefix "text") placeholder=@root.objectives.fields.textPlaceholder}}
+        <button type="button" data-action="removeObjective" class="icon fa-solid fa-minus"></button>
+        <button type="button" data-action="configureObjective" class="icon fa-solid fa-cog"></button>
+      </div>
+    </div>
+    {{/each}}
+    {{/if}}
+    {{/each}}
+  </fieldset>
+</section>

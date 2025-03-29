@@ -21,6 +21,7 @@ export default class QuestPageSheet extends AbstractPageSheet {
     primary: {
       tabs: [
         { id: "configuration", icon: "fa-solid fa-gears" },
+        { id: "objectives", icon: "fa-solid fa-list-check" },
         { id: "details", icon: "fa-solid fa-comment" },
         { id: "notes", icon: "fa-solid fa-eye-slash" },
         { id: "rewards", icon: "fa-solid fa-gem" },
@@ -40,6 +41,10 @@ export default class QuestPageSheet extends AbstractPageSheet {
     configuration: {
       template: "modules/quest-board/templates/quest/edit/configuration.hbs",
       templates: ["modules/quest-board/templates/shared/edit/basics.hbs"],
+      classes: ["tab"],
+    },
+    objectives: {
+      template: "modules/quest-board/templates/quest/edit/objectives.hbs",
       classes: ["scrollable", "tab"],
       scrollable: [""],
     },

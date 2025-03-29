@@ -18,10 +18,10 @@ export default class ShopPageSheet extends AbstractPageSheet {
   static TABS = {
     primary: {
       tabs: [
-        { id: "identity", icon: "fa-solid fa-gears" },
+        { id: "configuration", icon: "fa-solid fa-gears" },
         { id: "stock", icon: "fa-solid fa-shop" },
       ],
-      initial: "identity",
+      initial: "configuration",
       labelPrefix: "QUESTBOARD.SHOP.EDIT.TABS",
     },
   };
@@ -33,8 +33,8 @@ export default class ShopPageSheet extends AbstractPageSheet {
     tabs: {
       template: "templates/generic/tab-navigation.hbs",
     },
-    identity: {
-      template: "modules/quest-board/templates/shop/edit/identity.hbs",
+    configuration: {
+      template: "modules/quest-board/templates/shop/edit/configuration.hbs",
       templates: ["modules/quest-board/templates/shared/edit/basics.hbs"],
       classes: ["tab"],
     },

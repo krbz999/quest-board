@@ -86,6 +86,7 @@
           "configuration": "Configuration",
           "details": "Details",
           "notes": "Notes",
+          "objectives": "Objectives",
           "rewards": "Rewards"
         },
         "TITLE": "Quest: {name}",
@@ -147,7 +148,7 @@
       },
       "EDIT": {
         "TABS": {
-          "identity": "Identity",
+          "configuration": "Configuration",
           "stock": "Stock"
         },
         "TITLE": "Shop: {name}",
