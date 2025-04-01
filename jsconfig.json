@@ -8,7 +8,7 @@
     }
   },
   "exclude": ["node_modules", "**/node_modules/*"],
-  "include": ["module.mjs", "foundry/client/client.mjs", "foundry/client/global.d.mts"],
+  "include": ["module.mjs", "foundry/client/client.mjs", "global.d.ts"],
   "typeAcquisition": {
     "include": ["jquery"]
   }
