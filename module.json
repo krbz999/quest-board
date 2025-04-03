@@ -65,7 +65,12 @@
           "description.private"
         ]
       },
-      "shop": {}
+      "shop": {},
+      "track": {
+        "htmlFields": [
+          "counters.*.description"
+        ]
+      }
     }
   }
 }

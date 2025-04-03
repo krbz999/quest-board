@@ -15,32 +15,28 @@ Hooks.once("init", () => {
   Object.assign(CONFIG.JournalEntryPage.dataModels, {
     [`${QUESTBOARD.id}.quest`]: data.journalEntryPages.QuestData,
     [`${QUESTBOARD.id}.shop`]: data.journalEntryPages.ShopData,
+    [`${QUESTBOARD.id}.track`]: data.journalEntryPages.TrackData,
   });
   Object.assign(CONFIG.JournalEntryPage.typeIcons, {
     [`${QUESTBOARD.id}.quest`]: applications.sheets.journal.QuestPageSheet.DEFAULT_OPTIONS.window.icon,
     [`${QUESTBOARD.id}.shop`]: applications.sheets.journal.ShopPageSheet.DEFAULT_OPTIONS.window.icon,
+    [`${QUESTBOARD.id}.track`]: applications.sheets.journal.TrackPageSheet.DEFAULT_OPTIONS.window.icon,
   });
 
-  foundry.applications.apps.DocumentSheetConfig.registerSheet(
-    foundry.documents.JournalEntryPage,
-    QUESTBOARD.id,
-    applications.sheets.journal.QuestPageSheet,
-    {
-      types: [`${QUESTBOARD.id}.quest`],
-      makeDefault: true,
-      label: "QUESTBOARD.SHEET.LABEL.quest",
-    },
-  );
-  foundry.applications.apps.DocumentSheetConfig.registerSheet(
-    foundry.documents.JournalEntryPage,
-    QUESTBOARD.id,
-    applications.sheets.journal.ShopPageSheet,
-    {
-      types: [`${QUESTBOARD.id}.shop`],
-      makeDefault: true,
-      label: "QUESTBOARD.SHEET.LABEL.shop",
-    },
-  );
+  /**
+   * Register a journal entry page sheet.
+   * @param {typeof applications.sheets.journal.AbstractPageSheet} Cls    The journal entry page sheet.
+   * @param {string} type                                                 The page subtype (without prefix).
+   */
+  const registerSheet = (Cls, type) => {
+    foundry.applications.apps.DocumentSheetConfig.registerSheet(
+      foundry.documents.JournalEntryPage, QUESTBOARD.id, Cls,
+      { types: [`${QUESTBOARD.id}.${type}`], makeDefault: true, label: `QUESTBOARD.SHEET.LABEL.${type}` },
+    );
+  };
+  registerSheet(applications.sheets.journal.QuestPageSheet, "quest");
+  registerSheet(applications.sheets.journal.ShopPageSheet, "shop");
+  registerSheet(applications.sheets.journal.TrackPageSheet, "track");
 
   data.journalEntryPages.ShopData.assignQueries();
 });

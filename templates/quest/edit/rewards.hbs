@@ -1,9 +1,11 @@
 <section class="{{tabs.rewards.cssClass}}" data-group="{{tabs.rewards.group}}" data-tab="{{tabs.rewards.id}}">
-  <fieldset class="currencies">
+  <fieldset>
     <legend>{{localize "QUESTBOARD.QUEST.EDIT.LEGENDS.currencies"}}</legend>
-    {{#each currencies}}
-    {{formGroup field value=value placeholder="0" name=name rootId=@root.rootId label=placeholder classes="currency"}}
-    {{/each}}
+    <div class="form-group">
+      {{#each currencies}}
+      {{formGroup field value=value placeholder="0" name=name rootId=@root.rootId label=placeholder classes="label-top"}}
+      {{/each}}
+    </div>
   </fieldset>
 
   <div class="form-group">

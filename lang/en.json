@@ -40,7 +40,8 @@
     "SHEET": {
       "LABEL": {
         "quest": "Quest Page Sheet",
-        "shop": "Shop Page Sheet"
+        "shop": "Shop Page Sheet",
+        "track": "Track Page Sheet"
       }
     },
     "QUEST": {
@@ -199,13 +200,36 @@
         "stockNotFound": "The item was not found in the shop.",
         "tooHighQuantity": "The quantity is higher than what was available."
       }
+    },
+    "TRACK": {
+      "EDIT": {
+        "LEGENDS": {
+          "counters": "Counters"
+        },
+        "TABS": {
+          "configuration": "Configuration",
+          "counters": "Counters"
+        },
+        "TITLE": "Track: {name}"
+      },
+      "FIELDS": {
+        "counters": {
+          "name.label": "Name",
+          "description.label": "Description",
+          "config.min.label": "Min",
+          "config.max.label": "Max",
+          "config.value.label": "Value"
+        }
+      },
+      "VIEW": {}
     }
   },
   "TYPES": {
     "JournalEntryPage": {
       "quest-board": {
         "quest": "Quest Page",
-        "shop": "Shop Page"
+        "shop": "Shop Page",
+        "track": "Track Page"
       }
     }
   }
