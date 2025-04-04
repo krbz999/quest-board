@@ -10,6 +10,7 @@ export default class TrackPageSheet extends AbstractPageSheet {
       icon: "fa-solid fa-chart-gantt",
     },
     actions: {
+      configureCounter: TrackPageSheet.#configureCounter,
       createCounter: TrackPageSheet.#createCounter,
       deleteCounter: TrackPageSheet.#deleteCounter,
     },
@@ -158,6 +159,21 @@ export default class TrackPageSheet extends AbstractPageSheet {
 
   /* -------------------------------------------------- */
   /*   Event handlers                                   */
+  /* -------------------------------------------------- */
+
+  /**
+   * Configure a specific counter in a separate application.
+   * @this {TrackPageSheet}
+   * @param {PointerEvent} event    Initiating click event.
+   * @param {HTMLElement} target    The element that defined the [data-action].
+   */
+  static #configureCounter(event, target) {
+    new QUESTBOARD.applications.apps.TrackCounterConfig({
+      document: this.document,
+      counterId: target.closest("[data-counter-id]").dataset.counterId,
+    }).render({ force: true });
+  }
+
   /* -------------------------------------------------- */
 
   /**

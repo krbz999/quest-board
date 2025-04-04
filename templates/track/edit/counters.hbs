@@ -11,10 +11,10 @@
         {{formInput config.value.field value=config.value.value name=config.value.name placeholder="0"}}
         <span class="sep">/</span>
         {{formInput config.max.field value=config.max.value name=config.max.name placeholder="20"}}
+        <button type="button" data-action="configureCounter" class="icon fa-solid fa-cog"></button>
         <button type="button" data-action="deleteCounter" class="icon fa-solid fa-trash"></button>
       </div>
     </div>
-    {{#unless @last}}<hr>{{/unless}}
     {{/each}}
   </fieldset>
 </section>

@@ -71,8 +71,8 @@ export default class AbstractPageSheet extends foundry.applications.sheets.journ
   /* -------------------------------------------------- */
 
   /** @inheritdoc */
-  _onRender(context, options) {
-    super._onRender(context, options);
+  async _onRender(context, options) {
+    await super._onRender(context, options);
 
     new foundry.applications.ux.DragDrop({
       dropSelector: ".drop-area",

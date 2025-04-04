@@ -23,20 +23,18 @@ Hooks.once("init", () => {
     [`${QUESTBOARD.id}.track`]: applications.sheets.journal.TrackPageSheet.DEFAULT_OPTIONS.window.icon,
   });
 
-  /**
-   * Register a journal entry page sheet.
-   * @param {typeof applications.sheets.journal.AbstractPageSheet} Cls    The journal entry page sheet.
-   * @param {string} type                                                 The page subtype (without prefix).
-   */
-  const registerSheet = (Cls, type) => {
-    foundry.applications.apps.DocumentSheetConfig.registerSheet(
-      foundry.documents.JournalEntryPage, QUESTBOARD.id, Cls,
-      { types: [`${QUESTBOARD.id}.${type}`], makeDefault: true, label: `QUESTBOARD.SHEET.LABEL.${type}` },
-    );
-  };
-  registerSheet(applications.sheets.journal.QuestPageSheet, "quest");
-  registerSheet(applications.sheets.journal.ShopPageSheet, "shop");
-  registerSheet(applications.sheets.journal.TrackPageSheet, "track");
+  foundry.applications.apps.DocumentSheetConfig.registerSheet(
+    foundry.documents.JournalEntryPage, QUESTBOARD.id, applications.sheets.journal.QuestPageSheet,
+    { types: [`${QUESTBOARD.id}.quest`], makeDefault: true, label: "QUESTBOARD.QUEST.SHEET.LABEL" },
+  );
+  foundry.applications.apps.DocumentSheetConfig.registerSheet(
+    foundry.documents.JournalEntryPage, QUESTBOARD.id, applications.sheets.journal.ShopPageSheet,
+    { types: [`${QUESTBOARD.id}.shop`], makeDefault: true, label: "QUESTBOARD.SHOP.SHEET.LABEL" },
+  );
+  foundry.applications.apps.DocumentSheetConfig.registerSheet(
+    foundry.documents.JournalEntryPage, QUESTBOARD.id, applications.sheets.journal.TrackPageSheet,
+    { types: [`${QUESTBOARD.id}.track`], makeDefault: true, label: "QUESTBOARD.TRACK.SHEET.LABEL" },
+  );
 
   data.journalEntryPages.ShopData.assignQueries();
 });
