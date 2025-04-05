@@ -65,7 +65,7 @@ export default class TrackData extends foundry.abstract.TypeDataModel {
    * @returns {Promise<JournalEntryPage>}   A promise that resolves to the updated page.
    */
   async deleteCounters(ids) {
-    ids = foundry.utils.getType(ids) === "string" ? [ids] : ids;
+    ids = (foundry.utils.getType(ids) === "string") ? [ids] : ids;
     const update = ids.reduce((acc, id) => {
       acc[`system.counters.-=${id}`] = null;
       return acc;

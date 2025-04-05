@@ -230,7 +230,7 @@ export default class ShopPageSheet extends AbstractPageSheet {
     const uuid = target.closest("[data-uuid]").dataset.uuid;
 
     const stock = await QUESTBOARD.data.journalEntryPages.ShopData.loadSingleStock(
-      this.document.system.stock.find(stock => stock.uuid === uuid),
+      this.document.system.stock.get(uuid.replaceAll(".", "-")),
     );
     const quantity = await QUESTBOARD.applications.apps.PurchasePrompt.create(stock);
     if (!quantity) {
@@ -246,7 +246,7 @@ export default class ShopPageSheet extends AbstractPageSheet {
       customerUuid: this.#customer.uuid,
     };
 
-    const result = await gm.query("questboardPurchase", configuration);
+    const result = await gm.query("questboard", { type: "purchase", config: configuration });
     if (!result || (result.success === false)) {
       const message = [
         game.i18n.localize("QUESTBOARD.PURCHASE.WARNING.failure"),

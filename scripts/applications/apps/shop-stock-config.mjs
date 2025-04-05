@@ -5,7 +5,7 @@ export default class ShopStockConfig extends HandlebarsApplicationMixin(Applicat
   static DEFAULT_OPTIONS = {
     id: "{id}",
     classes: ["quest-board"],
-    stockId: null,
+    stockUuid: null,
     document: null,
     tag: "form",
     window: {
@@ -36,7 +36,17 @@ export default class ShopStockConfig extends HandlebarsApplicationMixin(Applicat
 
   /** @inheritdoc */
   get title() {
-    return game.i18n.format("QUESTBOARD.STOCK.DIALOG.TITLE", { name: this.options.stockId });
+    return game.i18n.localize("QUESTBOARD.STOCK.DIALOG.TITLE");
+  }
+
+  /* -------------------------------------------------- */
+
+  /**
+   * The stock entry.
+   * @type {object}
+   */
+  get stock() {
+    return this.document.system.stock.get(this.options.stockUuid.replaceAll(".", "-"));
   }
 
   /* -------------------------------------------------- */
@@ -60,7 +70,7 @@ export default class ShopStockConfig extends HandlebarsApplicationMixin(Applicat
   /** @inheritdoc */
   _initializeApplicationOptions(options) {
     const opts = super._initializeApplicationOptions(options);
-    opts.uniqueId = `${options.document.uuid.replaceAll(".", "-")}-Stock-${options.stockId}`;
+    opts.uniqueId = `${options.document.uuid.replaceAll(".", "-")}-Stock-${options.stockUuid.replaceAll(".", "-")}`;
     return opts;
   }
 
@@ -69,8 +79,8 @@ export default class ShopStockConfig extends HandlebarsApplicationMixin(Applicat
   /** @inheritdoc */
   async _prepareContext(options) {
     const context = await super._prepareContext(options);
-    const stock = this.document.system.stock[this.options.stockId];
-    const source = this.document.system.toObject().stock[this.options.stockId];
+    const stock = this.stock;
+    const source = this.document.system.toObject().stock[this.options.stockUuid.replaceAll(".", "-")];
     const prepared = await QUESTBOARD.data.journalEntryPages.ShopData.loadSingleStock(stock);
     const item = prepared.item;
 
@@ -106,7 +116,8 @@ export default class ShopStockConfig extends HandlebarsApplicationMixin(Applicat
         label: "QUESTBOARD.SHOP.FIELDS.stock.quantity.label",
       },
     });
-    context.psv.placeholder = Number(context.pev.value * context.quantity.value).toNearest(0.1);
+    context.quantity.value ||= null;
+    context.psv.placeholder = Number(context.pev.placeholder * (context.quantity.value || context.quantity.placeholder)).toNearest(0.1);
     context.psd.blank = game.i18n.format("QUESTBOARD.STOCK.DIALOG.DEFAULT", {
       value: CONFIG.DND5E.currencies[context.ped.value || item.system.price.denomination || "gp"].label,
     });
@@ -137,6 +148,6 @@ export default class ShopStockConfig extends HandlebarsApplicationMixin(Applicat
    */
   static #onSubmit(event, form, formData) {
     formData = foundry.utils.expandObject(formData.object);
-    this.document.update({ [`system.stock.${this.options.stockId}`]: formData });
+    this.document.update({ [`system.stock.${this.options.stockUuid.replaceAll(".", "-")}`]: formData });
   }
 }

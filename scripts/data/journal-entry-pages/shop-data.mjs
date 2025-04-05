@@ -37,7 +37,7 @@ export default class ShopData extends foundry.abstract.TypeDataModel {
             denomination: new StringField({ required: true, blank: true, choices: CONFIG.DND5E.currencies }),
           }),
         }),
-        quantity: new NumberField({ required: true, step: 1, min: 0 }),
+        quantity: new NumberField({ required: true, step: 1, min: 1 }),
         uuid: new DocumentUUIDField({ type: "Item", embedded: false }),
       })),
     };
@@ -73,7 +73,8 @@ export default class ShopData extends foundry.abstract.TypeDataModel {
   static #query = async (configuration) => {
     const page = await foundry.utils.fromUuid(configuration.pageUuid);
 
-    let stock = page.system.stock.find(s => s.uuid === configuration.stockUuid);
+    const stockId = configuration.stockUuid.replaceAll(".", "-");
+    let stock = page.system.stock.get(stockId);
     if (!stock) {
       return {
         success: false,
@@ -114,11 +115,9 @@ export default class ShopData extends foundry.abstract.TypeDataModel {
     }]);
 
     if (isStack) {
-      await page.system.removeStock(configuration.stockUuid);
+      await page.update({ [`system.stock.-=${stockId}`]: null });
     } else {
-      await page.system.editStock(configuration.stockUuid, {
-        quantity: stock.quantity - configuration.quantity,
-      });
+      await page.update({ [`system.stock.${stockId}.quantity`]: stock.quantity - configuration.quantity });
     }
 
     await Promise.all([
@@ -133,15 +132,6 @@ export default class ShopData extends foundry.abstract.TypeDataModel {
   /* -------------------------------------------------- */
 
   /**
-   * Assign the query handlers to the global object.
-   */
-  static assignQueries() {
-    CONFIG.queries.questboardPurchase = ShopData._query;
-  }
-
-  /* -------------------------------------------------- */
-
-  /**
    * A semaphore for handling purchases in order.
    * @type {Semaphore}
    */
@@ -152,13 +142,10 @@ export default class ShopData extends foundry.abstract.TypeDataModel {
   /** @inheritdoc */
   prepareDerivedData() {
     super.prepareDerivedData();
-    for (const [id, stock] of Object.entries(this.stock)) {
+    for (const [k, stock] of this.stock.entries()) {
       const item = fromUuidSync(stock.uuid);
-      if (!item || !ShopData.#ALLOWED_ITEM_TYPES.has(item.type)) {
-        delete this.stock[id];
-        continue;
-      }
-      stock.label = stock.alias ? stock.alias : item.name;
+      if (!item) this.stock.delete(k);
+      else stock.label = stock.alias ? stock.alias : item.name;
     }
   }
 
@@ -170,7 +157,7 @@ export default class ShopData extends foundry.abstract.TypeDataModel {
    */
   async loadStock() {
     const loaded = [];
-    for (const stock of Object.values(this.stock)) {
+    for (const stock of this.stock) {
       const entry = await ShopData.loadSingleStock(stock);
       loaded.push(entry);
     }
@@ -180,22 +167,8 @@ export default class ShopData extends foundry.abstract.TypeDataModel {
   /* -------------------------------------------------- */
 
   /**
-   * Get the id of the stock entry that stores the item by a given uuid.
-   * @param {string} uuid     An item's uuid.
-   * @returns {string|null}   The id or null if not found.
-   */
-  getStockId(uuid) {
-    for (const [id, v] of Object.entries(this.stock)) {
-      if (v.uuid === uuid) return id;
-    }
-    return null;
-  }
-
-  /* -------------------------------------------------- */
-
-  /**
    * Load a stock and prepare it for rendering.
-   * @param {Object} stock        The unprepared stock entry.
+   * @param {object} stock        The unprepared stock entry.
    * @returns {Promise<object>}   A promise that resolves to an object describing the stock.
    */
   static async loadSingleStock(stock) {
@@ -236,13 +209,13 @@ export default class ShopData extends foundry.abstract.TypeDataModel {
       throw new Error(`You cannot add a '${item.type}' item to the stock!`);
     }
     const stock = this.toObject().stock;
-    const id = this.getStockId(uuid);
+    const id = uuid.replaceAll(".", "-");
 
-    if (id) {
+    if (stock[id]) {
       const quantity = (stock[id].quantity ?? item.system._source.quantity) + item.system._source.quantity;
       stock[id].quantity = quantity;
     } else {
-      stock[foundry.utils.randomID()] = { uuid };
+      stock[id] = { uuid };
     }
 
     return this.parent.update({ "system.stock": stock });
@@ -256,7 +229,7 @@ export default class ShopData extends foundry.abstract.TypeDataModel {
    * @returns {Promise<JournalEntryPage>}   A promise that resolves to the updated page.
    */
   async removeStock(uuid) {
-    const id = this.getStockId(uuid);
+    const id = uuid.replaceAll(".", "-");
     return this.parent.update({ [`system.stock.-=${id}`]: null });
   }
 
@@ -270,7 +243,7 @@ export default class ShopData extends foundry.abstract.TypeDataModel {
   async editStockDialog(uuid) {
     return new QUESTBOARD.applications.apps.ShopStockConfig({
       document: this.parent,
-      stockId: this.getStockId(uuid),
+      stockUuid: uuid,
     }).render({ force: true });
   }
 }

@@ -25,12 +25,9 @@ export default async function batchCreateItems(actor, configs = []) {
       continue;
     }
 
-    const existing = actor.itemTypes.consumable.find(c => {
-      return c._stats.compendiumSource
-        && (c.name === item.name)
-        && (c.type === item.type)
-        && (c._stats.compendiumSource === item.uuid);
-    });
+    const existing = ["consumable", "loot"].includes(item.type) ? actor.itemTypes[item.type].find(c => {
+      return (c.name === item.name) && (c._stats.compendiumSource === item.uuid);
+    }) : null;
 
     // Existing consumables get stacked.
     if (existing) {

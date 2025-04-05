@@ -1,6 +1,5 @@
 const {
-  BooleanField, DocumentUUIDField, EmbeddedDataField, HTMLField,
-  NumberField, SchemaField, StringField, TypedObjectField,
+  BooleanField, EmbeddedDataField, HTMLField, NumberField, SchemaField, StringField, TypedObjectField,
 } = foundry.data.fields;
 
 /* -------------------------------------------------- */
@@ -143,6 +142,7 @@ export default class QuestData extends foundry.abstract.TypeDataModel {
         width: 400,
       },
     });
+
     const actor = game.actors.get(result?.actor);
     if (!actor) return null;
     return this.grantRewards({ ...result, actor });

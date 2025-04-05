@@ -1,9 +1,11 @@
+const { DocumentUUIDField, NumberField } = foundry.data.fields;
+
 export default class RewardItem extends foundry.abstract.DataModel {
   /** @inheritdoc */
   static defineSchema() {
     return {
-      uuid: new foundry.data.fields.DocumentUUIDField({ type: "Item", embedded: false }),
-      quantity: new foundry.data.fields.NumberField({ integer: true, initial: null, positive: true }),
+      uuid: new DocumentUUIDField({ type: "Item", embedded: false }),
+      quantity: new NumberField({ integer: true, initial: null, positive: true }),
     };
   }
 

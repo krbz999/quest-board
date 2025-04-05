@@ -200,7 +200,7 @@
     "STOCK": {
       "DIALOG": {
         "DEFAULT": "Default ({value})",
-        "TITLE": "Configure Stock Entry: {name}"
+        "TITLE": "Configure Stock Entry"
       }
     },
     "TRACK": {

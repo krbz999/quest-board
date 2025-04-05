@@ -38,7 +38,12 @@ Hooks.once("init", () => {
     { types: [`${QUESTBOARD.id}.track`], makeDefault: true, label: "QUESTBOARD.TRACK.SHEET.LABEL" },
   );
 
-  data.journalEntryPages.ShopData.assignQueries();
+  CONFIG.queries.questboard = ({ type, config }) => {
+    switch (type) {
+      case "purchase":
+        return data.journalEntryPages.ShopData._query(config);
+    }
+  };
 });
 
 /* -------------------------------------------------- */
