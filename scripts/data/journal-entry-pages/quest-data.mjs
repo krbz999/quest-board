@@ -179,12 +179,7 @@ export default class QuestData extends foundry.abstract.TypeDataModel {
 
     // TODO: Use CONFIG.queries to award the rewards.
 
-    const configs = [];
-    for (const r of this.rewards.items) {
-      const item = await r.item;
-      if (!item) continue;
-      configs.push({ item, quantity: r.quantity ?? item.system.quantity });
-    }
+    const configs = (await Promise.all(this.rewards.items.map(r => r.toConfig()))).filter(_ => _);
     const { itemData, itemUpdates } = await QUESTBOARD.utils.batchCreateItems(actor, configs);
     const currencyUpdate = {};
     const keys = Object.keys(CONFIG.DND5E.currencies);

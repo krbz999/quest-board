@@ -1,3 +1,5 @@
+/** @import { ItemGrantConfig } from "../types.mjs" */
+
 const { DocumentUUIDField, NumberField } = foundry.data.fields;
 
 export default class RewardItem extends foundry.abstract.DataModel {
@@ -42,5 +44,16 @@ export default class RewardItem extends foundry.abstract.DataModel {
    */
   get item() {
     return fromUuid(this.uuid);
+  }
+
+  /* -------------------------------------------------- */
+
+  /**
+   * Construct a config object from this entry.
+   * @returns {Promise<ItemGrantConfig|null>}   A promise that resolves to the created config.
+   */
+  async toConfig() {
+    const item = await this.item;
+    return item ? { item, quantity: this.quantity ?? item.system.quantity } : null;
   }
 }
