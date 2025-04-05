@@ -42,3 +42,9 @@
  * @property {*} value    The current value, after data preparation.
  * @property {*} source   The base value, before any data preparation.
  */
+
+/**
+ * @typedef {Object} ItemGrantConfig
+ * @property {Item5e} item            The item to grant a quantity of.
+ * @property {number} [quantity=1]    The amount to grant.
+ */

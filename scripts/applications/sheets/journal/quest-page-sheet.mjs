@@ -113,9 +113,13 @@ export default class QuestPageSheet extends AbstractPageSheet {
     });
 
     const _options = { relativeTo: this.document };
-    context.fields.public.enriched = await TextEditor.enrichHTML(context.fields.public.value, _options);
+    context.fields.public.enriched = await foundry.applications.ux.TextEditor.enrichHTML(
+      context.fields.public.value, _options,
+    );
     context.fields.public.hint = game.i18n.localize("QUESTBOARD.QUEST.EDIT.HINTS.content");
-    context.fields.private.enriched = await TextEditor.enrichHTML(context.fields.private.value, _options);
+    context.fields.private.enriched = await foundry.applications.ux.TextEditor.enrichHTML(
+      context.fields.private.value, _options,
+    );
 
     context.objectives = {
       fields: {
@@ -141,7 +145,13 @@ export default class QuestPageSheet extends AbstractPageSheet {
       }).sort((a, b) => a.sort - b.sort),
     };
 
-    const rewards = await this.document.system.retrieveRewards();
+    const currency = this.document.system.currencyRewards;
+    const itemRewards = [];
+    for (const r of this.document.system.rewards.items) {
+      const item = await r.item;
+      if (!item) continue;
+      itemRewards.push({ item, quantity: r.quantity ?? item.system.quantity });
+    }
 
     // Currencies
     context.currencies = [];
@@ -149,16 +159,24 @@ export default class QuestPageSheet extends AbstractPageSheet {
       context.currencies.push({
         field: this.document.system.schema.getField("rewards.currency.element"),
         name: `system.rewards.currency.${k}`,
-        value: rewards.currency[k] ?? null,
+        value: currency[k] ?? null,
         placeholder: v.label,
       });
     }
 
     context.items = [];
-    for (const item of rewards.items) {
+    for (const r of this.document.system.rewards.items) {
+      const item = await r.item;
+      if (!item) continue;
+      const ph = item.system.quantity;
       context.items.push({
         item,
-        hasQuantity: item.system.schema.has("quantity") && (item.type !== "container"),
+        quantity: {
+          value: (r.quantity === ph) ? null : r.quantity,
+          field: new foundry.data.fields.NumberField({ integer: true, positive: true }),
+          name: `system.rewards.items.${item.uuid.replaceAll(".", "-")}.quantity`,
+          placeholder: ph,
+        },
       });
     }
 
@@ -382,8 +400,8 @@ export default class QuestPageSheet extends AbstractPageSheet {
    * @param {HTMLElement} target    The element that defined the [data-action].
    */
   static #deleteReward(event, target) {
-    const uuid = target.dataset.uuid;
-    this.document.system.removeReward(uuid);
+    const id = target.closest("[data-uuid]").dataset.uuid.replaceAll(".", "-");
+    this.document.update({ [`system.rewards.items.-=${id}`]: null });
   }
 
   /* -------------------------------------------------- */

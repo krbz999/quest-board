@@ -16,13 +16,17 @@
     <p class="hint">{{localize "QUESTBOARD.REWARD.hint"}}</p>
   </div>
 
-  <fieldset class="drop-area">
+  <fieldset class="drop-area item-list">
     {{#if items.length}}
     {{#each items}}
-    <div class="form-group">
+    <div class="form-group" data-uuid="{{item.uuid}}">
       <div class="form-fields">
-        <span class="rewards">{{#if hasQuantity}} {{item.system.quantity}} &times; {{/if}} {{{dnd5e-linkForUuid item.uuid}}}</span>
-        <button type="button" class="icon fa-solid fa-trash" data-action="deleteReward" data-uuid="{{item.uuid}}"></button>
+        <span class="img">
+          <img src="{{item.img}}" alt="{{item.name}}">
+        </span>
+        <span class="label">{{{dnd5e-linkForUuid item.uuid}}}</span>
+        {{formInput quantity.field value=quantity.value name=quantity.name classes="quantity" placeholder=quantity.placeholder}}
+        <button type="button" class="icon fa-solid fa-trash" data-action="deleteReward"></button>
       </div>
     </div>
     {{/each}}

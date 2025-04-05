@@ -1,11 +1,13 @@
 import * as applications from "./scripts/applications/_module.mjs";
 import * as config from "./scripts/config.mjs";
 import * as data from "./scripts/data/_module.mjs";
+import * as utils from "./scripts/utils/_module.mjs";
 
 globalThis.QUESTBOARD = {
   applications,
   config,
   data,
+  utils,
   id: "quest-board",
 };
 

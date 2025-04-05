@@ -1,5 +1,5 @@
 const {
-  BooleanField, DocumentUUIDField, HTMLField,
+  BooleanField, DocumentUUIDField, EmbeddedDataField, HTMLField,
   NumberField, SchemaField, StringField, TypedObjectField,
 } = foundry.data.fields;
 
@@ -23,10 +23,7 @@ export default class QuestData extends foundry.abstract.TypeDataModel {
         private: new HTMLField(),
       }),
       rewards: new SchemaField({
-        items: new QUESTBOARD.data.fields.UniqueSchemaField(new SchemaField({
-          uuid: new DocumentUUIDField({ type: "Item", embedded: false }),
-          quantity: new NumberField({ nullable: false, min: 1, integer: true, initial: 1 }),
-        })),
+        items: new QUESTBOARD.data.fields.RewardsField(new EmbeddedDataField(QUESTBOARD.data.RewardItem)),
         currency: new TypedObjectField(new NumberField({ min: 0, nullable: true, integer: true })),
       }),
       objectives: new QUESTBOARD.data.fields.ObjectiveField({
@@ -36,6 +33,21 @@ export default class QuestData extends foundry.abstract.TypeDataModel {
       }),
     };
   }
+
+  /* -------------------------------------------------- */
+
+  /**
+   * Allowed item types for item rewards.
+   * @type {Set<string>}
+   */
+  static #ALLOWED_ITEM_TYPES = new Set([
+    "consumable",
+    "container",
+    "equipment",
+    "loot",
+    "tool",
+    "weapon",
+  ]);
 
   /* -------------------------------------------------- */
 
@@ -63,15 +75,7 @@ export default class QuestData extends foundry.abstract.TypeDataModel {
    * @type {boolean}
    */
   get hasItemRewards() {
-    for (const { uuid } of this.rewards.items) {
-      try {
-        const target = fromUuidSync(uuid);
-        if (target) return true;
-      } catch (err) {
-        // Ignore any errors.
-      }
-    }
-    return false;
+    return this.rewards.items.some(r => r.isValidReward);
   }
 
   /* -------------------------------------------------- */
@@ -82,46 +86,10 @@ export default class QuestData extends foundry.abstract.TypeDataModel {
   /* -------------------------------------------------- */
 
   /**
-   * Retrieve an object of rewards for this quest.
-   * @returns {Promise<object>}
+   * Prepared currency rewards.
+   * @returns {object}
    */
-  async retrieveRewards() {
-    return {
-      items: await this.#prepareItemRewards(),
-      currency: await this.#prepareCurrencyRewards(),
-    };
-  }
-
-  /* -------------------------------------------------- */
-
-  /**
-   * Prepare the quest reward items.
-   * @returns {Promise<Item5e[]>}
-   */
-  async #prepareItemRewards() {
-    const items = [];
-    for (const { uuid, quantity } of this.rewards.items) {
-      let item = await fromUuid(uuid);
-      if (!item) continue;
-
-      const change = {};
-      if (item.system.schema.has("quantity") && (item.type !== "container")) {
-        change["system.quantity"] = quantity;
-      }
-
-      item = item.clone(change, { keepId: true });
-      items.push(item);
-    }
-    return items;
-  }
-
-  /* -------------------------------------------------- */
-
-  /**
-   * Prepare the currency rewards.
-   * @returns {Promise<object>}
-   */
-  async #prepareCurrencyRewards() {
+  get currencyRewards() {
     const keys = Object.keys(CONFIG.DND5E.currencies);
     return Object.entries(this.rewards.currency).reduce((acc, [k, v]) => {
       if (keys.includes(k) && (v > 0)) acc[k] = v;
@@ -139,7 +107,7 @@ export default class QuestData extends foundry.abstract.TypeDataModel {
     const id = `${this.parent.uuid.replaceAll(".", "-")}-grant-rewards-dialog`;
     if (foundry.applications.instances.get(id)) throw new Error("Already a grant in progress.");
 
-    if (!this.hasItemRewards && foundry.utils.isEmpty(await this.#prepareCurrencyRewards())) {
+    if (!this.hasItemRewards && foundry.utils.isEmpty(this.currencyRewards)) {
       ui.notifications.warn("QUESTBOARD.REWARD.WARNING.rewards", { localize: true });
       return null;
     }
@@ -184,8 +152,10 @@ export default class QuestData extends foundry.abstract.TypeDataModel {
 
   /**
    * Grant the rewards of this quest to an actor, defaulting to the primary party.
-   * @param {Actor5e} [actor]           An actor receive the rewards.
-   * @returns {Promise<Actor5e|null>}   A promise that resolves to the receiving actor.
+   * @param {object} [options]              Reward options.
+   * @param {Actor5e} [options.actor]       The actor receive the rewards, falling back to the primary party.
+   * @param {boolean} [options.complete]    Should the quest be marked as completed?
+   * @returns {Promise<Actor5e|null>}       A promise that resolves to the receiving actor.
    */
   async grantRewards({ actor = null, complete = true } = {}) {
     // Grant to given actor.
@@ -209,18 +179,34 @@ export default class QuestData extends foundry.abstract.TypeDataModel {
 
     // TODO: Use CONFIG.queries to award the rewards.
 
-    let { items, currency } = await this.#prepareRewardsUpdate(actor);
-    [items, currency] = await Promise.all([
-      foundry.utils.isEmpty(items) ? null : actor.createEmbeddedDocuments("Item", items),
-      foundry.utils.isEmpty(currency) ? null : actor.update(currency),
+    const configs = [];
+    for (const r of this.rewards.items) {
+      const item = await r.item;
+      if (!item) continue;
+      configs.push({ item, quantity: r.quantity ?? item.system.quantity });
+    }
+    const { itemData, itemUpdates } = await QUESTBOARD.utils.batchCreateItems(actor, configs);
+    const currencyUpdate = {};
+    const keys = Object.keys(CONFIG.DND5E.currencies);
+    for (const [k, v] of Object.entries(this.rewards.currency)) {
+      if (keys.includes(k) && (v > 0)) {
+        currencyUpdate[`system.currency.${k}`] = actor.system.currency[k] + v;
+      }
+    }
+
+    // Perform changes.
+    const [, created] = await Promise.all([
+      actor.update(currencyUpdate),
+      actor.createEmbeddedDocuments("Item", itemData, { keepId: true }),
+      actor.updateEmbeddedDocuments("Item", itemUpdates),
     ]);
 
     if (complete) {
       await this.parent.update({ "system.complete": true });
     }
 
-    const content = await this.#prepareRewardsMessage(actor, items);
-    if (content) ChatMessage.implementation.create({ content: content });
+    const content = await this.#prepareRewardsMessage(actor, { created, itemData, itemUpdates, currencyUpdate });
+    if (content) foundry.utils.getDocumentClass("ChatMessage").create({ content: content });
 
     return actor;
   }
@@ -230,18 +216,18 @@ export default class QuestData extends foundry.abstract.TypeDataModel {
   /**
    * Prepare the contents of the chat message when rewarding quest rewards.
    * @param {Actor5e} actor       The actor receiving rewards.
-   * @param {Item5e[]} [items]    The items that were rewarded.
-   * @returns {string}            A (possibly empty) string.
+   * @param {object} changes      The created items, item creation data, update data, and currency update data.
+   * @returns {Promise<string>}   A promise that resolves to a (possibly empty) string.
    */
-  async #prepareRewardsMessage(actor, items) {
+  async #prepareRewardsMessage(actor, changes) {
     const contents = [];
 
     contents.push(`<p>${game.i18n.format("QUESTBOARD.REWARD.MESSAGE.CONTENT.completed", {
       name: this.parent.name,
     })}</p>`);
 
-    const currency = await this.#prepareCurrencyRewards();
-    if (items?.length || !foundry.utils.isEmpty(currency)) {
+    const currency = this.currencyRewards;
+    if (changes.created.length || changes.itemUpdates.length || !foundry.utils.isEmpty(currency)) {
       contents.push(
         "<h4>Rewards</h4>",
         `<p>${game.i18n.format("QUESTBOARD.REWARD.MESSAGE.CONTENT.rewarded", {
@@ -258,11 +244,16 @@ export default class QuestData extends foundry.abstract.TypeDataModel {
       contents.push("<p class='dnd5e2'>" + content.join(", ") + "</p>");
     }
 
-    if (items?.length) {
+    if (changes.created.length || changes.itemUpdates.length) {
       contents.push("<ul>");
-      for (const item of items) {
+      for (const item of changes.created) {
+        if (item.system.container) continue; // Ignore items in containers.
         const qty = item.system.quantity;
         contents.push(`<li>${qty > 1 ? `${qty} &times; ` : ""}${item.link}</li>`);
+      }
+      for (const { _id, delta } of changes.itemUpdates) {
+        const item = actor.items.get(_id);
+        contents.push(`<li>${delta > 1 ? `${delta} &times; ` : ""}${item.link}</li>`);
       }
       contents.push("</ul>");
     }
@@ -278,42 +269,19 @@ export default class QuestData extends foundry.abstract.TypeDataModel {
    * @returns {Promise<JournalEntryPage>}   A promise that resolves to the updated page.
    */
   async addReward(uuid) {
-    const items = [...this.rewards.items];
-    const index = items.findIndex(item => item.uuid === uuid);
-    if (index === -1) items.push({ uuid, quantity: 1 });
-    else items[index] = { uuid, quantity: (items[index].quantity ?? 1) + 1 };
-    return this.parent.update({ "system.rewards.items": items });
-  }
+    const item = await fromUuid(uuid);
+    if (!item || !QuestData.#ALLOWED_ITEM_TYPES.has(item.type)) return;
+    const items = this.toObject().rewards.items;
 
-  /* -------------------------------------------------- */
-
-  /**
-   * Remove a reward item.
-   * @param {string} uuid                   The uuid of the item.
-   * @returns {Promise<JournalEntryPage>}   A promise that resolves to the updated page.
-   */
-  async removeReward(uuid) {
-    const items = this.rewards.items.filter(r => r.uuid !== uuid);
-    return this.parent.update({ "system.rewards.items": Array.from(items) });
-  }
-
-  /* -------------------------------------------------- */
-
-  /**
-   * Prepare rewards from this quest to be added to an actor.
-   * @param {Actor5e} actor     The actor receiving the rewards.
-   * @returns {Promise<object>}
-   */
-  async #prepareRewardsUpdate(actor) {
-    let { items, currency } = await this.retrieveRewards();
-    items = items.map(item => game.items.fromCompendium(item));
-    currency = Object.entries(currency).reduce((acc, [k, v]) => {
-      const path = `system.currency.${k}`;
-      acc[path] = (foundry.utils.getProperty(actor, path) ?? 0) + v;
-      return acc;
-    }, {});
-
-    return { items, currency };
+    const id = uuid.replaceAll(".", "-");
+    if (items[id]) {
+      let qty = items[id].quantity ?? item.system.quantity;
+      qty += item.system.quantity;
+      if (item.type === "container") qty = null;
+      return this.parent.update({ [`system.rewards.items.${id}.quantity`]: qty });
+    } else {
+      return this.parent.update({ [`system.rewards.items.${id}`]: { uuid } });
+    }
   }
 
   /* -------------------------------------------------- */

@@ -32,7 +32,7 @@
     text-align: center;
   }
 
-  [data-tab=stock] {
+  fieldset.item-list {
     .img {
       flex: 0 0 2em;
     }
@@ -49,8 +49,9 @@
       flex: none;
     }
 
-    & button.icon {
-      flex: 0;
+    input.quantity {
+      flex: 0 0 3rem;
+      text-align: center;
     }
   }
 }
