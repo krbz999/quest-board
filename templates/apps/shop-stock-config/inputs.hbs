@@ -1,5 +1,5 @@
 <fieldset>
-  {{formGroup alias.field value=alias.value name=alias.name placeholder=alias.placeholder}}
+  {{formGroup alias.field value=alias.value name=alias.name placeholder=alias.placeholder label=(localize alias.label)}}
   <div class="form-group">
     <label>{{localize "QUESTBOARD.SHOP.FIELDS.stock.price.each.label"}}</label>
     <div class="form-fields">
@@ -24,6 +24,6 @@
     <p class="hint">{{localize "QUESTBOARD.SHOP.FIELDS.stock.price.stack.hint"}}</p>
   </div>
   {{#with quantity}}
-  {{formGroup field value=value name=name placeholder=placeholder}}
+  {{formGroup field value=value name=name placeholder=placeholder label=(localize label)}}
   {{/with}}
 </fieldset>

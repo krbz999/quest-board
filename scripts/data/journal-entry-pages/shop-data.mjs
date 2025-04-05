@@ -25,7 +25,7 @@ export default class ShopData extends foundry.abstract.TypeDataModel {
   static defineSchema() {
     return {
       owner: new ForeignDocumentField(foundry.documents.Actor),
-      stock: new QUESTBOARD.data.fields.UniqueSchemaField(new SchemaField({
+      stock: new QUESTBOARD.data.fields.StockField(new SchemaField({
         alias: new StringField({ required: true }),
         price: new SchemaField({
           each: new SchemaField({
@@ -178,13 +178,12 @@ export default class ShopData extends foundry.abstract.TypeDataModel {
   /** @inheritdoc */
   prepareDerivedData() {
     super.prepareDerivedData();
-    for (const stock of [...this.stock]) {
+    for (const [id, stock] of Object.entries(this.stock)) {
       const item = fromUuidSync(stock.uuid);
       if (!item || !ShopData.#ALLOWED_ITEM_TYPES.has(item.type)) {
-        this.stock.delete(stock);
+        delete this.stock[id];
         continue;
       }
-
       stock.label = stock.alias ? stock.alias : item.name;
     }
   }
@@ -197,11 +196,25 @@ export default class ShopData extends foundry.abstract.TypeDataModel {
    */
   async loadStock() {
     const loaded = [];
-    for (const stock of this.stock) {
+    for (const stock of Object.values(this.stock)) {
       const entry = await ShopData.loadSingleStock(stock);
       loaded.push(entry);
     }
     return loaded;
+  }
+
+  /* -------------------------------------------------- */
+
+  /**
+   * Get the id of the stock entry that stores the item by a given uuid.
+   * @param {string} uuid     An item's uuid.
+   * @returns {string|null}   The id or null if not found.
+   */
+  getStockId(uuid) {
+    for (const [id, v] of Object.entries(this.stock)) {
+      if (v.uuid === uuid) return id;
+    }
+    return null;
   }
 
   /* -------------------------------------------------- */
@@ -249,13 +262,15 @@ export default class ShopData extends foundry.abstract.TypeDataModel {
       throw new Error(`You cannot add a '${item.type}' item to the stock!`);
     }
     const stock = this.toObject().stock;
-    const index = stock.findIndex(item => item.uuid === uuid);
-    if (index === -1) {
-      stock.push({ uuid });
+    const id = this.getStockId(uuid);
+
+    if (id) {
+      const quantity = (stock[id].quantity ?? item.system._source.quantity) + item.system._source.quantity;
+      stock[id].quantity = quantity;
     } else {
-      const quantity = (stock[index].quantity ?? item.system._source.quantity) + item.system._source.quantity;
-      stock[index] = foundry.utils.mergeObject(stock[index], { quantity }, { inplace: false });
+      stock[foundry.utils.randomID()] = { uuid };
     }
+
     return this.parent.update({ "system.stock": stock });
   }
 
@@ -267,78 +282,21 @@ export default class ShopData extends foundry.abstract.TypeDataModel {
    * @returns {Promise<JournalEntryPage>}   A promise that resolves to the updated page.
    */
   async removeStock(uuid) {
-    const stock = this.toObject().stock.filter(s => s.uuid !== uuid);
-    return this.parent.update({ "system.stock": stock });
-  }
-
-  /* -------------------------------------------------- */
-
-  /**
-   * Perform changes to an entry in stock.
-   * @param {string} uuid                         The uuid of the entry.
-   * @returns {Promise<JournalEntryPage>}    A promise that resolves to the updated page.
-   */
-  async editStock(uuid, update = {}) {
-    const stocks = this.toObject().stock;
-    const source = stocks.find(s => s.uuid === uuid);
-    if (!source) throw new Error("Stock not found for editing!");
-
-    delete update.uuid;
-    foundry.utils.mergeObject(source, update);
-    return this.parent.update({ "system.stock": stocks });
+    const id = this.getStockId(uuid);
+    return this.parent.update({ [`system.stock.-=${id}`]: null });
   }
 
   /* -------------------------------------------------- */
 
   /**
    * Create a dialog for editing an entry in the stock.
-   * @param {string} uuid                         The uuid of the entry.
-   * @returns {Promise<JournalEntryPage|null>}    A promise that resolves to the updated page.
+   * @param {string} uuid                   The uuid of the entry.
+   * @returns {Promise<ShopStockConfig>}    A promise that resolves to a rendered stock config.
    */
   async editStockDialog(uuid) {
-    const source = this.toObject().stock.find(s => s.uuid === uuid);
-    const getField = path => {
-      const field = this.schema.getField(`stock.element.${path}`);
-      const value = foundry.utils.getProperty(source, path);
-      return { field, value, name: path };
-    };
-
-    const prepared = await ShopData.loadSingleStock(this.stock.find(s => s.uuid === uuid));
-    const item = prepared.item;
-
-    const context = {
-      alias: getField("alias"),
-      pev: getField("price.each.value"),
-      ped: getField("price.each.denomination"),
-      psv: getField("price.stack.value"),
-      psd: getField("price.stack.denomination"),
-      quantity: getField("quantity"),
-    };
-    context.alias.placeholder = item.name;
-    context.pev.placeholder = item.system.price.value;
-    context.ped.blank = game.i18n.format("QUESTBOARD.STOCK.DIALOG.DEFAULT", {
-      value: CONFIG.DND5E.currencies[item.system.price.denomination || "gp"].label,
-    });
-    context.psv.placeholder = Number(context.pev.value * context.quantity.value).toNearest(0.1);
-    context.psd.blank = game.i18n.format("QUESTBOARD.STOCK.DIALOG.DEFAULT", {
-      value: CONFIG.DND5E.currencies[context.ped.value || item.system.price.denomination || "gp"].label,
-    });
-    context.quantity.placeholder = item.system.quantity;
-    const html = await foundry.applications.handlebars.renderTemplate(
-      "modules/quest-board/templates/shop/edit/edit-stock.hbs",
-      context,
-    );
-
-    const update = await foundry.applications.api.Dialog.input({
-      content: html,
-      window: {
-        title: game.i18n.format("QUESTBOARD.STOCK.DIALOG.TITLE", { name: item.name }),
-      },
-      position: {
-        width: 400,
-      },
-    });
-    if (!update) return null;
-    return this.editStock(uuid, update);
+    return new QUESTBOARD.applications.apps.ShopStockConfig({
+      document: this.parent,
+      stockId: this.getStockId(uuid),
+    }).render({ force: true });
   }
 }
