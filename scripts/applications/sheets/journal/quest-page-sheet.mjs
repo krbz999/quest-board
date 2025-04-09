@@ -248,7 +248,8 @@ export default class QuestPageSheet extends AbstractPageSheet {
         }) };
     });
 
-    context.questType = QUESTBOARD.config.QUEST_TYPES[this.document.system.type].label;
+    const questType = QUESTBOARD.config.QUEST_TYPES[this.document.system.type];
+    context.questType = `${questType.label} ${Array(questType.priority).fill("★").join("")}`;
   }
 
   /* -------------------------------------------------- */

@@ -10,8 +10,8 @@ export default class TrackData extends foundry.abstract.TypeDataModel {
         name: new StringField({ required: true }),
         description: new HTMLField(),
         config: new SchemaField({
-          max: new NumberField({ min: 1, step: 1, nullable: false, initial: 20 }),
-          value: new NumberField({ min: 0, step: 1, nullable: false, initial: 0 }),
+          max: new NumberField({ min: 1, step: 1, nullable: true, initial: null }),
+          value: new NumberField({ min: 0, step: 1, nullable: true, initial: null }),
         }),
       }), { validateKey: key => foundry.data.validators.isValidId(key) }),
     };
@@ -23,6 +23,7 @@ export default class TrackData extends foundry.abstract.TypeDataModel {
   prepareDerivedData() {
     super.prepareDerivedData();
     for (const [k, v] of Object.entries(this.counters)) {
+      v.config.max ??= 20;
       v.config.value = Math.clamp(v.config.value, 0, v.config.max);
       v.config.spent = Math.clamp(v.config.max - v.config.value, 0, v.config.max);
     }

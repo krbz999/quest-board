@@ -8,7 +8,7 @@ export const QUEST_TYPES = {
   major: {
     label: "QUESTBOARD.QUESTTYPES.Major.label",
     labelPl: "QUESTBOARD.QUESTTYPES.Major.labelPl",
-    priority: 1,
+    priority: 3,
   },
   side: {
     label: "QUESTBOARD.QUESTTYPES.Side.label",
@@ -18,7 +18,7 @@ export const QUEST_TYPES = {
   minor: {
     label: "QUESTBOARD.QUESTTYPES.Minor.label",
     labelPl: "QUESTBOARD.QUESTTYPES.Minor.labelPl",
-    priority: 3,
+    priority: 1,
   },
 };
 dnd5e.utils.preLocalize("QUEST_TYPES", { keys: ["label", "labelPl"] });

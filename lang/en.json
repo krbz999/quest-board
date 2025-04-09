@@ -1,7 +1,8 @@
 {
   "QUESTBOARD": {
     "COUNTER": {
-      "TITLE": "Configure Counter: {id}"
+      "TITLE": "Configure Counter: {id}",
+      "value": "Value"
     },
     "PURCHASE": {
       "CONFIRM": {

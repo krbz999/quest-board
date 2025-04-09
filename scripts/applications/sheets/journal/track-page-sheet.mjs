@@ -82,15 +82,16 @@ export default class TrackPageSheet extends AbstractPageSheet {
     const context = await super._prepareContext(options);
 
     const prepCounter = id => {
-      const counter = this.document.system.counters[id];
+      const counter = foundry.utils.deepClone(this.document.system._source.counters[id]);
       const ctx = { id };
-      for (const name of ["name", "description", "config.min", "config.max", "config.value"]) {
+      for (const name of ["name", "description", "config.max", "config.value"]) {
         const field = this.document.system.schema.getField(`counters.element.${name}`);
         const value = foundry.utils.getProperty(counter, name);
         foundry.utils.setProperty(ctx, name, {
           field, value, name: `system.counters.${id}.${name}`,
         });
       }
+      ctx.config.value.value = Math.clamp(ctx.config.value.value, 0, ctx.config.max.value ?? 20) || null;
       return ctx;
     };
 
@@ -114,6 +115,7 @@ export default class TrackPageSheet extends AbstractPageSheet {
           relativeTo: this.document,
         }),
       };
+      data.value = Math.clamp(data.config.value, 0, data.config.max) || null;
       data.bars = [];
       for (let i = 0; i < v.config.max; i++) {
         data.bars.push({ filled: i < v.config.value });

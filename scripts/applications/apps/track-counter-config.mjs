@@ -100,7 +100,7 @@ export default class TrackCounterConfig extends HandlebarsApplicationMixin(Appli
   /** @inheritdoc */
   async _prepareContext(options) {
     const context = await super._prepareContext(options);
-    const counter = this.document.system.counters[this.options.counterId];
+    const counter = this.document.system._source.counters[this.options.counterId];
     Object.assign(context, {
       name: {
         field: this.document.system.schema.getField("counters.element.name"),
@@ -116,7 +116,7 @@ export default class TrackCounterConfig extends HandlebarsApplicationMixin(Appli
       },
       value: {
         field: this.document.system.schema.getField("counters.element.config.value"),
-        value: counter.config.value,
+        value: Math.clamp(counter.config.value, 0, counter.config.max ?? 20) || null,
         label: game.i18n.localize("QUESTBOARD.TRACK.FIELDS.counters.config.value.label"),
       },
       max: {
