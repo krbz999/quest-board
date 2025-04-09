@@ -88,6 +88,40 @@ export default class ShopPageSheet extends AbstractPageSheet {
 
   /* -------------------------------------------------- */
 
+  /**
+   * A set of stock ids to help persist the disabled state of buttons across re-renders.
+   * @type {Set<string>}
+   */
+  #disabledStock = new Set();
+
+  /* -------------------------------------------------- */
+
+  /**
+   * Since it is not possible to use `this.element` for view mode, we have to record
+   * each of the individual purchase buttons.
+   * @type {Map<string, HTMLButtonElement>}
+   */
+  #purchaseButtons = new Map();
+
+  /* -------------------------------------------------- */
+
+  /**
+   * Toggle and store the disabled state of a button.
+   * @param {HTMLButtonElement} button    The button element.
+   * @param {boolean} state               The disabled state.
+   */
+  #toggleStockButton(button, state) {
+    const id = button.closest("[data-stock-id]").dataset.stockId;
+    if (state) {
+      this.#disabledStock.add(id);
+    } else {
+      this.#disabledStock.delete(id);
+    }
+    this.#purchaseButtons.get(id).disabled = state;
+  }
+
+  /* -------------------------------------------------- */
+
   /** @inheritdoc */
   async _prepareContext(options) {
     const context = await super._prepareContext(options);
@@ -136,7 +170,11 @@ export default class ShopPageSheet extends AbstractPageSheet {
     for (const stock of this.document.system.stock) {
       const data = await stock.prepareEntryData();
       if (!data) continue;
-      context.stock.push({ stock, ctx: data, disabled: !this.#customer });
+      context.stock.push({
+        stock,
+        ctx: data,
+        disabled: !this.#customer || this.#disabledStock.has(stock.id),
+      });
     }
   }
 
@@ -166,7 +204,9 @@ export default class ShopPageSheet extends AbstractPageSheet {
       switch (partId) {
         case "store":
           for (const button of element.querySelectorAll("[data-action=purchase]")) {
+            const id = button.closest("[data-stock-id]").dataset.stockId;
             button.addEventListener("click", ShopPageSheet.#purchase.bind(this));
+            this.#purchaseButtons.set(id, button);
           }
           break;
         case "header":
@@ -243,12 +283,12 @@ export default class ShopPageSheet extends AbstractPageSheet {
     }
 
     const target = event.currentTarget;
-    target.disabled = true;
+    this.#toggleStockButton(target, true);
     const stockId = target.closest("[data-stock-id]").dataset.stockId;
     const stock = await this.document.system.stock.get(stockId).prepareEntryData();
     const quantity = await QUESTBOARD.applications.apps.ShopPurchasePrompt.create(stock);
     if (!quantity) {
-      target.disabled = false;
+      this.#toggleStockButton(target, false);
       return;
     }
 
@@ -266,7 +306,7 @@ export default class ShopPageSheet extends AbstractPageSheet {
         result?.reason ?? null,
       ].filterJoin(" ");
       ui.notifications.warn(message);
-      target.disabled = false;
+      this.#toggleStockButton(target, false);
     }
   }
 
