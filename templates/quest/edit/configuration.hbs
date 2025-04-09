@@ -1,0 +1,9 @@
+<section class="{{tabs.configuration.cssClass}}" data-group="{{tabs.configuration.group}}" data-tab="{{tabs.configuration.id}}">
+  <fieldset>
+    {{> "modules/quest-board/templates/shared/edit/basics.hbs"}}
+    {{formGroup fields.type.field value=fields.type.value rootId=rootId}}
+    {{#if isGM}}
+    {{formGroup fields.complete.field value=fields.complete.value rootId=rootId}}
+    {{/if}}
+  </fieldset>
+</section>

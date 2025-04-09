@@ -1,0 +1,8 @@
+{{!--TODO: remove label once https://github.com/foundryvtt/foundryvtt/issues/12272 is resolved --}}
+{{formGroup fields.name.field label=fields.name.label value=fields.name.value rootId=rootId}}
+{{#with fields.titleLevel}}
+{{formGroup field label=label value=value rootId=@root.rootId choices=options}}
+{{/with}}
+{{#if fields.category.options.length}}
+{{formGroup fields.category.field label=fields.category.label value=fields.category.value options=fields.category.options}}
+{{/if}}

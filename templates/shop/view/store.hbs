@@ -1,0 +1,29 @@
+<section>
+  <table>
+    <thead>
+      <tr>
+        <th>{{localize "QUESTBOARD.SHOP.VIEW.HEADERS.name"}}</th>
+        <th class="center">{{localize "QUESTBOARD.SHOP.VIEW.HEADERS.available"}}</th>
+        <th class="center">{{localize "QUESTBOARD.SHOP.VIEW.HEADERS.price"}}</th>
+        <th class="center"></th>
+      </tr>
+    </thead>
+    <tbody>
+      {{#each stock}}
+      <tr data-stock-id="{{stock.id}}">
+        <td>{{{dnd5e-linkForUuid ctx.item.uuid}}}</td>
+        <td class="center">&times; {{ctx.quantity}}</td>
+        <td class="center price">
+          <span class="each">{{ctx.pev}} {{ctx.ped}}</span>
+          {{#if (gt ctx.quantity 1)}}
+          <span class="stack">({{ctx.psv}} {{ctx.psd}})</span>
+          {{/if}}
+        </td>
+        <td class="center">
+          <button type="button" data-action="purchase" class="icon fa-solid fa-cart-shopping" {{disabled disabled}}></button>
+        </td>
+      </tr>
+      {{/each}}
+    </tbody>
+  </table>
+</section>

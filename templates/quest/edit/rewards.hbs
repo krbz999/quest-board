@@ -1,0 +1,37 @@
+<section class="{{tabs.rewards.cssClass}}" data-group="{{tabs.rewards.group}}" data-tab="{{tabs.rewards.id}}">
+  <fieldset>
+    <legend>{{localize "QUESTBOARD.QUEST.EDIT.LEGENDS.currencies"}}</legend>
+    <div class="form-group">
+      {{#each currencies}}
+      {{formGroup field value=value placeholder="0" name=name rootId=@root.rootId label=placeholder classes="label-bottom"}}
+      {{/each}}
+    </div>
+  </fieldset>
+
+  <div class="form-group">
+    <label>{{localize "QUESTBOARD.REWARD.label"}}</label>
+    <div class="form-fields">
+      <button type="button" data-action="grantRewards" class="icon fa-solid fa-award"></button>
+    </div>
+    <p class="hint">{{localize "QUESTBOARD.REWARD.hint"}}</p>
+  </div>
+
+  <fieldset class="drop-area item-list">
+    {{#if items.length}}
+    {{#each items}}
+    <div class="form-group" data-reward-id="{{reward.id}}">
+      <div class="form-fields">
+        <span class="img">
+          <img src="{{ctx.item.img}}" alt="{{ctx.item.name}}">
+        </span>
+        <span class="label">{{{dnd5e-linkForUuid ctx.item.uuid}}}</span>
+        {{formInput quantity.field value=quantity.value name=quantity.name classes="quantity" placeholder=quantity.placeholder}}
+        <button type="button" class="icon fa-solid fa-trash" data-action="deleteReward"></button>
+      </div>
+    </div>
+    {{/each}}
+    {{else}}
+    <p class="hint empty">{{localize "QUESTBOARD.QUEST.EDIT.HINTS.dropItems"}}</p>
+    {{/if}}
+  </fieldset>
+</section>

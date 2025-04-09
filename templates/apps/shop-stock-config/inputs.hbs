@@ -1,0 +1,28 @@
+<fieldset>
+  <div class="form-group">
+    <label>{{localize "QUESTBOARD.SHOP.FIELDS.stock.price.each.label"}}</label>
+    <div class="form-fields">
+      {{#with pev}}
+      {{formInput field value=value name=name placeholder=placeholder}}
+      {{/with}}
+      {{#with ped}}
+      {{formInput field value=value name=name blank=blank}}
+      {{/with}}
+    </div>
+  </div>
+  <div class="form-group">
+    <label>{{localize "QUESTBOARD.SHOP.FIELDS.stock.price.stack.label"}}</label>
+    <div class="form-fields">
+      {{#with psv}}
+      {{formInput field value=value name=name placeholder=placeholder}}
+      {{/with}}
+      {{#with psd}}
+      {{formInput field value=value name=name blank=blank}}
+      {{/with}}
+    </div>
+    <p class="hint">{{localize "QUESTBOARD.SHOP.FIELDS.stock.price.stack.hint"}}</p>
+  </div>
+  {{#with quantity}}
+  {{formGroup field value=value name=name placeholder=placeholder label=(localize label)}}
+  {{/with}}
+</fieldset>

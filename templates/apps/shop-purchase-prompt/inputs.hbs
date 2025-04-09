@@ -1,0 +1,11 @@
+{{#if showRange}}
+<div class="form-group">
+  <label>{{input.field.label}}</label>
+  <div class="form-fields">
+    {{formInput input.field value=input.value name=input.name}}
+  </div>
+  <p class="hint" data-hint>{{{hint}}}</p>
+</div>
+{{else}}
+<p>{{content}}</p>
+{{/if}}
