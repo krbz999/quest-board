@@ -1,0 +1,25 @@
+<section>
+  {{#if objectives.length}}
+  <div class="fvtt narrative">
+    <h4>{{localize "QUESTBOARD.QUEST.VIEW.HEADERS.objectives"}}</h4>
+    <ul class="objectives">
+      {{#each objectives}}
+      <li>
+        <dnd5e-checkbox class="{{#if disabled}}disabled{{/if}}" {{checked checked}} data-action="toggleObjective" data-id="{{id}}"></dnd5e-checkbox>
+        <span>{{ifThen text text (localize "QUESTBOARD.QUEST.FIELDS.objectives.text.placeholder")}}</span>
+        {{#if objectives.length}}
+        <ul class="objectives">
+          {{#each objectives}}
+          <li>
+            <dnd5e-checkbox class="{{#if disabled}}disabled{{/if}}" {{checked checked}} data-action="toggleObjective" data-parent-id="{{../id}}" data-id="{{id}}"></dnd5e-checkbox>
+            <span>{{ifThen text text (localize "QUESTBOARD.QUEST.FIELDS.objectives.text.placeholder")}} {{~#if optional}} [{{localize "QUESTBOARD.QUEST.VIEW.optional"}}]{{/if}}</span>
+          </li>
+          {{/each}}
+        </ul>
+        {{/if}}
+      </li>
+      {{/each}}
+    </ul>
+  </div>
+  {{/if}}
+</section>

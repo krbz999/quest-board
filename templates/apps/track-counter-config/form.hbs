@@ -1,0 +1,14 @@
+<section>
+  <fieldset>
+    {{formGroup name.field value=name.value label=name.label name="name" placeholder=(localize "Name")}}
+    <div class="form-group">
+      <label>{{localize "QUESTBOARD.COUNTER.value"}}</label>
+      <div class="form-fields">
+        {{formInput value.field value=value.value name="config.value" placeholder="0" max=max.value type="number"}}
+        <span class="sep">/</span>
+        {{formInput max.field value=max.value name="config.max" placeholder="20"}}
+      </div>
+    </div>
+  </fieldset>
+  {{formInput description.field value=description.value enriched=description.enriched name="description" height=400}}
+</section>

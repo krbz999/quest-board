@@ -1,0 +1,258 @@
+{
+  "QUESTBOARD": {
+    "COUNTER": {
+      "TITLE": "Configure Counter: {id}",
+      "value": "Value"
+    },
+    "PURCHASE": {
+      "CONFIRM": {
+        "areYouSure": "Do you want to purchase '{name}' for {value} {denomination}?",
+        "receipt": "Purchased {link}&times;{quantity} for {value} <i class='currency {denomination}'></i>.",
+        "title": "Purchase {name}?"
+      },
+      "QUANTITY": {
+        "content": "Purchase {quantity} '{name}' for {value} {denomination}?",
+        "label": "Quantity",
+        "title": "Choose Quantity: {name}"
+      },
+      "WARNING": {
+        "failure": "The purchase was not successful.",
+        "insufficientFunds": "{name} does not have {value} {denomination} available.",
+        "noGM": "There is no active GM available to finalize the purchase.",
+        "queryPermission": "Making purchases require enabling the 'Query Users' permission.",
+        "stockNotFound": "The item was not found in the shop.",
+        "tooHighQuantity": "The quantity is higher than what was available."
+      }
+    },
+    "QUEST": {
+      "EDIT": {
+        "HINTS": {
+          "content": "The public description of the quest is visible to any users able to view the page.",
+          "dropItems": "Drop items here to add them as a quest reward.",
+          "invalidItemType":"You cannot add a '{type}' item as a reward!"
+        },
+        "LEGENDS": {
+          "currencies": "Currencies",
+          "objectives": "Objectives"
+        },
+        "OBJECTIVE_TITLE": "Configure Objective",
+        "TABS": {
+          "configuration": "Configuration",
+          "details": "Details",
+          "notes": "Notes",
+          "objectives": "Objectives",
+          "rewards": "Rewards"
+        },
+        "TITLE": "Quest: {name}",
+        "WARNING": {
+          "onlyItems": "Only items can be added as a reward for a quest.",
+          "onlyPack": "Only items stored in compendiums can be added as a reward for a quest."
+        }
+      },
+      "FIELDS": {
+        "complete": {
+          "hint": "Whether this quest is completed.",
+          "label": "Complete"
+        },
+        "description": {
+          "private": {
+            "hint": "Private information written here is visible only game masters, and only game masters can edit it."
+          }
+        },
+        "objectives": {
+          "checked": {
+            "label": "Checked"
+          },
+          "optional": {
+            "label": "Optional"
+          },
+          "sort": {
+            "label": "Sort"
+          },
+          "text": {
+            "label": "Text",
+            "placeholder": "Objective"
+          }
+        },
+        "type": {
+          "label": "Quest Type"
+        }
+      },
+      "SHEET": {
+        "LABEL": "Quest Page Sheet"
+      },
+      "VIEW": {
+        "CONTEXT": {
+          "award": "Grant Rewards",
+          "complete": "Complete Quest"
+        },
+        "HEADERS": {
+          "complete": "COMPLETE",
+          "objectives": "Objectives",
+          "private": "Private Information"
+        },
+        "optional": "Optional"
+      }
+    },
+    "QUESTTYPES": {
+      "Major": {
+        "label": "Major Quest",
+        "labelPl": "Major Quests"
+      },
+      "Minor": {
+        "label": "Minor Quest",
+        "labelPl": "Minor Quests"
+      },
+      "Side": {
+        "label": "Side Quest",
+        "labelPl": "Side Quests"
+      }
+    },
+    "REWARD": {
+      "DIALOG": {
+        "ACTOR": {
+          "hint": "Choose the actor that will receive the rewards.",
+          "label": "Target"
+        },
+        "content": "Grant the rewards from the '{name}' quest? The quest will also be marked as complete.",
+        "title": "Grant Rewards"
+      },
+      "hint": "Grant the rewards of this quest to the primary party or an assigned player character.",
+      "label": "Reward",
+      "MESSAGE": {
+        "CONTENT": {
+          "completed": "The party completed the '{name}' quest!",
+          "rewarded": "The rewards were added to {name}."
+        }
+      },
+      "WARNING": {
+        "actor": "You cannot grant the quest rewards to an actor you do not have ownership of.",
+        "party": "There is no primary party to receive the rewards.",
+        "rewards": "No rewards are configured for this quest!"
+      }
+    },
+    "SHOP": {
+      "EDIT": {
+        "HINTS": {
+          "dropItems": "Drop items here to add them to the shop's inventory.",
+          "invalidItemType": "You cannot add a '{type}' item to the stock!"
+        },
+        "TABS": {
+          "configuration": "Configuration",
+          "proprietor": "Proprietor",
+          "stock": "Stock"
+        },
+        "TITLE": "Shop: {name}",
+        "WARNING": {
+          "onlyItems": "Only items can be added as shop inventory.",
+          "onlyPack": "Only items stored in compendiums can be added as shop inventory."
+        }
+      },
+      "FIELDS": {
+        "owner": {
+          "hint": "Assign an optional actor who is the proprietor of this shop.",
+          "label": "Owner"
+        },
+        "stock": {
+          "alias": {
+            "hint": "A name for the item to display instead of the item's regular name.",
+            "label": "Alias"
+          },
+          "price": {
+            "each": {
+              "denomination": {
+                "label": "Denomination"
+              },
+              "label": "Unit Price",
+              "value": {
+                "label": "Price"
+              }
+            },
+            "stack": {
+              "denomination": {
+                "label": "Denomination"
+              },
+              "hint": "The price for the entire remaining stock of this item. If blank, the unit price is multiplied by the quantity.",
+              "label": "Stack Price",
+              "value": {
+                "label": "Price"
+              }
+            }
+          },
+          "quantity": {
+            "label": "Quantity"
+          }
+        }
+      },
+      "SHEET": {
+        "LABEL": "Shop Page Sheet"
+      },
+      "VIEW": {
+        "CUSTOMER": {
+          "current": "Shopping as {name}.",
+          "hint": "Change the active customer. Purchases will be transferred to their actor sheet.",
+          "label": "Customer",
+          "none": "No active customer.",
+          "title": "Change Customer"
+        },
+        "HEADERS": {
+          "available": "Available",
+          "name": "Name",
+          "price": "Price"
+        }
+      }
+    },
+    "STOCK": {
+      "DIALOG": {
+        "DEFAULT": "Default ({value})",
+        "TITLE": "Configure Stock Entry"
+      }
+    },
+    "TRACK": {
+      "EDIT": {
+        "LEGENDS": {
+          "counters": "Counters"
+        },
+        "TABS": {
+          "configuration": "Configuration",
+          "counters": "Counters"
+        },
+        "TITLE": "Track: {name}"
+      },
+      "FIELDS": {
+        "counters": {
+          "config": {
+            "max": {
+              "label": "Max"
+            },
+            "min": {
+              "label": "Min"
+            },
+            "value": {
+              "label": "Value"
+            }
+          },
+          "description": {
+            "label": "Description"
+          },
+          "name": {
+            "label": "Name"
+          }
+        }
+      },
+      "SHEET": {
+        "LABEL": "Track Page Sheet"
+      },
+      "VIEW": {}
+    }
+  },
+  "TYPES": {
+    "JournalEntryPage": {
+      "quest-board": {
+        "quest": "Quest Page",
+        "shop": "Shop Page",
+        "track": "Track Page"
+      }
+    }
+  }
+}

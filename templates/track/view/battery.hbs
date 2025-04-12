@@ -1,0 +1,10 @@
+<h4>{{ifThen name name (localize "Name")}}</h4>
+<section>{{{text}}}</section>
+<div class="battery" data-counter-id="{{id}}">
+  <div class="bars" style="--max: {{config.max}};">
+    {{#each bars as |bar idx|}}
+    <span class="{{ifThen bar.filled 'bar filled' 'bar'}}" data-idx="{{idx}}"></span>
+    {{/each}}
+  </div>
+  <input type="number" class="value delta" min="0" max="{{config.max}}" step="1" value="{{value}}" placeholder="0">
+</div>

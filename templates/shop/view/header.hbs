@@ -1,0 +1,13 @@
+<header class="journal-page-header">
+  <h1>
+    <span class="name">{{name}}</span>
+  </h1>
+  <p class="details">
+    {{#if customer}}
+    {{localize "QUESTBOARD.SHOP.VIEW.CUSTOMER.current" name=customer.name}}
+    {{else}}
+    {{localize "QUESTBOARD.SHOP.VIEW.CUSTOMER.none"}}
+    {{/if}}
+    <a class="icon fa-solid fa-cog" data-action="changeCustomer"></a>
+  </p>
+</header>

@@ -1,0 +1,6 @@
+<section>
+  {{#each counters}}
+  {{> "modules/quest-board/templates/track/view/battery.hbs"}}
+  {{#unless @last}}<hr>{{/unless}}
+  {{/each}}
+</section>
