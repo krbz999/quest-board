@@ -1,8 +1,6 @@
-/** @import * as TYPES from "./types.mjs" */
-
 /**
  * The quest types.
- * @enum {TYPES.QuestTypeConfig}
+ * @enum {import("./types.mjs").QuestTypeConfig}
  */
 export const QUEST_TYPES = {
   major: {

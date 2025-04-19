@@ -21,9 +21,9 @@
 
 /**
  * @typedef {Object} FieldContext
- * @property {InstanceType<foundry["data"]["fields"]["DataField"]>} field    The data field.
- * @property {*} value    The current value, after data preparation.
- * @property {*} source   The base value, before any data preparation.
+ * @property {DataField} field    The data field.
+ * @property {*} value            The current value, after data preparation.
+ * @property {*} source           The base value, before any data preparation.
  */
 
 /**

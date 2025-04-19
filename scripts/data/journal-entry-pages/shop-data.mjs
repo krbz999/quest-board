@@ -1,5 +1,3 @@
-/** @import * as TYPES from "../../types.mjs" */
-
 const {
   ForeignDocumentField,
 } = foundry.data.fields;
@@ -22,8 +20,8 @@ export default class ShopData extends foundry.abstract.TypeDataModel {
 
   /**
    * Query method to purchase an item from the shop.
-   * @param {TYPES.ShopPurchaseQueryConfiguration} configuration
-   * @returns {Promise<TYPES.QueryResult>}
+   * @param {import("../../types.mjs").ShopPurchaseQueryConfiguration} configuration
+   * @returns {Promise<import("../../types.mjs").QueryResult>}
    */
   static _query = async (configuration) => {
     return QUESTBOARD.semaphore.add(ShopData.#query, configuration);
@@ -33,8 +31,8 @@ export default class ShopData extends foundry.abstract.TypeDataModel {
 
   /**
    * Query method to purchase an item from the shop.
-   * @param {TYPES.ShopPurchaseQueryConfiguration} configuration
-   * @returns {Promise<QueryResult>}
+   * @param {import("../../types.mjs").ShopPurchaseQueryConfiguration} configuration
+   * @returns {Promise<import("../../types.mjs").QueryResult>}
    */
   static #query = async (configuration) => {
     const page = await fromUuid(configuration.pageUuid);

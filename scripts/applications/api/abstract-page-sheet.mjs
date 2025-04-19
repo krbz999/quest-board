@@ -1,5 +1,3 @@
-/** @import * as TYPES from "../../types.mjs" */
-
 export default class AbstractPageSheet extends foundry.applications.sheets.journal.JournalEntryPageHandlebarsSheet {
   /** @inheritdoc */
   static DEFAULT_OPTIONS = {
@@ -24,7 +22,7 @@ export default class AbstractPageSheet extends foundry.applications.sheets.journ
   /**
    * Configure basic data for the form group.
    * @param {string} path   The path to the field.
-   * @returns {TYPES.FieldContext}
+   * @returns {import("../../types.mjs").FieldContext}
    */
   _prepareField(path) {
     const field = path.startsWith("system.")

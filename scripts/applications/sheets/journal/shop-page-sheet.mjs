@@ -1,5 +1,3 @@
-/** @import * as TYPES from "../../../types.mjs" */
-
 import AbstractPageSheet from "../../api/abstract-page-sheet.mjs";
 
 export default class ShopPageSheet extends AbstractPageSheet {
@@ -292,7 +290,7 @@ export default class ShopPageSheet extends AbstractPageSheet {
       return;
     }
 
-    /** @type {TYPES.ShopPurchaseQueryConfiguration} */
+    /** @type {import("../../../types.mjs").ShopPurchaseQueryConfiguration} */
     const configuration = {
       quantity, stockId,
       pageUuid: this.document.uuid,

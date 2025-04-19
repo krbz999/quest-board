@@ -2,7 +2,7 @@
  * Utility method that takes a bunch of items from a compendium, and creates create/update data for an actor.
  * The data returned should be created with `keepId: true`.
  * @param {Actor5e} actor                                         The actor to receive the items.
- * @param {ItemGrantConfig[]} [configs]    The configuration of items to grant.
+ * @param {import("../types.mjs").ItemGrantConfig[]} [configs]    The configuration of items to grant.
  * @returns {object}                                              A promise that resolves to an object with item
  *                                                                creation and item update data.
  */
