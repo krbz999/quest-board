@@ -154,3 +154,29 @@
     }
   }
 }
+
+.application.quest-board.calendar {
+  section[data-year] {
+    display: grid;
+    grid-template-columns: repeat(7, 1fr);
+    gap: 1em;
+
+    [data-action=pickDate] {
+      aspect-ratio: 1;
+      text-align: center;
+      border: 1px solid gray;
+      padding: 0.5em;
+      font-size: 2em;
+      transition: background-color 200ms ease;
+
+      &:hover {
+        text-shadow: unset;
+        background-color: rgb(14, 0, 143);
+      }
+
+      &.active {
+        background-color: rgb(76, 0, 148);
+      }
+    }
+  }
+}

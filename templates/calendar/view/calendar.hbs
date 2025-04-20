@@ -1,0 +1,11 @@
+<section data-year="{{year}}">
+  {{#each buttons.days}}
+  {{#if blank}}
+  <span class="date blank"></span>
+  {{else}}
+  <a class="{{cssClass}}" data-action="pickDate" data-day="{{day}}" data-tooltip-text="{{tooltip}}">
+    <span class="label">{{label}}</span>
+  </a>
+  {{/if}}
+  {{/each}}
+</section>
