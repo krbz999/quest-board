@@ -31,7 +31,6 @@ export default class CalendarView extends HandlebarsApplicationMixin(Application
     classes: ["quest-board", "calendar"],
     id: "quest-board-calendar",
     position: {
-      width: 600,
       height: "auto",
     },
     window: {
