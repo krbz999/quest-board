@@ -123,13 +123,12 @@ export default class CalendarView extends HandlebarsApplicationMixin(Application
 
     const buttons = {
       days: Array.fromRange(days).map(n => {
+        const active = !this.#month && (n === dayOfMonth);
         return {
+          active,
           label: String(n + 1),
           day: day - (dayOfMonth - n),
-          cssClass: [
-            "date",
-            (!this.#month && (n === dayOfMonth)) ? "active" : null,
-          ].filterJoin(" "),
+          cssClass: [ "date", active ? "active" : null ].filterJoin(" "),
         };
       }),
     };
@@ -167,10 +166,24 @@ export default class CalendarView extends HandlebarsApplicationMixin(Application
    * @param {PointerEvent} event    The initiating click event.
    * @param {HTMLElement} target    The element that defined the [data-action].
    */
-  static #pickDate(event, target) {
+  static async #pickDate(event, target) {
+    if (!game.user.isGM) return;
     const day = Number(target.dataset.day);
     const year = Number(target.closest("[data-year]").dataset.year);
-    const components = { ...game.time.components, day, year };
+    const components = game.time.calendar.timeToComponents(game.time.calendar.componentsToTime({ day, year }));
+
+    const confirm = await foundry.applications.api.Dialog.confirm({
+      content: `<p>${game.i18n.format("QUESTBOARD.CALENDAR.confirmContent", {
+        date: game.time.calendar.format(components, "natural"),
+      })}</p>`,
+      modal: true,
+      window: {
+        title: "QUESTBOARD.CALENDAR.confirmTitle",
+        icon: "fa-solid fa-calendar-days",
+      },
+    });
+    if (!confirm) return;
+
     this.#month = 0;
     game.time.set(components);
   }

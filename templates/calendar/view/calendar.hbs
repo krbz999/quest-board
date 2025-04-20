@@ -9,7 +9,7 @@
     {{#if blank}}
     <span class="date blank"></span>
     {{else}}
-    <a class="{{cssClass}}" data-action="pickDate" data-day="{{day}}">
+    <a class="{{cssClass}}" {{#unless active}} data-action="pickDate" {{/unless}} data-day="{{day}}">
       <span class="label">{{label}}</span>
     </a>
     {{/if}}
