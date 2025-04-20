@@ -120,15 +120,20 @@ export default class CalendarView extends HandlebarsApplicationMixin(Application
     month = cal.months.values[month];
 
     const days = cal.isLeapYear(year) ? (month.leapDays ?? month.days) : month.days;
+    const eventData = game.settings.get(QUESTBOARD.id, "calendar-events");
 
     const buttons = {
       days: Array.fromRange(days).map(n => {
         const active = !this.#month && (n === dayOfMonth);
+        const _day = day - (dayOfMonth - n);
         return {
-          active,
+          active, day: _day,
           label: String(n + 1),
-          day: day - (dayOfMonth - n),
-          cssClass: [ "date", active ? "active" : null ].filterJoin(" "),
+          cssClass: [
+            "date",
+            active ? "active" : null,
+            eventData.hasEvents({ year, day: _day }) ? "events" : null,
+          ].filterJoin(" "),
         };
       }),
     };
@@ -167,16 +172,54 @@ export default class CalendarView extends HandlebarsApplicationMixin(Application
    * @returns {object[]}    Context menu options.
    */
   #createDateContextMenuOptions() {
+    const getData = li => ({ day: Number(li.dataset.day), year: Number(li.closest("[data-year]").dataset.year) });
+
     return [{
       name: "QUESTBOARD.CALENDAR.contextShowEvents",
       icon: "<i class='fa-solid fa-fw fa-calendar-days'></i>",
-      condition: () => true,
-      callback: li => {
-        const day = Number(li.dataset.day);
-        const year = Number(li.closest("[data-year]").dataset.year);
-        this.#showDateEvents({ day, year });
-      },
+      condition: li => game.settings.get(QUESTBOARD.id, "calendar-events").hasEvents(getData(li)),
+      callback: li => this.#showDateEvents(getData(li)),
+    }, {
+      name: "QUESTBOARD.CALENDAR.contextAddEvent",
+      icon: "<i class='fa-solid fa-fw fa-calendar-plus'></i>",
+      condition: li => game.user.isGM,
+      callback: li => this.#addEventToDate(getData(li)),
     }];
+  }
+
+  /* -------------------------------------------------- */
+
+  /**
+   * Handle adding an event to a given date.
+   * @param {import("../../data/calendar-event-storage.mjs").EventDate} date    The date.
+   */
+  #addEventToDate({ day, year }) {
+    const callback = (event, button) => {
+      const uuids = button.form.elements.pageUuid.value;
+      if (!uuids.length) return;
+      const store = game.settings.get(QUESTBOARD.id, "calendar-events");
+      if (!button.form.elements.recurring.checked) year = null;
+      store.storeEvents(uuids, { day, year });
+    };
+
+    foundry.applications.api.Dialog.prompt({
+      content: foundry.applications.elements.HTMLDocumentTagsElement.create({
+        type: "JournalEntryPage",
+        single: false,
+        name: "pageUuid",
+      }).outerHTML + foundry.applications.fields.createFormGroup({
+        label: game.i18n.localize("QUESTBOARD.CALENDAR.contextAddEventRecurring"),
+        input: foundry.applications.fields.createCheckboxInput({
+          name: "recurring",
+          value: true,
+        }),
+      }).outerHTML,
+      ok: { callback },
+      window: {
+        title: "QUESTBOARD.CALENDAR.contextAddEventPromptTitle",
+        icon: "fa-solid fa-calendar-plus",
+      },
+    });
   }
 
   /* -------------------------------------------------- */
@@ -184,7 +227,6 @@ export default class CalendarView extends HandlebarsApplicationMixin(Application
   /**
    * Handle showing events for a given date.
    * @param {import("../../data/calendar-event-storage.mjs").EventDate} date    The date.
-   * @returns {Promise<void>}
    */
   async #showDateEvents({ day, year }) {
     const events = await game.settings.get(QUESTBOARD.id, "calendar-events").getEventsByDate({ day, year });

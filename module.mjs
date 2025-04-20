@@ -62,6 +62,7 @@ Hooks.once("init", () => {
     type: data.CalendarEventStorage,
     config: false,
     scope: "world",
+    onChange: () => ui.calendar.render(),
   });
 });
 

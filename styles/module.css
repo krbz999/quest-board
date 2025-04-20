@@ -188,6 +188,7 @@
         font-size: 2em;
         align-items: center;
         justify-content: center;
+        position: relative;
 
         &:hover {
           text-shadow: unset;
@@ -200,6 +201,17 @@
           background-color: rgb(76, 0, 148);
           color: white;
           transform: scale(1.1);
+        }
+
+        &.events::after {
+          content: "\f274";
+          position: absolute;
+          right: 0.25rem;
+          bottom: 0.25rem;
+          font-family: "Font Awesome 6 Pro";
+          font-weight: lighter;
+          font-size: initial;
+          pointer-events: none;
         }
       }
     }

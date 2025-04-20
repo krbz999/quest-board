@@ -36,10 +36,28 @@ export default class CalendarEventStorage extends foundry.abstract.DataModel {
 
   /**
    * Retrieve all events that happen on a given date.
-   * @param {EventDate} [data]                The date the events to retrieve. If omitted, the current date.
+   * @param {EventDate} [date]                The date the events to retrieve. If omitted, the current date.
    * @returns {Promise<JournalEntryPage[]>}   A promise that resolves to retrieved journal entry pages.
    */
   async getEventsByDate(date) {
+    const uuids = this.getUuidsByDate(date);
+
+    const pages = new Set();
+    for (const uuid of uuids) {
+      const page = await fromUuid(uuid);
+      if (page) pages.add(page);
+    }
+    return Array.from(pages);
+  }
+
+  /* -------------------------------------------------- */
+
+  /**
+   * Retrieve all uuids for events that happen on a given date.
+   * @param {EventDate} [date]    The date the events to retrieve. If omitted, the current date.
+   * @returns {Set<string>}       Event pages' uuids.
+   */
+  getUuidsByDate(date) {
     if (!date) date = game.time.components;
 
     const { year = null, day } = date;
@@ -48,12 +66,19 @@ export default class CalendarEventStorage extends foundry.abstract.DataModel {
       if ((v.year === null) || (v.year === year)) acc.push(...v.pages);
       return acc;
     }, []));
-    const pages = new Set();
-    for (const uuid of uuids) {
-      const page = await fromUuid(uuid);
-      if (page) pages.add(page);
-    }
-    return Array.from(pages);
+
+    return uuids;
+  }
+
+  /* -------------------------------------------------- */
+
+  /**
+   * Does the given date have events?
+   * @param {EventDate} [date]    The date to test. If omitted, the current date.
+   * @returns {boolean}           Whether there are any stored uuids on the given date.
+   */
+  hasEvents(date) {
+    return this.getUuidsByDate(date).size > 0;
   }
 
   /* -------------------------------------------------- */
