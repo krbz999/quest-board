@@ -110,4 +110,22 @@ export default class CalendarEventStorage extends foundry.abstract.DataModel {
     if (!date) date = game.time.components;
     return this.storeEvents([uuid], date);
   }
+
+  /* -------------------------------------------------- */
+
+  /**
+   * Remove an event entirely.
+   * @param {string|JournalEntryPage} uuid      The uuid of a page, or the page itself.
+   * @returns {Promise<CalendarEventStorage>}   A promise that resolves to the updated setting.
+   */
+  async removeEvent(uuid) {
+    uuid = (uuid instanceof foundry.documents.JournalEntryPage) ? uuid.uuid : uuid;
+
+    const data = game.settings.get(QUESTBOARD.id, "calendar-events").toObject();
+    for (const { pages } of Object.values(data.events)) {
+      pages.findSplice(e => e === uuid);
+    }
+
+    return game.settings.set(QUESTBOARD.id, "calendar-events", data);
+  }
 }
