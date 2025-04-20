@@ -154,3 +154,69 @@
     }
   }
 }
+
+.application.quest-board.calendar {
+
+  [data-application-part=format] {
+    text-align: center;
+    .timestamp {
+      font-family: monospace;
+    }
+  }
+
+  [data-application-part=calendar] {
+
+    .calendar-header {
+      display: grid;
+      grid-template-columns: repeat(var(--days), 1fr);
+      gap: 1em;
+      margin: 1em 0;
+      text-align: center;
+    }
+
+    .dates {
+      display: grid;
+      grid-template-columns: repeat(var(--days), 1fr);
+      gap: 1em;
+      margin: 1em 0;
+
+      [data-action=pickDate] {
+        aspect-ratio: 1;
+        text-align: center;
+        border: 1px solid gray;
+        padding: 0.5em;
+        font-size: 2em;
+        transition: all 200ms ease;
+
+        &:hover {
+          text-shadow: unset;
+          background-color: rgb(14, 0, 143);
+          color: white;
+          transform: scale(1.1);
+        }
+
+        &.active {
+          background-color: rgb(76, 0, 148);
+          color: white;
+          transform: scale(1.1);
+        }
+      }
+    }
+
+    .month {
+      display: flex;
+      text-align: center;
+      align-items: center;
+      gap: 1em;
+
+      .label {
+        flex: 1;
+        margin: 0;
+      }
+
+      button {
+        flex: 0 0 4rem;
+      }
+    }
+  }
+}

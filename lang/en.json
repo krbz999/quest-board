@@ -1,5 +1,8 @@
 {
   "QUESTBOARD": {
+    "CALENDAR": {
+      "title": "Calendar"
+    },
     "COUNTER": {
       "TITLE": "Configure Counter: {id}",
       "value": "Value"

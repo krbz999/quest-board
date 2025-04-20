@@ -57,6 +57,7 @@
   },
   "documentTypes": {
     "JournalEntryPage": {
+      "calendar": {},
       "quest": {
         "htmlFields": [
           "description.private"
