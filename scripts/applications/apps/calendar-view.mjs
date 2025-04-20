@@ -147,6 +147,78 @@ export default class CalendarView extends HandlebarsApplicationMixin(Application
 
   /* -------------------------------------------------- */
 
+  /** @inheritdoc */
+  async _onRender(context, options) {
+    await super._onRender(context, options);
+    this._createContextMenu(this.#createDateContextMenuOptions, ".date", {
+      container: this.element,
+      parentClassHooks: false,
+      hookName: "DateContextMenuOptions",
+      fixed: true,
+    });
+  }
+
+  /* -------------------------------------------------- */
+  /*   Context Menu                                     */
+  /* -------------------------------------------------- */
+
+  /**
+   * Prepare context menu options for dates on the calendar.
+   * @returns {object[]}    Context menu options.
+   */
+  #createDateContextMenuOptions() {
+    return [{
+      name: "QUESTBOARD.CALENDAR.contextShowEvents",
+      icon: "<i class='fa-solid fa-fw fa-calendar-days'></i>",
+      condition: () => true,
+      callback: li => {
+        const day = Number(li.dataset.day);
+        const year = Number(li.closest("[data-year]").dataset.year);
+        this.#showDateEvents({ day, year });
+      },
+    }];
+  }
+
+  /* -------------------------------------------------- */
+
+  /**
+   * Handle showing events for a given date.
+   * @param {import("../../data/calendar-event-storage.mjs").EventDate} date    The date.
+   * @returns {Promise<void>}
+   */
+  async #showDateEvents({ day, year }) {
+    const events = await game.settings.get(QUESTBOARD.id, "calendar-events").getEventsByDate({ day, year });
+    if (!events.length) {
+      return void ui.notifications.info("QUESTBOARD.CALENDAR.contextNoEvents", { localize: true });
+    }
+
+    const callback = (event, button) => {
+      const uuid = button.form.elements.pageUuid.value;
+      foundry.documents.collections.Journal._showEntry(uuid, true);
+    };
+
+    foundry.applications.api.Dialog.prompt({
+      content: foundry.applications.fields.createSelectInput({
+        name: "pageUuid",
+        autofocus: true,
+        options: events.map(page => ({
+          value: page.uuid,
+          label: `[${game.i18n.localize(CONFIG.JournalEntryPage.typeLabels[page.type])}] ${page.name}`,
+        })),
+        sort: true,
+      }).outerHTML,
+      ok: { callback },
+      window: {
+        title: "QUESTBOARD.CALENDAR.contextShowEventsPromptTitle",
+        icon: "fa-solid fa-calendar-days",
+      },
+    });
+  }
+
+  /* -------------------------------------------------- */
+  /*   Event Handlers                                   */
+  /* -------------------------------------------------- */
+
   /**
    * Change the displayed month.
    * @this {CalendarView}

@@ -224,11 +224,11 @@ export default class QuestPageSheet extends AbstractPageSheet {
 
     context.fields = {
       public: {
-        enriched: await TextEditor.enrichHTML(this.document.text.content, enrichOptions),
+        enriched: await foundry.applications.ux.TextEditor.enrichHTML(this.document.text.content, enrichOptions),
       },
       private: {
         enriched: this.document.isOwner
-          ? await TextEditor.enrichHTML(this.document.system.description.private, enrichOptions)
+          ? await foundry.applications.ux.TextEditor.enrichHTML(this.document.system.description.private, enrichOptions)
           : null,
       },
     };

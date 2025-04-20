@@ -17,7 +17,7 @@ const {
 /**
  * @typedef {object} EventDate
  * @property {number} day         The day of the event.
- * @property {number|null} year   The year of the event. If `null`, recurring events.
+ * @property {number|null} year   The year of the event.
  */
 
 export default class CalendarEventStorage extends foundry.abstract.DataModel {

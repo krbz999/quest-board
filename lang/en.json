@@ -3,6 +3,9 @@
     "CALENDAR": {
       "confirmContent": "Change the date to {date}?",
       "confirmTitle": "Change Date",
+      "contextShowEvents": "Show Events",
+      "contextNoEvents": "The given date has no events.",
+      "contextShowEventsPromptTitle": "Choose Event",
       "title": "Calendar"
     },
     "COUNTER": {
