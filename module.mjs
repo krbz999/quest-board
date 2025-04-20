@@ -30,6 +30,9 @@ Hooks.once("init", () => {
     [`${QUESTBOARD.id}.track`]: applications.sheets.journal.TrackPageSheet.DEFAULT_OPTIONS.window.icon,
   });
 
+  CONFIG.ui.calendar = applications.apps.CalendarView;
+  CONFIG.time.formatters.natural = applications.apps.CalendarView.formatDateNatural;
+
   foundry.applications.apps.DocumentSheetConfig.registerSheet(
     foundry.documents.JournalEntryPage, QUESTBOARD.id, applications.sheets.journal.QuestPageSheet,
     { types: [`${QUESTBOARD.id}.quest`], makeDefault: true, label: "QUESTBOARD.QUEST.SHEET.LABEL" },
@@ -63,3 +66,4 @@ Hooks.once("i18nInit", () => {
 
 Hooks.on("getJournalSheetEntryContext", data.journalEntryPages.QuestData.addContextMenuOptions);
 Hooks.on("getJournalEntryPageContextOptions", data.journalEntryPages.QuestData.addContextMenuOptions);
+Hooks.on("updateWorldTime", () => ui.calendar.render());
