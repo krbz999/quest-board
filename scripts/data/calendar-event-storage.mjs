@@ -37,7 +37,8 @@ export default class CalendarEventStorage extends foundry.abstract.DataModel {
           blank: true,
           initial: "",
           choices: {
-            month: "QUESTBOARD.CALENDAR.FIELDS.events.element.repeat.choices.month",
+            // Disabled until evalMonthly below is implemented.
+            // month: "QUESTBOARD.CALENDAR.FIELDS.events.element.repeat.choices.month",
             year: "QUESTBOARD.CALENDAR.FIELDS.events.element.repeat.choices.year",
           },
         }),
