@@ -32,7 +32,7 @@
       },
       "settingDisplayCalendarName": "Display Calendar Button",
       "settingDisplayCalendarHint": "Display a button above the Players allowing all users to view the current calendar.",
-      "title": "Calendar",
+      "title": "Calendar: {name}",
       "viewCalendar": "View Calendar"
     },
     "COUNTER": {

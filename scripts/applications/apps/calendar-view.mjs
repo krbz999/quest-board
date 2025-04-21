@@ -12,10 +12,9 @@ export default class CalendarView extends HandlebarsApplicationMixin(Application
     const day = calendar.days.values[components.dayOfWeek];
     const month = calendar.months.values[components.month];
 
-    // FIXME: The names are not properly localized cus the strings are wrong.
     return [
-      day.name.split(".").at(-1),
-      `${month.name.split(".").at(-1)} ${(components.dayOfMonth + 1).ordinalString()}`,
+      game.i18n.localize(day.name),
+      `${game.i18n.localize(month.name)} ${(components.dayOfMonth + 1).ordinalString()}`,
       components.year,
     ].join(", ");
   }
@@ -55,7 +54,6 @@ export default class CalendarView extends HandlebarsApplicationMixin(Application
       height: "auto",
     },
     window: {
-      title: "QUESTBOARD.CALENDAR.title",
       icon: "fa-solid fa-calendar-days",
     },
   };
@@ -71,6 +69,15 @@ export default class CalendarView extends HandlebarsApplicationMixin(Application
       template: "modules/quest-board/templates/calendar/view/calendar.hbs",
     },
   };
+
+  /* -------------------------------------------------- */
+
+  /** @inheritdoc */
+  get title() {
+    return game.i18n.format("QUESTBOARD.CALENDAR.title", {
+      name: game.i18n.localize(game.time.calendar.name),
+    });
+  }
 
   /* -------------------------------------------------- */
 
@@ -172,10 +179,9 @@ export default class CalendarView extends HandlebarsApplicationMixin(Application
 
     Object.assign(context, {
       buttons,
-      // FIXME: The names are not properly localized cus the strings are wrong.
-      daysOfWeek: cal.days.values.map(k => k.name.split(".").at(-1)),
+      daysOfWeek: cal.days.values.map(k => game.i18n.localize(k.name)),
       year: c.year,
-      month: cal.months.values[c.month].name.split(".").at(-1),
+      month: game.i18n.localize(cal.months.values[c.month].name),
     });
   }
 

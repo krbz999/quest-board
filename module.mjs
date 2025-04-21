@@ -56,8 +56,6 @@ Hooks.once("init", () => {
   QUESTBOARD.semaphore = new foundry.utils.Semaphore(1);
 
   // Calendar-related data.
-  CONFIG.time.worldCalendarClass = data.HavilonCalendar;
-  CONFIG.time.worldCalendarConfig = data.HavilonCalendarConfig;
   game.settings.register(QUESTBOARD.id, data.CalendarEventStorage.SETTING, {
     type: data.CalendarEventStorage,
     config: false,
