@@ -112,12 +112,23 @@ export default class CalendarEventStorage extends foundry.abstract.DataModel {
 
     const evalYearly = event => {
       if (date.year < event.date.year) return false;
-      if (date.day < event.date.day) return false;
-      return (date.day - event.date.day) < event.duration;
+
+      const dateS = cal.componentsToTime(date);
+      const durS = cal.componentsToTime({ day: event.duration - 1 });
+      let eventS;
+
+      if (date.day < event.date.day) {
+        // If the date is before the recurring event, look at previous year and see if it has a duration long enough.
+        eventS = cal.componentsToTime({ day: event.date.day, year: date.year - 1 });
+      } else {
+        // See if the current year's event has a duration long enough.
+        eventS = cal.componentsToTime({ day: event.date.day, year: date.year });
+      }
+
+      return dateS.between(eventS, eventS + durS);
     };
 
     const evalMonthly = event => {
-      if (date.year < event.date.year) return false;
       console.warn("Repeating events that occur monthly are not yet supported.");
       return false;
     };
@@ -213,8 +224,9 @@ export default class CalendarEventStorage extends foundry.abstract.DataModel {
     uuid = (uuid instanceof foundry.documents.JournalEntryPage) ? uuid.uuid : uuid;
 
     const data = CalendarEventStorage.getSetting().toObject();
-    for (const event of Object.values(data.events)) {
+    for (const [k, event] of Object.entries(data.events)) {
       event.pages.findSplice(e => e === uuid);
+      if (!event.pages.length) delete data.events[k];
     }
 
     return game.settings.set(QUESTBOARD.id, CalendarEventStorage.SETTING, data);
