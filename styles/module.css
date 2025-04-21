@@ -86,6 +86,49 @@
     }
   }
 
+  /* Relation */
+  &.relation-page {
+    .two-column {
+      display: flex;
+      margin-top: 1em;
+      gap: 1em;
+    }
+
+    .avatar {
+      position: relative;
+      cursor: var(--cursor-pointer);
+
+      &::after {
+        content: "";
+        position: absolute;
+        inset: 6px 6px 8px;
+        border: 2px solid var(--dnd5e-color-gold);
+        pointer-events: none;
+      }
+
+      img {
+        display: block;
+        object-fit: cover;
+        object-position: top center;
+        border: none;
+        width: 100%;
+        max-width: 300px;
+        border-radius: 3px 3px 0 0;
+        border-bottom: 2px solid var(--dnd5e-color-gold);
+        pointer-events: none;
+      }
+    }
+
+    .statistics {
+      flex: 1;
+
+      .label {
+        font-weight: bold;
+        font-style: italic;
+      }
+    }
+  }
+
   /* Shop */
   &.shop-page {
     & table .center {

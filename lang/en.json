@@ -143,6 +143,49 @@
         "labelPl": "Side Quests"
       }
     },
+    "RELATION": {
+      "EDIT": {
+        "TABS": {
+          "configuration": "Configuration",
+          "identity": "Identity",
+          "private": "Private"
+        },
+        "TITLE": "Relation: {name}"
+      },
+      "FIELDS": {
+        "age": {
+          "birth": {
+            "label": "Birth Date",
+            "day": {
+              "label": "Day"
+            },
+            "year": {
+              "label": "Year"
+            }
+          }
+        },
+        "avatar": {
+          "label": "Avatar"
+        },
+        "biography": {
+          "private": {
+            "hint": "Private information written here is visible only game masters, and only game masters can edit it."
+          }
+        },
+        "titles": {
+          "label": "Titles"
+        }
+      },
+      "SHEET": {
+        "LABEL": "Relation Page Sheet"
+      },
+      "VIEW": {
+        "birthdate": "Date of Birth",
+        "HEADERS": {
+          "private": "Private Information"
+        }
+      }
+    },
     "REWARD": {
       "DIALOG": {
         "ACTOR": {
@@ -284,6 +327,7 @@
     "JournalEntryPage": {
       "quest-board": {
         "quest": "Quest",
+        "relation": "Relation",
         "shop": "Shop",
         "track": "Track"
       }
