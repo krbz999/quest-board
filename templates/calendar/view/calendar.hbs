@@ -1,7 +1,7 @@
 <section style="--days: {{daysOfWeek.length}}">
   <div class="calendar-header">
     {{#each daysOfWeek}}
-    <span class="day">{{this}}</span>
+    <span class="day" data-tooltip="{{tooltip}}">{{label}}</span>
     {{/each}}
   </div>
   <div class="dates" data-year="{{year}}">

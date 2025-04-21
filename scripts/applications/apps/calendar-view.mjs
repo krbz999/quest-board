@@ -179,7 +179,12 @@ export default class CalendarView extends HandlebarsApplicationMixin(Application
 
     Object.assign(context, {
       buttons,
-      daysOfWeek: cal.days.values.map(k => game.i18n.localize(k.name)),
+      daysOfWeek: cal.days.values.map(k => {
+        return {
+          label: game.i18n.localize(k.abbreviation),
+          tooltip: k.name,
+        };
+      }),
       year: c.year,
       month: game.i18n.localize(cal.months.values[c.month].name),
     });

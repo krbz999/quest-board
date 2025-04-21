@@ -190,6 +190,11 @@
         justify-content: center;
         position: relative;
 
+        &.blank {
+          border: none;
+          pointer-events: none;
+        }
+
         &:hover {
           text-shadow: unset;
           background-color: rgb(14, 0, 143);
