@@ -30,7 +30,10 @@
           }
         }
       },
-      "title": "Calendar"
+      "settingDisplayCalendarName": "Display Calendar Button",
+      "settingDisplayCalendarHint": "Display a button above the Players allowing all users to view the current calendar.",
+      "title": "Calendar",
+      "viewCalendar": "View Calendar"
     },
     "COUNTER": {
       "TITLE": "Configure Counter: {id}",

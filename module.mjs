@@ -64,6 +64,15 @@ Hooks.once("init", () => {
     scope: "world",
     onChange: () => ui.calendar.render(),
   });
+  game.settings.register(QUESTBOARD.id, "displayCalendar", {
+    name: "QUESTBOARD.CALENDAR.settingDisplayCalendarName",
+    hint: "QUESTBOARD.CALENDAR.settingDisplayCalendarHint",
+    type: new foundry.data.fields.BooleanField(),
+    default: true,
+    config: true,
+    requiresReload: true,
+    scope: "world",
+  });
 });
 
 /* -------------------------------------------------- */
@@ -78,3 +87,4 @@ Hooks.once("i18nInit", () => {
 Hooks.on("getJournalSheetEntryContext", data.journalEntryPages.QuestData.addContextMenuOptions);
 Hooks.on("getJournalEntryPageContextOptions", data.journalEntryPages.QuestData.addContextMenuOptions);
 Hooks.on("updateWorldTime", () => ui.calendar.render());
+Hooks.once("renderPlayers", applications.apps.CalendarView.renderPlayers);

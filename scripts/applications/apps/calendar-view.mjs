@@ -22,6 +22,27 @@ export default class CalendarView extends HandlebarsApplicationMixin(Application
 
   /* -------------------------------------------------- */
 
+  /**
+   * Hook function for injecting an element on the hotbar.
+   * @param {Players} players       The Players application.
+   * @param {HTMLElement} element   The aside element.
+   * @param {object} context        Rendering context.
+   * @param {object} options        Rendering options.
+   */
+  static renderPlayers(players, element, context, options) {
+    if (!game.settings.get(QUESTBOARD.id, "displayCalendar")) return;
+    if (document.getElementById("view-calendar")) return;
+    const button = foundry.utils.parseHTML(`
+    <button id="view-calendar" class="faded-ui" type="button" data-action="viewCalendar">
+      <i class="fa-solid fa-calendar-days"></i>
+      ${game.i18n.localize("QUESTBOARD.CALENDAR.viewCalendar")}
+    </button>`);
+    button.addEventListener("click", () => ui.calendar.render({ force: true }));
+    element.insertAdjacentElement("beforebegin", button);
+  }
+
+  /* -------------------------------------------------- */
+
   /** @inheritdoc */
   static DEFAULT_OPTIONS = {
     actions: {
@@ -60,6 +81,14 @@ export default class CalendarView extends HandlebarsApplicationMixin(Application
    * @type {number}
    */
   #month = 0;
+
+  /* -------------------------------------------------- */
+
+  /** @inheritdoc */
+  async render(options, _options) {
+    if (options?.force === true) this.#month = 0;
+    return super.render(options, _options);
+  }
 
   /* -------------------------------------------------- */
 

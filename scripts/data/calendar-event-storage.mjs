@@ -56,7 +56,7 @@ export default class CalendarEventStorage extends foundry.abstract.DataModel {
    * The setting name.
    * @type {string}
    */
-  static SETTING = "calendar-events";
+  static SETTING = "calendarEvents";
 
   /* -------------------------------------------------- */
 
