@@ -58,7 +58,7 @@ Hooks.once("init", () => {
   // Calendar-related data.
   CONFIG.time.worldCalendarClass = data.HavilonCalendar;
   CONFIG.time.worldCalendarConfig = data.HavilonCalendarConfig;
-  game.settings.register(QUESTBOARD.id, "calendar-events", {
+  game.settings.register(QUESTBOARD.id, data.CalendarEventStorage.SETTING, {
     type: data.CalendarEventStorage,
     config: false,
     scope: "world",
@@ -70,6 +70,7 @@ Hooks.once("init", () => {
 
 Hooks.once("i18nInit", () => {
   dnd5e.utils.performPreLocalization(config);
+  foundry.helpers.Localization.localizeDataModel(data.CalendarEventStorage);
 });
 
 /* -------------------------------------------------- */

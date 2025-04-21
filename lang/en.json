@@ -9,6 +9,24 @@
       "contextNoEvents": "The given date has no events.",
       "contextShowEvents": "Show Events",
       "contextShowEventsPromptTitle": "Choose Event",
+      "FIELDS": {
+        "events": {
+          "label": "Events",
+          "element": {
+            "duration": {
+              "label": "Duration",
+              "hint": "The full duration of the event, measured in days. If the event does not occur for more than its original date, the duration should be '1'."
+            },
+            "repeat": {
+              "label": "Repeat",
+              "choices": {
+                "month": "Monthly",
+                "year": "Yearly"
+              }
+            }
+          }
+        }
+      },
       "title": "Calendar"
     },
     "COUNTER": {

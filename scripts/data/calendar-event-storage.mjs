@@ -1,23 +1,25 @@
 const {
-  DocumentUUIDField, NumberField, SchemaField, SetField, TypedObjectField,
+  DocumentUUIDField, NumberField, SchemaField, SetField, StringField, TypedObjectField,
 } = foundry.data.fields;
 
 /**
- * @typedef CalendarEventStorage
+ * Data for the calendar event storage.
  * @property {Record<string, CalendarEventData>} events
  */
 
 /**
  * @typedef {object} CalendarEventData
- * @property {number} day         The day of the event.
- * @property {number|null} year   The year of the event. If `null`, the event repeats each year.
+ * @property {EventDate} date     The date of the event. If the duration is longer than a day, this is the starting
+ *                                date of the event. If the event repeats, this is the first time the event occurs.
+ * @property {number} duration    The duration of the event, measured in days.
  * @property {string[]} pages     A set of journal entry page uuids.
+ * @property {string} repeat      How the event repeats.
  */
 
 /**
  * @typedef {object} EventDate
- * @property {number} day         The day of the event.
- * @property {number|null} year   The year of the event.
+ * @property {number} day     The day of the event.
+ * @property {number} year    The year of the event.
  */
 
 export default class CalendarEventStorage extends foundry.abstract.DataModel {
@@ -25,12 +27,54 @@ export default class CalendarEventStorage extends foundry.abstract.DataModel {
   static defineSchema() {
     return {
       events: new TypedObjectField(new SchemaField({
-        day: new NumberField({ integer: true, nullable: false, min: 0 }),
-        year: new NumberField({ integer: true, nullable: true, min: 0 }),
+        date: new SchemaField({
+          day: new NumberField({ integer: true, nullable: false, min: 0 }),
+          year: new NumberField({ integer: true, nullable: false, min: 0 }),
+        }),
+        duration: new NumberField({ integer: true, min: 1, nullable: false, initial: 1 }),
         pages: new SetField(new DocumentUUIDField({ type: "JournalEntryPage", embedded: true })),
+        repeat: new StringField({
+          blank: true,
+          initial: "",
+          choices: {
+            month: "QUESTBOARD.CALENDAR.FIELDS.events.element.repeat.choices.month",
+            year: "QUESTBOARD.CALENDAR.FIELDS.events.element.repeat.choices.year",
+          },
+        }),
       }), { validateKey: key => foundry.data.validators.isValidId(key) }),
     };
   }
+
+  /* -------------------------------------------------- */
+
+  /** @inheritdoc */
+  static LOCALIZATION_PREFIXES = ["QUESTBOARD.CALENDAR"];
+
+  /* -------------------------------------------------- */
+
+  /**
+   * The setting name.
+   * @type {string}
+   */
+  static SETTING = "calendar-events";
+
+  /* -------------------------------------------------- */
+
+  /**
+   * The stored game setting.
+   * @returns {CalendarEventStorage}
+   */
+  static getSetting() {
+    return game.settings.get(QUESTBOARD.id, CalendarEventStorage.SETTING);
+  }
+
+  /* -------------------------------------------------- */
+
+  /**
+   * The retrieved uuids are cached.
+   * @type {Record<string, Set<string>>}
+   */
+  #cached;
 
   /* -------------------------------------------------- */
 
@@ -60,14 +104,47 @@ export default class CalendarEventStorage extends foundry.abstract.DataModel {
   getUuidsByDate(date) {
     if (!date) date = game.time.components;
 
-    const { year = null, day } = date;
-    const uuids = new Set(Object.values(this.events).reduce((acc, v) => {
-      if (v.day !== day) return acc;
-      if ((v.year === null) || (v.year === year)) acc.push(...v.pages);
-      return acc;
-    }, []));
+    const key = `${date.year}:${date.day}`;
+    if (this.#cached?.[key]) return this.#cached[key];
 
-    return uuids;
+    const uuids = new Set();
+    const cal = game.time.calendar;
+
+    const evalYearly = event => {
+      if (date.year < event.date.year) return false;
+      if (date.day < event.date.day) return false;
+      return (date.day - event.date.day) < event.duration;
+    };
+
+    const evalMonthly = event => {
+      if (date.year < event.date.year) return false;
+      console.warn("Repeating events that occur monthly are not yet supported.");
+      return false;
+    };
+
+    const evalNonRepeat = event => {
+      if (date.year < event.date.year) return false;
+      if (date.day < event.date.day) return false;
+      return cal.componentsToTime(cal.difference(date, event.date)) < cal.componentsToTime({ day: event.duration });
+    };
+
+    for (const event of Object.values(this.events)) {
+      let matched = false;
+      switch (event.repeat) {
+        case "year":
+          matched = evalYearly(event);
+          break;
+        case "month":
+          matched = evalMonthly(event);
+          break;
+        default:
+          matched = evalNonRepeat(event);
+      }
+      if (matched) for (const uuid of event.pages) uuids.add(uuid);
+    }
+
+    this.#cached ??= {};
+    return this.#cached[key] = uuids;
   }
 
   /* -------------------------------------------------- */
@@ -96,30 +173,18 @@ export default class CalendarEventStorage extends foundry.abstract.DataModel {
   /**
    * Store events.
    * @param {string[]|JournalEntryPage[]} uuids   An array of pages or page uuids.
-   * @param {EventDate} [date]                    The date of the events. If omitted, the current date.
+   * @param {CalendarEventData} [eventData]       The data of the events. If omitted, create a non-repeating event
+   *                                              on just the current date with a duration of 1 day.
    * @returns {Promise<CalendarEventStorage>}     A promise that resolves to the updated setting.
    */
-  async storeEvents(uuids, date) {
+  async storeEvents(uuids, eventData) {
+    if (!game.user.isGM) return;
     uuids = uuids.map(e => (e instanceof foundry.documents.JournalEntryPage) ? e.uuid : e);
-    if (!date) date = game.time.components;
-    const { year, day } = date;
+    if (!eventData) eventData = { date: game.time.components };
 
-    const data = game.settings.get(QUESTBOARD.id, "calendar-events").toObject();
-
-    let stored = false;
-    for (const [id, v] of Object.entries(data.events)) {
-      if ((v.year === year) && (v.day === day)) {
-        for (const uuid of uuids) v.pages.push(uuid);
-        stored = true;
-        break;
-      }
-    }
-
-    if (!stored) {
-      foundry.utils.setProperty(data, `events.${foundry.utils.randomID()}`, { year, day, pages: uuids });
-    }
-
-    return game.settings.set(QUESTBOARD.id, "calendar-events", data);
+    const data = CalendarEventStorage.getSetting();
+    foundry.utils.setProperty(data, `events.${foundry.utils.randomID()}`, { ...eventData, pages: uuids });
+    return game.settings.set(QUESTBOARD.id, CalendarEventStorage.SETTING, data);
   }
 
   /* -------------------------------------------------- */
@@ -127,13 +192,13 @@ export default class CalendarEventStorage extends foundry.abstract.DataModel {
   /**
    * Store an event.
    * @param {string|JournalEntryPage} uuid      The uuid of a page, or the page itself.
-   * @param {EventDate} [date]                  The date of the event. If omitted, the current date.
+   * @param {CalendarEventData} [eventData]     The data of the events. If omitted, create a non-repeating event
+   *                                            on just the current date with a duration of 1 day.
    * @returns {Promise<CalendarEventStorage>}   A promise that resolves to the updated setting.
    */
-  async storeEvent(uuid, date) {
-    if (uuid instanceof foundry.documents.JournalEntryPage) uuid = uuid.uuid;
-    if (!date) date = game.time.components;
-    return this.storeEvents([uuid], date);
+  async storeEvent(uuid, eventData) {
+    if (!game.user.isGM) return;
+    return this.storeEvents([uuid], eventData);
   }
 
   /* -------------------------------------------------- */
@@ -144,13 +209,27 @@ export default class CalendarEventStorage extends foundry.abstract.DataModel {
    * @returns {Promise<CalendarEventStorage>}   A promise that resolves to the updated setting.
    */
   async removeEvent(uuid) {
+    if (!game.user.isGM) return;
     uuid = (uuid instanceof foundry.documents.JournalEntryPage) ? uuid.uuid : uuid;
 
-    const data = game.settings.get(QUESTBOARD.id, "calendar-events").toObject();
-    for (const { pages } of Object.values(data.events)) {
-      pages.findSplice(e => e === uuid);
+    const data = CalendarEventStorage.getSetting().toObject();
+    for (const event of Object.values(data.events)) {
+      event.pages.findSplice(e => e === uuid);
     }
 
-    return game.settings.set(QUESTBOARD.id, "calendar-events", data);
+    return game.settings.set(QUESTBOARD.id, CalendarEventStorage.SETTING, data);
+  }
+
+  /* -------------------------------------------------- */
+
+  /**
+   * Clear the entire calendar of all events.
+   * @returns {Promise<CalendarEventStorage>}   A promise that resolves to the updated setting.
+   */
+  static async clearCalendar() {
+    if (!game.user.isGM) return;
+    const data = CalendarEventStorage.getSetting().toObject();
+    delete data.events;
+    return game.settings.set(QUESTBOARD.id, CalendarEventStorage.SETTING, data);
   }
 }

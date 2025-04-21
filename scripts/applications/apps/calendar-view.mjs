@@ -120,7 +120,7 @@ export default class CalendarView extends HandlebarsApplicationMixin(Application
     month = cal.months.values[month];
 
     const days = cal.isLeapYear(year) ? (month.leapDays ?? month.days) : month.days;
-    const eventData = game.settings.get(QUESTBOARD.id, "calendar-events");
+    const eventData = QUESTBOARD.data.CalendarEventStorage.getSetting();
 
     const buttons = {
       days: Array.fromRange(days).map(n => {
@@ -177,7 +177,7 @@ export default class CalendarView extends HandlebarsApplicationMixin(Application
     return [{
       name: "QUESTBOARD.CALENDAR.contextShowEvents",
       icon: "<i class='fa-solid fa-fw fa-calendar-days'></i>",
-      condition: li => game.settings.get(QUESTBOARD.id, "calendar-events").hasEvents(getData(li)),
+      condition: li => QUESTBOARD.data.CalendarEventStorage.getSetting().hasEvents(getData(li)),
       callback: li => this.#showDateEvents(getData(li)),
     }, {
       name: "QUESTBOARD.CALENDAR.contextAddEvent",
@@ -195,25 +195,29 @@ export default class CalendarView extends HandlebarsApplicationMixin(Application
    */
   #addEventToDate({ day, year }) {
     const callback = (event, button) => {
-      const uuids = button.form.elements.pageUuid.value;
-      if (!uuids.length) return;
-      const store = game.settings.get(QUESTBOARD.id, "calendar-events");
-      if (!button.form.elements.recurring.checked) year = null;
-      store.storeEvents(uuids, { day, year });
+      const formData = new foundry.applications.ux.FormDataExtended(button.form);
+      const { pages, repeat, duration } = foundry.utils.expandObject(formData.object).events.element;
+      if (!pages.length) return;
+
+      const store = QUESTBOARD.data.CalendarEventStorage.getSetting();
+      store.storeEvents(pages, { date: { day, year }, duration, repeat });
     };
 
+    const schema = QUESTBOARD.data.CalendarEventStorage.schema;
+
     foundry.applications.api.Dialog.prompt({
-      content: foundry.applications.elements.HTMLDocumentTagsElement.create({
-        type: "JournalEntryPage",
-        single: false,
-        name: "pageUuid",
-      }).outerHTML + foundry.applications.fields.createFormGroup({
-        label: game.i18n.localize("QUESTBOARD.CALENDAR.contextAddEventRecurring"),
-        input: foundry.applications.fields.createCheckboxInput({
-          name: "recurring",
-          value: true,
-        }),
-      }).outerHTML,
+      content: [
+        schema.getField("events.element.pages").toInput({}),
+        schema.getField("events.element.repeat").toFormGroup({
+          label: "QUESTBOARD.CALENDAR.FIELDS.events.element.repeat.label",
+          localize: true,
+        }, { localize: true }),
+        schema.getField("events.element.duration").toFormGroup({
+          label: "QUESTBOARD.CALENDAR.FIELDS.events.element.duration.label",
+          hint: "QUESTBOARD.CALENDAR.FIELDS.events.element.duration.hint",
+          localize: true,
+        }, {}),
+      ].map(html => html.outerHTML).join(""),
       ok: { callback },
       window: {
         title: "QUESTBOARD.CALENDAR.contextAddEventPromptTitle",
@@ -229,7 +233,7 @@ export default class CalendarView extends HandlebarsApplicationMixin(Application
    * @param {import("../../data/calendar-event-storage.mjs").EventDate} date    The date.
    */
   async #showDateEvents({ day, year }) {
-    const events = await game.settings.get(QUESTBOARD.id, "calendar-events").getEventsByDate({ day, year });
+    const events = await QUESTBOARD.data.CalendarEventStorage.getSetting().getEventsByDate({ day, year });
     if (!events.length) {
       return void ui.notifications.info("QUESTBOARD.CALENDAR.contextNoEvents", { localize: true });
     }
