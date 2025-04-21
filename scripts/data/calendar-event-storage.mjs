@@ -182,7 +182,7 @@ export default class CalendarEventStorage extends foundry.abstract.DataModel {
     uuids = uuids.map(e => (e instanceof foundry.documents.JournalEntryPage) ? e.uuid : e);
     if (!eventData) eventData = { date: game.time.components };
 
-    const data = CalendarEventStorage.getSetting();
+    const data = CalendarEventStorage.getSetting().toObject();
     foundry.utils.setProperty(data, `events.${foundry.utils.randomID()}`, { ...eventData, pages: uuids });
     return game.settings.set(QUESTBOARD.id, CalendarEventStorage.SETTING, data);
   }
@@ -218,6 +218,23 @@ export default class CalendarEventStorage extends foundry.abstract.DataModel {
     }
 
     return game.settings.set(QUESTBOARD.id, CalendarEventStorage.SETTING, data);
+  }
+
+  /* -------------------------------------------------- */
+
+  /**
+   * Create a prompt to remove events listed on a given date.
+   * @param {EventDate} date    The date to configure. If omitted, the current date is used.
+   * @returns {Promise<void>}
+   */
+  async removeEventDialog(date) {
+    if (!date) date = game.time.components;
+
+    const store = CalendarEventStorage.getSetting();
+    const uuids = store.getUuidsByDate(date);
+    if (!uuids.size) return;
+
+    new QUESTBOARD.applications.apps.CalendarEventDeletionDialog({ date }).render({ force: true });
   }
 
   /* -------------------------------------------------- */

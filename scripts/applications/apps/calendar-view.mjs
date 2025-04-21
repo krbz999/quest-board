@@ -184,6 +184,11 @@ export default class CalendarView extends HandlebarsApplicationMixin(Application
       icon: "<i class='fa-solid fa-fw fa-calendar-plus'></i>",
       condition: li => game.user.isGM,
       callback: li => this.#addEventToDate(getData(li)),
+    }, {
+      name: "QUESTBOARD.CALENDAR.contextDeleteEvents",
+      icon: "<i class='fa-solid fa-fw fa-calendar-xmark'></i>",
+      condition: li => game.user.isGM && QUESTBOARD.data.CalendarEventStorage.getSetting().hasEvents(getData(li)),
+      callback: li => this.#removeEventFromDate(getData(li)),
     }];
   }
 
@@ -259,6 +264,16 @@ export default class CalendarView extends HandlebarsApplicationMixin(Application
         icon: "fa-solid fa-calendar-days",
       },
     });
+  }
+
+  /* -------------------------------------------------- */
+
+  /**
+   * Handle removing events from a given date.
+   * @param {import("../../data/calendar-event-storage.mjs").EventDate} date    The date.
+   */
+  #removeEventFromDate({ day, year }) {
+    QUESTBOARD.data.CalendarEventStorage.getSetting().removeEventDialog({ day, year });
   }
 
   /* -------------------------------------------------- */

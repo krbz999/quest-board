@@ -5,7 +5,7 @@ export default class ShopPageSheet extends AbstractPageSheet {
   static DEFAULT_OPTIONS = {
     viewClasses: ["shop-page"],
     window: {
-      icon: "fa-solid fa-shop",
+      icon: "fa-solid fa-fw fa-shop",
     },
     actions: {
       editStock: ShopPageSheet.#editStock,

@@ -6,6 +6,9 @@
       "contextAddEvent": "Add Event",
       "contextAddEventPromptTitle": "Add Event",
       "contextAddEventRecurring": "Recurring",
+      "contextDeleteEvents": "Delete Events",
+      "contextDeleteEventsDialogTitle": "Delete Events",
+      "contextDeleteEventsDialogUnknownPage": "Unknown Page",
       "contextNoEvents": "The given date has no events.",
       "contextShowEvents": "Show Events",
       "contextShowEventsPromptTitle": "Choose Event",
@@ -271,16 +274,15 @@
       },
       "SHEET": {
         "LABEL": "Track Page Sheet"
-      },
-      "VIEW": {}
+      }
     }
   },
   "TYPES": {
     "JournalEntryPage": {
       "quest-board": {
-        "quest": "Quest Page",
-        "shop": "Shop Page",
-        "track": "Track Page"
+        "quest": "Quest",
+        "shop": "Shop",
+        "track": "Track"
       }
     }
   }
