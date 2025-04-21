@@ -1,0 +1,9 @@
+<section>
+  <div class="public">{{{public}}}</div>
+  {{#if (and isGM private)}}
+  <aside class="fvtt notable">
+    <h4>{{localize "QUESTBOARD.RELATION.VIEW.HEADERS.private"}}</h4>
+    {{{private}}}
+  </aside>
+  {{/if}}
+</section>

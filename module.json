@@ -65,6 +65,15 @@
           "description.private"
         ]
       },
+      "relation": {
+        "htmlFields": [
+          "biography.private",
+          "biography.public"
+        ],
+        "gmOnly": [
+          "biography.private"
+        ]
+      },
       "shop": {},
       "track": {
         "htmlFields": [

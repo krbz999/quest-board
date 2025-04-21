@@ -1,0 +1,16 @@
+<section class="{{tabs.identity.cssClass}}" data-group="{{tabs.identity.group}}" data-tab="{{tabs.identity.id}}">
+  {{#with fields}}
+  <fieldset>
+    {{formGroup avatar.field value=avatar.source}}
+    <div class="form-group">
+      <label>{{localize "QUESTBOARD.RELATION.FIELDS.age.birth.label"}}</label>
+      <div class="form-fields">
+        {{formGroup age.birth.day.field value=age.birth.day.source}}
+        {{formGroup age.birth.year.field value=age.birth.year.source}}
+      </div>
+    </div>
+    {{formGroup titles.field value=titles.source}}
+  </fieldset>
+  {{formGroup public.field value=public.source enriched=public.enriched height=300 toggled=true}}
+  {{/with}}
+</section>
