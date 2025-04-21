@@ -1,5 +1,40 @@
 {
   "QUESTBOARD": {
+    "CALENDAR": {
+      "confirmContent": "Change the date to {date}?",
+      "confirmTitle": "Change Date",
+      "contextAddEvent": "Add Event",
+      "contextAddEventPromptTitle": "Add Event",
+      "contextAddEventRecurring": "Recurring",
+      "contextDeleteEvents": "Delete Events",
+      "contextDeleteEventsDialogTitle": "Delete Events",
+      "contextDeleteEventsDialogUnknownPage": "Unknown Page",
+      "contextNoEvents": "The given date has no events.",
+      "contextShowEvents": "Show Events",
+      "contextShowEventsPromptTitle": "Choose Event",
+      "FIELDS": {
+        "events": {
+          "label": "Events",
+          "element": {
+            "duration": {
+              "label": "Duration",
+              "hint": "The full duration of the event, measured in days. If the event does not occur for more than its original date, the duration should be '1'."
+            },
+            "repeat": {
+              "label": "Repeat",
+              "choices": {
+                "month": "Monthly",
+                "year": "Yearly"
+              }
+            }
+          }
+        }
+      },
+      "settingDisplayCalendarName": "Display Calendar Button",
+      "settingDisplayCalendarHint": "Display a button above the Players allowing all users to view the current calendar.",
+      "title": "Calendar: {name}",
+      "viewCalendar": "View Calendar"
+    },
     "COUNTER": {
       "TITLE": "Configure Counter: {id}",
       "value": "Value"
@@ -242,16 +277,15 @@
       },
       "SHEET": {
         "LABEL": "Track Page Sheet"
-      },
-      "VIEW": {}
+      }
     }
   },
   "TYPES": {
     "JournalEntryPage": {
       "quest-board": {
-        "quest": "Quest Page",
-        "shop": "Shop Page",
-        "track": "Track Page"
+        "quest": "Quest",
+        "shop": "Shop",
+        "track": "Track"
       }
     }
   }

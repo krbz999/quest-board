@@ -5,7 +5,7 @@ export default class TrackPageSheet extends AbstractPageSheet {
   static DEFAULT_OPTIONS = {
     viewClasses: ["track-page"],
     window: {
-      icon: "fa-solid fa-chart-gantt",
+      icon: "fa-solid fa-fw fa-chart-gantt",
     },
     actions: {
       configureCounter: TrackPageSheet.#configureCounter,

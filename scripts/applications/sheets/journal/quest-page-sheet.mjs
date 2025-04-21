@@ -5,7 +5,7 @@ export default class QuestPageSheet extends AbstractPageSheet {
   static DEFAULT_OPTIONS = {
     viewClasses: ["quest-page"],
     window: {
-      icon: "fa-solid fa-award",
+      icon: "fa-solid fa-fw fa-award",
     },
     actions: {
       addObjective: QuestPageSheet.#addObjective,
@@ -224,11 +224,11 @@ export default class QuestPageSheet extends AbstractPageSheet {
 
     context.fields = {
       public: {
-        enriched: await TextEditor.enrichHTML(this.document.text.content, enrichOptions),
+        enriched: await foundry.applications.ux.TextEditor.enrichHTML(this.document.text.content, enrichOptions),
       },
       private: {
         enriched: this.document.isOwner
-          ? await TextEditor.enrichHTML(this.document.system.description.private, enrichOptions)
+          ? await foundry.applications.ux.TextEditor.enrichHTML(this.document.system.description.private, enrichOptions)
           : null,
       },
     };
