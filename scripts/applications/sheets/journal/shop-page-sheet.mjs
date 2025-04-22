@@ -304,8 +304,9 @@ export default class ShopPageSheet extends AbstractPageSheet {
         result?.reason ?? null,
       ].filterJoin(" ");
       ui.notifications.warn(message);
-      this.#toggleStockButton(target, false);
     }
+
+    this.#toggleStockButton(target, false);
   }
 
   /* -------------------------------------------------- */
