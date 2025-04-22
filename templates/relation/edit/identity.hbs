@@ -2,6 +2,13 @@
   {{#with fields}}
   <fieldset>
     {{formGroup avatar.field value=avatar.source}}
+    {{formGroup titles.field value=titles.source}}
+    {{formGroup gender.field value=gender.source}}
+    {{formGroup properties.field value=properties.source type="checkboxes" classes="stacked" options=properties.options}}
+  </fieldset>
+
+  <fieldset>
+    <legend>{{localize "QUESTBOARD.RELATION.FIELDS.age.label"}}</legend>
     <div class="form-group">
       <label>{{localize "QUESTBOARD.RELATION.FIELDS.age.birth.label"}}</label>
       <div class="form-fields">
@@ -9,8 +16,15 @@
         {{formGroup age.birth.year.field value=age.birth.year.source}}
       </div>
     </div>
-    {{formGroup titles.field value=titles.source}}
+    {{#if age.death}}
+    <div class="form-group">
+      <label>{{localize "QUESTBOARD.RELATION.FIELDS.age.death.label"}}</label>
+      <div class="form-fields">
+        {{formGroup age.death.day.field value=age.death.day.source}}
+        {{formGroup age.death.year.field value=age.death.year.source}}
+      </div>
+    </div>
+    {{/if}}
   </fieldset>
-  {{formGroup public.field value=public.source enriched=public.enriched height=300 toggled=true}}
   {{/with}}
 </section>

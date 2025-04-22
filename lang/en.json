@@ -147,15 +147,27 @@
       "EDIT": {
         "TABS": {
           "configuration": "Configuration",
+          "connections": "Connections",
           "identity": "Identity",
-          "private": "Private"
+          "private": "Secrets",
+          "public": "Biography"
         },
         "TITLE": "Relation: {name}"
       },
       "FIELDS": {
         "age": {
+          "label": "Life Events",
           "birth": {
-            "label": "Birth Date",
+            "label": "Date of Birth",
+            "day": {
+              "label": "Day"
+            },
+            "year": {
+              "label": "Year"
+            }
+          },
+          "death": {
+            "label": "Date of Death",
             "day": {
               "label": "Day"
             },
@@ -172,15 +184,56 @@
             "hint": "Private information written here is visible only game masters, and only game masters can edit it."
           }
         },
+        "gender": {
+          "label": "Gender"
+        },
+        "groups": {
+          "label": "Groups",
+          "ideologies": {
+            "label": "Ideologies"
+          },
+          "organizations": {
+            "label": "Organizations"
+          },
+          "teachings": {
+            "label": "Teachings"
+          }
+        },
+        "locations": {
+          "label": "Locations",
+          "demises": {
+            "label": "Places of Demise"
+          },
+          "origins": {
+            "label": "Places of Origin"
+          },
+          "residences": {
+            "label": "Current Residences"
+          }
+        },
+        "properties": {
+          "label": "Properties"
+        },
         "titles": {
           "label": "Titles"
         }
+      },
+      "GENDERS": {
+        "male": "Male",
+        "female": "Female",
+        "other": "Other",
+        "none": "None"
+      },
+      "PROPERTIES": {
+        "dead": "Dead"
       },
       "SHEET": {
         "LABEL": "Relation Page Sheet"
       },
       "VIEW": {
+        "age": "Age",
         "birthdate": "Date of Birth",
+        "deathdate": "Date of Death",
         "HEADERS": {
           "private": "Private Information"
         }

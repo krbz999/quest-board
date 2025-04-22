@@ -7,15 +7,29 @@ export default class RelationData extends foundry.abstract.TypeDataModel {
   static defineSchema() {
     return {
       age: new SchemaField({
-        birth: new SchemaField({
-          day: new NumberField({ integer: true, min: 0, nullable: false, initial: 0 }),
-          year: new NumberField({ integer: true, min: 0, nullable: false, initial: 0 }),
-        }),
+        birth: new QUESTBOARD.data.fields.DateField(),
+        death: new QUESTBOARD.data.fields.DateField(),
       }),
       avatar: new FilePathField({ categories: ["IMAGE"] }),
       biography: new SchemaField({
         public: new HTMLField(),
         private: new HTMLField(),
+      }),
+      gender: new StringField({ choices: () => QUESTBOARD.config.RELATION_GENDERS, blank: true }),
+      groups: new SchemaField({
+        ideologies: new SetField(new StringField()),
+        organizations: new SetField(new StringField()),
+        teachings: new SetField(new StringField()),
+      }),
+      locations: new SchemaField({
+        demises: new SetField(new StringField()),
+        origins: new SetField(new StringField()),
+        residences: new SetField(new StringField()),
+      }),
+      properties: new SetField(new StringField()),
+      stats: new SchemaField({
+        height: new StringField({ required: true }),
+        weight: new StringField({ required: true }),
       }),
       titles: new SetField(new StringField()),
     };
@@ -31,7 +45,13 @@ export default class RelationData extends foundry.abstract.TypeDataModel {
   /** @inheritdoc */
   prepareDerivedData() {
     super.prepareDerivedData();
-    this.age.label = game.time.calendar.format(game.time.calendar.componentsToTime(this.age.birth), "natural");
+
+    const cal = game.time.calendar;
+    this.age.birth.label = cal.format(cal.componentsToTime(this.age.birth), "natural");
+    this.age.death.label = cal.format(cal.componentsToTime(this.age.death), "natural");
+    this.age.label = this.properties.has("dead")
+      ? cal.difference(this.age.death, this.age.birth).year
+      : cal.difference(game.time.components, this.age.birth).year;
   }
 
   /* -------------------------------------------------- */

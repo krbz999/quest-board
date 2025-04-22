@@ -54,6 +54,11 @@
       text-align: center;
     }
   }
+
+  .prose prose-mirror {
+    margin-left: 0;
+    margin-right: 0;
+  }
 }
 
 .journal-entry-page.quest-board {

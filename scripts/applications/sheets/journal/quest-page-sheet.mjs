@@ -53,11 +53,11 @@ export default class QuestPageSheet extends AbstractPageSheet {
     },
     details: {
       template: "modules/quest-board/templates/quest/edit/details.hbs",
-      classes: ["tab"],
+      classes: ["tab", "prose"],
     },
     notes: {
       template: "modules/quest-board/templates/quest/edit/notes.hbs",
-      classes: ["tab"],
+      classes: ["tab", "prose"],
     },
     rewards: {
       template: "modules/quest-board/templates/quest/edit/rewards.hbs",

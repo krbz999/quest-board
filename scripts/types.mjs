@@ -6,6 +6,11 @@
  */
 
 /**
+ * @typedef {object} RelationPropertyConfig
+ * @property {string} label   Human-readable label of this property.
+ */
+
+/**
  * @typedef {Object} ShopPurchaseQueryConfiguration
  * @property {string} pageUuid        The uuid of the shop page.
  * @property {string} stockId         The id of the entry in the shop's stock.

@@ -20,6 +20,8 @@ export default class RelationPageSheet extends AbstractPageSheet {
       tabs: [
         { id: "configuration", icon: "fa-solid fa-gears" },
         { id: "identity", icon: "fa-solid fa-user-tag" },
+        { id: "connections", icon: "fa-solid fa-sitemap" },
+        { id: "public", icon: "fa-solid fa-user" },
         { id: "private", icon: "fa-solid fa-user-secret" },
       ],
       initial: "configuration",
@@ -43,9 +45,17 @@ export default class RelationPageSheet extends AbstractPageSheet {
       template: "modules/quest-board/templates/relation/edit/identity.hbs",
       classes: ["tab"],
     },
+    connections: {
+      template: "modules/quest-board/templates/relation/edit/connections.hbs",
+      classes: ["tab"],
+    },
+    public: {
+      template: "modules/quest-board/templates/relation/edit/public.hbs",
+      classes: ["tab", "prose"],
+    },
     private: {
       template: "modules/quest-board/templates/relation/edit/private.hbs",
-      classes: ["tab"],
+      classes: ["tab", "prose"],
     },
   };
 
@@ -105,6 +115,12 @@ export default class RelationPageSheet extends AbstractPageSheet {
       case "identity":
         await this.#prepareIdentity(context, options);
         break;
+      case "connections":
+        await this.#prepareConnections(context, options);
+        break;
+      case "public":
+        await this.#preparePublic(context, options);
+        break;
       case "private":
         await this.#preparePrivate(context, options);
         break;
@@ -130,7 +146,61 @@ export default class RelationPageSheet extends AbstractPageSheet {
           },
         },
         avatar: this._prepareField("system.avatar"),
+        gender: this._prepareField("system.gender"),
+        properties: this._prepareField("system.properties"),
         titles: this._prepareField("system.titles"),
+      },
+    });
+
+    if (this.document.system.properties.has("dead")) {
+      context.fields.age.death = {
+        day: this._prepareField("system.age.death.day"),
+        year: this._prepareField("system.age.death.year"),
+      };
+    }
+
+    context.fields.properties.options = QUESTBOARD.config.RELATION_PROPERTIES.toOptions;
+  }
+
+  /* -------------------------------------------------- */
+
+  /**
+   * Prepare context for a particular part.
+   * @param {object} context    Rendering context. **will be mutated**
+   * @param {object} options    Rendering options.
+   * @returns {Promise<void>}   A promise that resolves once the context has been mutated.
+   */
+  async #prepareConnections(context, options) {
+    Object.assign(context, {
+      fields: {
+        groups: {
+          ideologies: this._prepareField("system.groups.ideologies"),
+          organizations: this._prepareField("system.groups.organizations"),
+          teachings: this._prepareField("system.groups.teachings"),
+        },
+        locations: {
+          residences: this._prepareField("system.locations.residences"),
+          origins: this._prepareField("system.locations.origins"),
+        },
+      },
+    });
+
+    if (this.document.system.properties.has("dead")) {
+      context.fields.locations.demises = this._prepareField("system.locations.demises");
+    }
+  }
+
+  /* -------------------------------------------------- */
+
+  /**
+   * Prepare context for a particular part.
+   * @param {object} context    Rendering context. **will be mutated**
+   * @param {object} options    Rendering options.
+   * @returns {Promise<void>}   A promise that resolves once the context has been mutated.
+   */
+  async #preparePublic(context, options) {
+    Object.assign(context, {
+      fields: {
         public: this._prepareField("system.biography.public"),
       },
     });
@@ -166,11 +236,46 @@ export default class RelationPageSheet extends AbstractPageSheet {
   async _prepareContentContext(context, options) {
     const titles = Array.from(this.document.system.titles).join(", ");
     const avatar = this.document.system.avatar || "icons/svg/mystery-man.svg";
+    const isDead = this.document.system.properties.has("dead");
+
+    const stats = [{
+      label: "QUESTBOARD.RELATION.VIEW.birthdate",
+      value: this.document.system.age.birth.label,
+      show: true,
+    }, {
+      label: "QUESTBOARD.RELATION.VIEW.deathdate",
+      value: this.document.system.age.death.label,
+      show: isDead,
+    }, {
+      label: "QUESTBOARD.RELATION.VIEW.age",
+      value: this.document.system.age.label,
+      show: true,
+    }];
+
+    for (const field of ["residences", "origins", "demises"]) {
+      if ((field === "demises") && !isDead) continue;
+      if (this.document.system.locations[field].size) {
+        stats.push({
+          show: true,
+          label: `QUESTBOARD.RELATION.FIELDS.locations.${field}.label`,
+          value: Array.from(this.document.system.locations[field]).join(", "),
+        });
+      }
+    }
+
+    for (const field of ["ideologies", "organizations", "teachings"]) {
+      if (this.document.system.groups[field].size) {
+        stats.push({
+          show: true,
+          label: `QUESTBOARD.RELATION.FIELDS.groups.${field}.label`,
+          value: Array.from(this.document.system.groups[field]).join(", "),
+        });
+      }
+    }
 
     const enrichOptions = { relativeTo: this.document, rollData: this.document.getRollData?.() };
     Object.assign(context, {
-      titles, avatar,
-      date: this.document.system.age.label,
+      titles, avatar, stats,
       isGM: game.user.isGM,
       public: await foundry.applications.ux.TextEditor.enrichHTML(this.document.system.biography.public, enrichOptions),
       private: await foundry.applications.ux.TextEditor.enrichHTML(this.document.system.biography.private, enrichOptions),

@@ -20,3 +20,34 @@ export const QUEST_TYPES = {
   },
 };
 dnd5e.utils.preLocalize("QUEST_TYPES", { keys: ["label", "labelPl"] });
+
+/* -------------------------------------------------- */
+
+/**
+ * Properties available for a Relation.
+ * @enum {import("./types.mjs").RelationPropertyConfig}
+ */
+export const RELATION_PROPERTIES = {
+  dead: {
+    label: "QUESTBOARD.RELATION.PROPERTIES.dead",
+  },
+};
+Object.defineProperty(RELATION_PROPERTIES, "toOptions", {
+  get: function() {return Object.entries(this).map(([k, v]) => ({ value: k, label: v.label })); },
+  enumerable: false,
+});
+dnd5e.utils.preLocalize("RELATION_PROPERTIES", { keys: ["label"] });
+
+/* -------------------------------------------------- */
+
+/**
+ * Selectable gender for a relation.
+ * @enum {string}
+ */
+export const RELATION_GENDERS = {
+  male: "QUESTBOARD.RELATION.GENDERS.male",
+  female: "QUESTBOARD.RELATION.GENDERS.female",
+  other: "QUESTBOARD.RELATION.GENDERS.other",
+  none: "QUESTBOARD.RELATION.GENDERS.none",
+};
+dnd5e.utils.preLocalize("RELATION_GENDERS");

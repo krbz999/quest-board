@@ -6,8 +6,12 @@
     </figure>
   </div>
   <div class="statistics">
+    {{#each stats}}
+    {{#if show}}
     <p>
-      <span class="label">{{localize "QUESTBOARD.RELATION.VIEW.birthdate"}}.</span> {{date}}
+      <span class="label">{{localize label}}.</span> {{value}}
     </p>
+    {{/if}}
+    {{/each}}
   </div>
 </section>
