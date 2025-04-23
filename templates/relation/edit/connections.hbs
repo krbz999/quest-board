@@ -2,18 +2,18 @@
   {{#with fields}}
   <fieldset>
     <legend>{{localize "QUESTBOARD.RELATION.FIELDS.locations.label"}}</legend>
-    {{formGroup locations.residences.field value=locations.residences.source}}
-    {{formGroup locations.origins.field value=locations.origins.source}}
+    {{formGroup locations.residences.field value=locations.residences.source rootId=@root.rootId}}
+    {{formGroup locations.origins.field value=locations.origins.source rootId=@root.rootId}}
     {{#if locations.demises}}
-    {{formGroup locations.demises.field value=locations.demises.source}}
+    {{formGroup locations.demises.field value=locations.demises.source rootId=@root.rootId}}
     {{/if}}
   </fieldset>
 
   <fieldset>
     <legend>{{localize "QUESTBOARD.RELATION.FIELDS.groups.label"}}</legend>
-    {{formGroup groups.ideologies.field value=groups.ideologies.source}}
-    {{formGroup groups.organizations.field values=groups.organizations.source}}
-    {{formGroup groups.teachings.field value=groups.teachings.source}}
+    {{formGroup groups.ideologies.field value=groups.ideologies.source rootId=@root.rootId}}
+    {{formGroup groups.organizations.field values=groups.organizations.source rootId=@root.rootId}}
+    {{formGroup groups.teachings.field value=groups.teachings.source rootId=@root.rootId}}
   </fieldset>
   {{/with}}
 </section>

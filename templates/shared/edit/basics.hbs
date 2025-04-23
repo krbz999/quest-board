@@ -4,5 +4,5 @@
 {{formGroup field label=label value=value rootId=@root.rootId choices=options}}
 {{/with}}
 {{#if fields.category.options.length}}
-{{formGroup fields.category.field label=fields.category.label value=fields.category.value options=fields.category.options}}
+{{formGroup fields.category.field label=fields.category.label value=fields.category.value options=fields.category.options rootId=@root.rootId}}
 {{/if}}

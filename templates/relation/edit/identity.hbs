@@ -1,9 +1,9 @@
 <section class="{{tabs.identity.cssClass}}" data-group="{{tabs.identity.group}}" data-tab="{{tabs.identity.id}}">
   {{#with fields}}
   <fieldset>
-    {{formGroup avatar.field value=avatar.source}}
-    {{formGroup titles.field value=titles.source}}
-    {{formGroup gender.field value=gender.source}}
+    {{formGroup avatar.field value=avatar.source rootId=@root.rootId}}
+    {{formGroup titles.field value=titles.source rootId=@root.rootId}}
+    {{formGroup gender.field value=gender.source rootId=@root.rootId}}
     {{formGroup properties.field value=properties.source type="checkboxes" classes="stacked" options=properties.options}}
   </fieldset>
 
@@ -12,16 +12,16 @@
     <div class="form-group">
       <label>{{localize "QUESTBOARD.RELATION.FIELDS.age.birth.label"}}</label>
       <div class="form-fields">
-        {{formGroup age.birth.day.field value=age.birth.day.source}}
-        {{formGroup age.birth.year.field value=age.birth.year.source}}
+        {{formGroup age.birth.day.field value=age.birth.day.source rootId=@root.rootId}}
+        {{formGroup age.birth.year.field value=age.birth.year.source rootId=@root.rootId}}
       </div>
     </div>
     {{#if age.death}}
     <div class="form-group">
       <label>{{localize "QUESTBOARD.RELATION.FIELDS.age.death.label"}}</label>
       <div class="form-fields">
-        {{formGroup age.death.day.field value=age.death.day.source}}
-        {{formGroup age.death.year.field value=age.death.year.source}}
+        {{formGroup age.death.day.field value=age.death.day.source rootId=@root.rootId}}
+        {{formGroup age.death.year.field value=age.death.year.source rootId=@root.rootId}}
       </div>
     </div>
     {{/if}}
