@@ -3,7 +3,7 @@ export default class AbstractPageSheet extends foundry.applications.sheets.journ
   static DEFAULT_OPTIONS = {
     classes: ["quest-board"],
     viewClasses: ["quest-board"],
-    includeTOC: true,
+    includeTOC: false,
     position: {
       width: 550,
       height: "auto",

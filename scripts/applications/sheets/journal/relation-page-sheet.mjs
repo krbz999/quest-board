@@ -305,4 +305,32 @@ export default class RelationPageSheet extends AbstractPageSheet {
   #attachViewListeners(element, options) {
     element.querySelector("[data-action=showImage]").addEventListener("click", () => this.document.system.showImage());
   }
+
+  /* -------------------------------------------------- */
+
+  /** @inheritdoc */
+  _preSyncPartState(partId, newElement, priorElement, state) {
+    super._preSyncPartState(partId, newElement, priorElement, state);
+    if (state.focus) return;
+    const focused = priorElement.querySelector(":focus");
+    if (!focused) return;
+    if (focused.parentElement.tagName === "STRING-TAGS") {
+      state.focus = [focused.parentElement.name, focused.tagName, partId].join(":");
+      state.focusSpc = true;
+    }
+  }
+
+  /* -------------------------------------------------- */
+
+  /** @inheritdoc */
+  _syncPartState(partId, newElement, priorElement, state) {
+    if (state.focusSpc) {
+      const [focus, tagName, _partId] = state.focus.split(":");
+      if (_partId === partId) {
+        newElement.querySelector(`string-tags[name="${focus}"] > ${tagName}`).focus();
+        delete state.focus;
+      }
+    }
+    super._syncPartState(partId, newElement, priorElement, state);
+  }
 }
