@@ -1,5 +1,5 @@
 const {
-  FilePathField, HTMLField, NumberField, SchemaField, SetField, StringField,
+  FilePathField, HTMLField, SchemaField, SetField, StringField,
 } = foundry.data.fields;
 
 export default class RelationData extends foundry.abstract.TypeDataModel {
