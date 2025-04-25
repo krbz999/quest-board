@@ -41,6 +41,23 @@ dnd5e.utils.preLocalize("RELATION_PROPERTIES", { keys: ["label"] });
 /* -------------------------------------------------- */
 
 /**
+ * Properties available for a Location.
+ * @enum {import("./types.mjs").LocationPropertyConfig}
+ */
+export const LOCATION_PROPERTIES = {
+  defunct: {
+    label: "QUESTBOARD.LOCATION.PROPERTIES.defunct",
+  },
+};
+Object.defineProperty(LOCATION_PROPERTIES, "toOptions", {
+  get: function() {return Object.entries(this).map(([k, v]) => ({ value: k, label: v.label })); },
+  enumerable: false,
+});
+dnd5e.utils.preLocalize("LOCATION_PROPERTIES", { keys: ["label"] });
+
+/* -------------------------------------------------- */
+
+/**
  * Selectable gender for a relation.
  * @enum {string}
  */

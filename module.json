@@ -57,6 +57,15 @@
   },
   "documentTypes": {
     "JournalEntryPage": {
+      "location": {
+        "htmlFields": [
+          "biography.private",
+          "biography.public"
+        ],
+        "gmOnly": [
+          "biography.private"
+        ]
+      },
       "quest": {
         "htmlFields": [
           "description.private"

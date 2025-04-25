@@ -6,6 +6,11 @@
  */
 
 /**
+ * @typedef {object} LocationPropertyConfig
+ * @property {string} label   Human-readable label of this property.
+ */
+
+/**
  * @typedef {object} RelationPropertyConfig
  * @property {string} label   Human-readable label of this property.
  */

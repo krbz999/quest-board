@@ -39,6 +39,72 @@
       "TITLE": "Configure Counter: {id}",
       "value": "Value"
     },
+    "LOCATION": {
+      "EDIT": {
+        "TABS": {
+          "configuration": "Configuration",
+          "connections": "Connections",
+          "identity": "Identity",
+          "public": "Description",
+          "private": "Secrets"
+        },
+        "TITLE": "Location: {name}"
+      },
+      "FIELDS": {
+        "age": {
+          "label": "Age",
+          "founding": {
+            "label": "Founding",
+            "day": {
+              "label": "Day"
+            },
+            "year": {
+              "label": "Year"
+            }
+          },
+          "defunct": {
+            "label": "Defunct",
+            "day": {
+              "label": "Day"
+            },
+            "year": {
+              "label": "Year"
+            }
+          }
+        },
+        "avatar": {
+          "label": "Image"
+        },
+        "biography": {
+          "private": {
+            "hint": "Private information written here is visible only game masters, and only game masters can edit it."
+          }
+        },
+        "properties": {
+          "label": "Properties"
+        },
+        "stats": {
+          "population": {
+            "label": "Population"
+          }
+        },
+        "titles": {
+          "label": "Titles"
+        }
+      },
+      "PROPERTIES": {
+        "defunct": "Defunct"
+      },
+      "VIEW": {
+        "defunctdate": "Defunct",
+        "founding": "Founded",
+        "population": "Population",
+        "year": "Year {year}",
+        "HEADERS": {
+          "private": "Private Information"
+        }
+      }
+    },
     "PURCHASE": {
       "CONFIRM": {
         "areYouSure": "Do you want to purchase '{name}' for {value} {denomination}?",

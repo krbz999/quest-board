@@ -20,12 +20,14 @@ globalThis.QUESTBOARD = {
 
 Hooks.once("init", () => {
   Object.assign(CONFIG.JournalEntryPage.dataModels, {
+    [`${QUESTBOARD.id}.location`]: data.journalEntryPages.LocationData,
     [`${QUESTBOARD.id}.quest`]: data.journalEntryPages.QuestData,
     [`${QUESTBOARD.id}.relation`]: data.journalEntryPages.RelationData,
     [`${QUESTBOARD.id}.shop`]: data.journalEntryPages.ShopData,
     [`${QUESTBOARD.id}.track`]: data.journalEntryPages.TrackData,
   });
   Object.assign(CONFIG.JournalEntryPage.typeIcons, {
+    [`${QUESTBOARD.id}.location`]: applications.sheets.journal.LocationPageSheet.DEFAULT_OPTIONS.window.icon,
     [`${QUESTBOARD.id}.quest`]: applications.sheets.journal.QuestPageSheet.DEFAULT_OPTIONS.window.icon,
     [`${QUESTBOARD.id}.relation`]: applications.sheets.journal.RelationPageSheet.DEFAULT_OPTIONS.window.icon,
     [`${QUESTBOARD.id}.shop`]: applications.sheets.journal.ShopPageSheet.DEFAULT_OPTIONS.window.icon,
@@ -35,6 +37,10 @@ Hooks.once("init", () => {
   CONFIG.ui.calendar = applications.apps.CalendarView;
   CONFIG.time.formatters.natural = applications.apps.CalendarView.formatDateNatural;
 
+  foundry.applications.apps.DocumentSheetConfig.registerSheet(
+    foundry.documents.JournalEntryPage, QUESTBOARD.id, applications.sheets.journal.LocationPageSheet,
+    { types: [`${QUESTBOARD.id}.location`], makeDefault: true, label: "QUESTBOARD.LOCATION.SHEET.LABEL" },
+  );
   foundry.applications.apps.DocumentSheetConfig.registerSheet(
     foundry.documents.JournalEntryPage, QUESTBOARD.id, applications.sheets.journal.QuestPageSheet,
     { types: [`${QUESTBOARD.id}.quest`], makeDefault: true, label: "QUESTBOARD.QUEST.SHEET.LABEL" },
