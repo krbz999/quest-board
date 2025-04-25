@@ -233,7 +233,7 @@
         border: 1px solid gray;
         transition: all 200ms ease;
         display: flex;
-        font-size: 2em;
+        font-size: 1.5em;
         align-items: center;
         justify-content: center;
         position: relative;
@@ -259,11 +259,11 @@
         &.events::after {
           content: "\f274";
           position: absolute;
-          right: 0.25rem;
-          bottom: 0.25rem;
+          right: 2px;
+          bottom: 2px;
           font-family: "Font Awesome 6 Pro";
           font-weight: lighter;
-          font-size: initial;
+          font-size: 10px;
           pointer-events: none;
         }
       }

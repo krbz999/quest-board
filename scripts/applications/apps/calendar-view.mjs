@@ -22,6 +22,61 @@ export default class CalendarView extends HandlebarsApplicationMixin(Application
   /* -------------------------------------------------- */
 
   /**
+   * Get what day of the year a certain day of a certain month is.
+   * @param {CalendarData} calendar   The calendar.
+   * @param {number} dayOfMonth       The zero-indexed day of the month.
+   * @param {number} month            The zero-indexed month.
+   * @param {number} year             The year.
+   * @returns {number}                The zero-indexed day of the year.
+   */
+  static getDayOfYear(calendar, dayOfMonth, month, year) {
+    const daysInMonth = this.getDaysInMonth(calendar, month, year);
+    dayOfMonth = Math.clamp(dayOfMonth, 0, daysInMonth - 1);
+
+    let day = 0;
+    for (let i = 0; i < month; i++) {
+      const daysInMonth = this.getDaysInMonth(calendar, i, year);
+      day += daysInMonth;
+    }
+    return day + dayOfMonth;
+  }
+
+  /* -------------------------------------------------- */
+
+  /**
+   * Get how many days are in a given month of a given year.
+   * @param {CalendarData} calendar   The calendar.
+   * @param {number} month            The zero-indexed month.
+   * @param {number} year             The year.
+   * @returns {number}                The number of days in the month.
+   */
+  static getDaysInMonth(calendar, month, year) {
+    month = calendar.months.values[month];
+    return calendar.isLeapYear(year) ? (month.leapDays ?? month.days) : month.days;
+  }
+
+  /* -------------------------------------------------- */
+
+  /**
+   * Get whether a given time is between a start time and end time.
+   * @param {CalendarData} calendar         The calendar.
+   * @param {number|Components} time        The date.
+   * @param {number|Components} startTime   The start time.
+   * @param {number|Components} endTime     The end time.
+   * @returns {boolean}
+   */
+  static isTimeBetween(calendar, time, startTime, endTime) {
+    if (typeof time === "object") time = calendar.componentsToTime(time);
+    if (typeof startTime === "object") startTime = calendar.componentsToTime(startTime);
+    if (typeof endTime === "object") endTime = calendar.componentsToTime(endTime);
+    return time.between(startTime, endTime);
+  }
+
+  static add = add; // TODO: remove
+
+  /* -------------------------------------------------- */
+
+  /**
    * Hook function for injecting an element on the hotbar.
    * @param {Players} players       The Players application.
    * @param {HTMLElement} element   The aside element.
@@ -137,44 +192,40 @@ export default class CalendarView extends HandlebarsApplicationMixin(Application
   async #preparePartContextCalendar(context) {
     const cal = game.time.calendar;
     let c = game.time.components;
+
     if (this.#month < 0) {
       for (let i = 0; i > this.#month; i--) {
-        const time = cal.componentsToTime({ ...c, day: c.day - c.dayOfMonth - 1 });
-        c = cal.timeToComponents(time);
+        // Go to last day of previous month.
+        c = add.call(cal, c, { day: -(c.dayOfMonth + 1) });
       }
     } else if (this.#month > 0) {
       for (let i = 0; i < this.#month; i++) {
-        const month = cal.months.values[c.month];
-        const days = cal.isLeapYear(c.year) ? (month.leapDays ?? month.days) : month.days;
-        const delta = days - c.dayOfMonth;
-        const time = cal.componentsToTime({ ...c, day: c.day + delta });
-        c = cal.timeToComponents(time);
+        // Go to first day of next month.
+        c = add.call(cal, c, { day: CalendarView.getDaysInMonth(cal, c.month, c.year) - c.dayOfMonth });
       }
     }
 
-    let { day, year, month, dayOfMonth } = c;
-    month = cal.months.values[month];
-
-    const days = cal.isLeapYear(year) ? (month.leapDays ?? month.days) : month.days;
+    const days = CalendarView.getDaysInMonth(cal, c.month, c.year);
     const eventData = QUESTBOARD.data.CalendarEventStorage.getSetting();
 
     const buttons = {
       days: Array.fromRange(days).map(n => {
-        const active = !this.#month && (n === dayOfMonth);
-        const _day = day - (dayOfMonth - n);
+        const day = CalendarView.getDayOfYear(cal, n, c.month, c.year);
+        const active = !this.#month && (day === c.day);
+
         return {
-          active, day: _day,
+          active, day,
           label: String(n + 1),
           cssClass: [
             "date",
             active ? "active" : null,
-            eventData.hasEvents({ year, day: _day }) ? "events" : null,
+            eventData.hasEvents({ year: c.year, day }) ? "events" : null,
           ].filterJoin(" "),
         };
       }),
     };
 
-    const dayOfWeekFirstOfMonth = cal.timeToComponents(cal.componentsToTime({ ...c, day: day - dayOfMonth })).dayOfWeek;
+    const dayOfWeekFirstOfMonth = add.call(game.time.calendar, c, { day: -c.dayOfMonth }).dayOfWeek;
     buttons.days.unshift(...Array(dayOfWeekFirstOfMonth).fill({ blank: true }));
 
     Object.assign(context, {
@@ -360,4 +411,18 @@ export default class CalendarView extends HandlebarsApplicationMixin(Application
     this.#month = 0;
     game.time.set(components);
   }
+}
+
+/**
+ * Modify some start time by adding a number of seconds or components to it. The delta components may be negative.
+ * TODO: Remove with 13.341
+ * @param {number|Components} startTime           The initial time
+ * @param {number|Components} deltaTime           Differential components to add
+ * @returns {Components}                          The resulting time
+ */
+function add(startTime, deltaTime) {
+  if (typeof startTime === "object") startTime = this.componentsToTime(startTime);
+  if (typeof deltaTime === "object") deltaTime = this.componentsToTime(deltaTime);
+  const endTime = startTime + deltaTime;
+  return this.timeToComponents(endTime);
 }

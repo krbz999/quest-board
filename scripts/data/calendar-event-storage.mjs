@@ -99,7 +99,7 @@ export default class CalendarEventStorage extends foundry.abstract.DataModel {
 
   /**
    * Retrieve all uuids for events that happen on a given date.
-   * @param {EventDate} [date]    The date the events to retrieve. If omitted, the current date.
+   * @param {EventDate} [date]    The date of the events to retrieve. If omitted, the current date.
    * @returns {Set<string>}       Event pages' uuids.
    */
   getUuidsByDate(date) {
@@ -114,19 +114,10 @@ export default class CalendarEventStorage extends foundry.abstract.DataModel {
     const evalYearly = event => {
       if (date.year < event.date.year) return false;
 
-      const dateS = cal.componentsToTime(date);
-      const durS = cal.componentsToTime({ day: event.duration - 1 });
-      let eventS;
-
-      if (date.day < event.date.day) {
-        // If the date is before the recurring event, look at previous year and see if it has a duration long enough.
-        eventS = cal.componentsToTime({ day: event.date.day, year: date.year - 1 });
-      } else {
-        // See if the current year's event has a duration long enough.
-        eventS = cal.componentsToTime({ day: event.date.day, year: date.year });
-      }
-
-      return dateS.between(eventS, eventS + durS);
+      const timeDelta = { day: event.duration - 1 };
+      const year = (date.day < event.date.day) ? (date.year - 1) : date.year;
+      const endTime = QUESTBOARD.applications.apps.CalendarView.add.call(cal, { ...event.date, year }, timeDelta);
+      return QUESTBOARD.applications.apps.CalendarView.isTimeBetween(cal, date, { ...event.date, year }, endTime);
     };
 
     const evalMonthly = event => {
@@ -135,9 +126,9 @@ export default class CalendarEventStorage extends foundry.abstract.DataModel {
     };
 
     const evalNonRepeat = event => {
-      if (date.year < event.date.year) return false;
-      if (date.day < event.date.day) return false;
-      return cal.componentsToTime(cal.difference(date, event.date)) < cal.componentsToTime({ day: event.duration });
+      const timeDelta = { day: event.duration - 1 };
+      const endTime = QUESTBOARD.applications.apps.CalendarView.add.call(cal, event.date, timeDelta);
+      return QUESTBOARD.applications.apps.CalendarView.isTimeBetween(cal, date, event.date, endTime);
     };
 
     for (const event of Object.values(this.events)) {
