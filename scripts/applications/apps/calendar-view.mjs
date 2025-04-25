@@ -3,10 +3,10 @@ const { HandlebarsApplicationMixin, Application } = foundry.applications.api;
 export default class CalendarView extends HandlebarsApplicationMixin(Application) {
   /**
    * Format a date as a human-readable string.
-   * @param {CalendarData} calendar       The current calendar.
-   * @param {TimeComponents} components   The time components to format.
-   * @param {object} _options             Options for the formatter.
-   * @returns {string}                    The formatted string.
+   * @param {CalendarData} calendar   The current calendar.
+   * @param {Components} components   The time components to format.
+   * @param {object} _options         Options for the formatter.
+   * @returns {string}                The formatted string.
    */
   static formatDateNatural(calendar, components, _options) {
     const day = calendar.days.values[components.dayOfWeek];
