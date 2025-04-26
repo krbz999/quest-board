@@ -8,10 +8,14 @@
 
     & button {
       flex: 0;
-      border: 0;
-      padding: 0;
+      border: none;
       background: none;
-      height: unset;
+      padding: 0;
+      min-height: 1em;
+      height: 1em;
+      width: 1em;
+      outline: none;
+      box-shadow: none;
     }
   }
 
