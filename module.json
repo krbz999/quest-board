@@ -62,7 +62,7 @@
           "biography.private",
           "biography.public"
         ],
-        "gmOnly": [
+        "gmOnlyFields": [
           "biography.private"
         ]
       },
@@ -70,7 +70,7 @@
         "htmlFields": [
           "description.private"
         ],
-        "gmOnly": [
+        "gmOnlyFields": [
           "description.private"
         ]
       },
@@ -79,7 +79,7 @@
           "biography.private",
           "biography.public"
         ],
-        "gmOnly": [
+        "gmOnlyFields": [
           "biography.private"
         ]
       },
