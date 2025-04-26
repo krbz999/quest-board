@@ -1,0 +1,8 @@
+<fieldset>
+  {{formGroup fields.text.field value=fields.text.value name=fields.text.name label=fields.text.label placeholder=fields.text.placeholder}}
+  {{formGroup fields.sort.field value=fields.sort.value name=fields.sort.name label=fields.sort.label hint=fields.sort.hint placeholder="0"}}
+  {{formGroup fields.checked.field value=fields.checked.value name=fields.checked.name disabled=disableChecked label=fields.checked.label}}
+  {{#if showOptional}}
+  {{formGroup fields.optional.field value=fields.optional.value name=fields.optional.name label=fields.optional.label}}
+  {{/if}}
+</fieldset>

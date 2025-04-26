@@ -125,7 +125,7 @@ export default class QuestPageSheet extends AbstractPageSheet {
       fields: {
         checked: this.document.system.schema.getField("objectives.element.checked"),
         text: this.document.system.schema.getField("objectives.element.text"),
-        textPlaceholder: game.i18n.localize("QUESTBOARD.QUEST.FIELDS.objectives.text.placeholder"),
+        textPlaceholder: game.i18n.localize("QUESTBOARD.QUEST.FIELDS.objectives.element.text.placeholder"),
         sort: this.document.system.schema.getField("objectives.element.sort"),
       },
       objectives: Object.entries(this.document.system.objectives).map(([k, v]) => {
@@ -245,8 +245,9 @@ export default class QuestPageSheet extends AbstractPageSheet {
             id: k,
             disabled: !canUpdate,
           };
-        }) };
-    });
+        }).sort((a, b) => a.sort - b.sort),
+      };
+    }).sort((a, b) => a.sort - b.sort);
 
     const questType = QUESTBOARD.config.QUEST_TYPES[this.document.system.type];
     context.questType = `${questType.label} ${Array(questType.priority).fill("★").join("")}`;
@@ -331,45 +332,12 @@ export default class QuestPageSheet extends AbstractPageSheet {
       parentObjective ? `${parentObjective}.objectives` : null,
       id,
     ].filterJoin(".");
-    const objective = foundry.utils.getProperty(this.document, path);
-    const isRoot = !parentObjective;
 
-    const {
-      checked, optional, text, sort,
-    } = this.document.system.schema.getField(isRoot ? "objectives.element" : "objectives.element.objectives.element").fields;
-
-    const html = [
-      text.toFormGroup({
-        label: game.i18n.localize("QUESTBOARD.QUEST.FIELDS.objectives.text.label"),
-      }, {
-        value: objective.text,
-        placeholder: game.i18n.localize("QUESTBOARD.QUEST.FIELDS.objectives.text.placeholder"),
-        name: [path, "text"].join("."),
-      }).outerHTML,
-      sort.toFormGroup({
-        label: game.i18n.localize("QUESTBOARD.QUEST.FIELDS.objectives.sort.label"),
-        hint: "",
-      }, { value: objective.sort, placeholder: "0", name: [path, "sort"].join(".") }).outerHTML,
-      checked.toFormGroup({
-        label: game.i18n.localize("QUESTBOARD.QUEST.FIELDS.objectives.checked.label"),
-      }, { value: objective.checked, name: [path, "checked"].join(".") }).outerHTML,
-      optional?.toFormGroup({
-        label: game.i18n.localize("QUESTBOARD.QUEST.FIELDS.objectives.optional.label"),
-      }, { value: objective.optional, name: [path, "optional"].join(".") }).outerHTML,
-    ].filterJoin("");
-
-    const update = await foundry.applications.api.Dialog.input({
-      window: {
-        title: "QUESTBOARD.QUEST.EDIT.OBJECTIVE_TITLE",
-      },
-      position: {
-        width: 400,
-      },
-      content: `<fieldset>${html}</fieldset>`,
+    const application = new QUESTBOARD.applications.apps.QuestObjectiveConfig({
+      document: this.document,
+      objectivePath: path,
     });
-    if (!update) return;
-
-    this.document.update(update);
+    application.render({ force: true });
   }
 
   /* -------------------------------------------------- */

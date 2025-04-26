@@ -105,6 +105,9 @@
         }
       }
     },
+    "OBJECTIVE": {
+      "TITLE": "Configure Objective: {id}"
+    },
     "PURCHASE": {
       "CONFIRM": {
         "areYouSure": "Do you want to purchase '{name}' for {value} {denomination}?",
@@ -136,7 +139,6 @@
           "currencies": "Currencies",
           "objectives": "Objectives"
         },
-        "OBJECTIVE_TITLE": "Configure Objective",
         "TABS": {
           "configuration": "Configuration",
           "details": "Details",
@@ -161,18 +163,39 @@
           }
         },
         "objectives": {
-          "checked": {
-            "label": "Checked"
-          },
-          "optional": {
-            "label": "Optional"
-          },
-          "sort": {
-            "label": "Sort"
-          },
-          "text": {
-            "label": "Text",
-            "placeholder": "Objective"
+          "element": {
+            "checked": {
+              "label": "Checked"
+            },
+            "optional": {
+              "label": "Optional"
+            },
+            "sort": {
+              "label": "Sort",
+              "hint": ""
+            },
+            "text": {
+              "label": "Text",
+              "placeholder": "Objective"
+            },
+            "objectives": {
+              "element": {
+                "checked": {
+                  "label": "Checked"
+                },
+                "optional": {
+                  "label": "Optional"
+                },
+                "sort": {
+                  "label": "Sort",
+                  "hint": ""
+                },
+                "text": {
+                  "label": "Text",
+                  "placeholder": "Objective"
+                }
+              }
+            }
           }
         },
         "type": {
@@ -445,6 +468,7 @@
   "TYPES": {
     "JournalEntryPage": {
       "quest-board": {
+        "location": "Location",
         "quest": "Quest",
         "relation": "Relation",
         "shop": "Shop",
