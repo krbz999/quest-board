@@ -76,7 +76,6 @@
       &::after {
         content: "";
         position: absolute;
-        inset: 6px 6px 0;
         border: 2px solid var(--dnd5e-color-gold);
         pointer-events: none;
       }
@@ -111,6 +110,23 @@
 
   /* Location */
   &.location-page {
+    figure {
+      --margin-inset: 6px;
+
+      &::after {
+        inset: var(--margin-inset);
+      }
+
+      figcaption {
+        position: absolute;
+        margin: calc(2 * var(--margin-inset));
+        bottom: 0;
+        left: 0;
+        right: 0;
+        border-radius: 2px;
+      }
+    }
+
     .statistics {
       border-bottom: 2px solid var(--dnd5e-color-gold);
     }
@@ -151,6 +167,10 @@
     .avatar {
       figure {
         max-width: 300px;
+
+        &::after {
+          inset: 6px 6px 0;
+        }
       }
     }
   }
