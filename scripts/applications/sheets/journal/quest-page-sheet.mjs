@@ -344,17 +344,18 @@ export default class QuestPageSheet extends AbstractPageSheet {
       }, {
         value: objective.text,
         placeholder: game.i18n.localize("QUESTBOARD.QUEST.FIELDS.objectives.text.placeholder"),
+        name: [path, "text"].join("."),
       }).outerHTML,
       sort.toFormGroup({
         label: game.i18n.localize("QUESTBOARD.QUEST.FIELDS.objectives.sort.label"),
         hint: "",
-      }, { value: objective.sort, placeholder: "0" }).outerHTML,
+      }, { value: objective.sort, placeholder: "0", name: [path, "sort"].join(".") }).outerHTML,
       checked.toFormGroup({
         label: game.i18n.localize("QUESTBOARD.QUEST.FIELDS.objectives.checked.label"),
-      }, { value: objective.checked }).outerHTML,
+      }, { value: objective.checked, name: [path, "checked"].join(".") }).outerHTML,
       optional?.toFormGroup({
         label: game.i18n.localize("QUESTBOARD.QUEST.FIELDS.objectives.optional.label"),
-      }, { value: objective.optional }).outerHTML,
+      }, { value: objective.optional, name: [path, "optional"].join(".") }).outerHTML,
     ].filterJoin("");
 
     const update = await foundry.applications.api.Dialog.input({
@@ -368,10 +369,7 @@ export default class QuestPageSheet extends AbstractPageSheet {
     });
     if (!update) return;
 
-    this.document.update({ [path]: isRoot
-      ? foundry.utils.expandObject(update).system.objectives
-      : foundry.utils.expandObject(update).system.objectives.objectives,
-    });
+    this.document.update(update);
   }
 
   /* -------------------------------------------------- */
