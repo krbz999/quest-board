@@ -1,5 +1,5 @@
 const {
-  BooleanField, IntegerSortField, SchemaField, StringField, TypedObjectField,
+  BooleanField, NumberField, SchemaField, StringField, TypedObjectField,
 } = foundry.data.fields;
 
 export default class ObjectiveField extends TypedObjectField {
@@ -7,7 +7,7 @@ export default class ObjectiveField extends TypedObjectField {
     super(new SchemaField({
       text: new StringField({ required: true }),
       checked: new BooleanField(),
-      sort: new IntegerSortField(),
+      sort: new NumberField({ required: true, nullable: false, integer: true, initial: 0 }),
       ...fields,
     }), {
       validateKey: key => foundry.data.validators.isValidId(key),

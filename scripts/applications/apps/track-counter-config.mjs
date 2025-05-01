@@ -105,7 +105,6 @@ export default class TrackCounterConfig extends HandlebarsApplicationMixin(Appli
       name: {
         field: this.document.system.schema.getField("counters.element.name"),
         value: counter.name,
-        label: "Name",
       },
       description: {
         field: this.document.system.schema.getField("counters.element.description"),
@@ -117,12 +116,10 @@ export default class TrackCounterConfig extends HandlebarsApplicationMixin(Appli
       value: {
         field: this.document.system.schema.getField("counters.element.config.value"),
         value: Math.clamp(counter.config.value, 0, counter.config.max ?? 20) || null,
-        label: game.i18n.localize("QUESTBOARD.TRACK.FIELDS.counters.config.value.label"),
       },
       max: {
         field: this.document.system.schema.getField("counters.element.config.max"),
         value: counter.config.max,
-        label: game.i18n.localize("QUESTBOARD.TRACK.FIELDS.counters.config.max.label"),
       },
     });
     return context;

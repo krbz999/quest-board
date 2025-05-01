@@ -72,8 +72,6 @@ export default class CalendarView extends HandlebarsApplicationMixin(Application
     return time.between(startTime, endTime);
   }
 
-  static add = add; // TODO: remove
-
   /* -------------------------------------------------- */
 
   /**
@@ -196,12 +194,12 @@ export default class CalendarView extends HandlebarsApplicationMixin(Application
     if (this.#month < 0) {
       for (let i = 0; i > this.#month; i--) {
         // Go to last day of previous month.
-        c = add.call(cal, c, { day: -(c.dayOfMonth + 1) });
+        c = cal.add(c, { day: -(c.dayOfMonth + 1) });
       }
     } else if (this.#month > 0) {
       for (let i = 0; i < this.#month; i++) {
         // Go to first day of next month.
-        c = add.call(cal, c, { day: CalendarView.getDaysInMonth(cal, c.month, c.year) - c.dayOfMonth });
+        c = cal.add(c, { day: CalendarView.getDaysInMonth(cal, c.month, c.year) - c.dayOfMonth });
       }
     }
 
@@ -225,7 +223,7 @@ export default class CalendarView extends HandlebarsApplicationMixin(Application
       }),
     };
 
-    const dayOfWeekFirstOfMonth = add.call(game.time.calendar, c, { day: -c.dayOfMonth }).dayOfWeek;
+    const dayOfWeekFirstOfMonth = cal.add(c, { day: -c.dayOfMonth }).dayOfWeek;
     buttons.days.unshift(...Array(dayOfWeekFirstOfMonth).fill({ blank: true }));
 
     Object.assign(context, {
@@ -411,18 +409,4 @@ export default class CalendarView extends HandlebarsApplicationMixin(Application
     this.#month = 0;
     game.time.set(components);
   }
-}
-
-/**
- * Modify some start time by adding a number of seconds or components to it. The delta components may be negative.
- * TODO: Remove with 13.341
- * @param {number|Components} startTime           The initial time
- * @param {number|Components} deltaTime           Differential components to add
- * @returns {Components}                          The resulting time
- */
-function add(startTime, deltaTime) {
-  if (typeof startTime === "object") startTime = this.componentsToTime(startTime);
-  if (typeof deltaTime === "object") deltaTime = this.componentsToTime(deltaTime);
-  const endTime = startTime + deltaTime;
-  return this.timeToComponents(endTime);
 }

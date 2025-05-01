@@ -65,6 +65,22 @@
   }
 }
 
+/* VARIABLES */
+.theme-light .quest-board,
+.application.theme-light .quest-board,
+/* AppV1 support */
+.app.journal-entry .quest-board {
+  --figcaption-bg: #eeede0;
+  --tracker-color-bg: rgba(0, 0, 255, 0.7);
+  --tracker-color-fill: 200, 110, 100;
+}
+.theme-dark .quest-board,
+.application.theme-dark .quest-board {
+  --figcaption-bg: #222222;
+  --tracker-color-bg: rgba(125, 125, 0, 0.7);
+  --tracker-color-fill: 180, 180, 0;
+}
+
 .journal-entry-page.quest-board {
   /* Shared */
   .details {
@@ -93,10 +109,12 @@
         border-radius: 3px 3px 0 0;
         border-bottom: 2px solid var(--dnd5e-color-gold);
         pointer-events: none;
+        box-shadow: none;
       }
 
       figcaption {
-        background-color: var(--dnd5e-color-groove);
+        background-color: var(--figcaption-bg);
+        box-shadow: 0 0 2px var(--dnd5e-color-gold);
         margin: 0 6px;
         padding: 6px;
       }
@@ -200,11 +218,9 @@
       display: grid;
       grid-template-columns: 1fr 3em;
       align-items: center;
-      --yellow: 200, 110, 100;
       --filled: 1;
       --preview: 0.5;
       --empty: 0.1;
-      --blue-50: rgba(0, 0, 255, 0.7);
       gap: 1rem;
 
       .bars {
@@ -225,18 +241,18 @@
             right: 2px;
             bottom: 0;
             transition: background-color 250ms ease;
-            background-color: rgba(var(--yellow), var(--empty));
-            filter: drop-shadow(2px 2px 0 var(--blue-50));
+            background-color: rgba(var(--tracker-color-fill), var(--empty));
+            filter: drop-shadow(2px 2px 0 var(--tracker-color-bg));
           }
 
           &.filled::after {
-            background-color: rgba(var(--yellow), var(--filled));
+            background-color: rgba(var(--tracker-color-fill), var(--filled));
           }
 
           &:hover::after,
           &:has(~:hover):not(.filled)::after,
           &:hover ~ .filled::after {
-            background-color: rgba(var(--yellow), var(--preview));
+            background-color: rgba(var(--tracker-color-fill), var(--preview));
           }
         }
       }

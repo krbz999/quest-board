@@ -36,6 +36,11 @@ export default class QuestData extends foundry.abstract.TypeDataModel {
   /* -------------------------------------------------- */
 
   /** @inheritdoc */
+  static LOCALIZATION_PREFIXES = ["QUESTBOARD.QUEST"];
+
+  /* -------------------------------------------------- */
+
+  /** @inheritdoc */
   prepareDerivedData() {
     super.prepareDerivedData();
 
@@ -61,11 +66,6 @@ export default class QuestData extends foundry.abstract.TypeDataModel {
   get hasItemRewards() {
     return this.rewards.items.some(r => r.isValidReward);
   }
-
-  /* -------------------------------------------------- */
-
-  /** @inheritdoc */
-  static LOCALIZATION_PREFIXES = ["QUESTBOARD.QUEST"];
 
   /* -------------------------------------------------- */
 

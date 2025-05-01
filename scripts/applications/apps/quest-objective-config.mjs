@@ -114,9 +114,6 @@ export default class QuestObjectiveConfig extends HandlebarsApplicationMixin(App
         name,
         field: this.document.system.schema.getField(path.slice(7) + "." + name),
         value: foundry.utils.getProperty(source, name),
-        // TODO: remove this once element can be localized properly
-        // TODO: this also adds the placeholder for 'text'
-        ...foundry.utils.getProperty(game.i18n.translations, ["QUESTBOARD.QUEST.FIELDS", path.slice(7), name].join(".")),
       };
     };
 

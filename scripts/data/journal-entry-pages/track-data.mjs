@@ -20,6 +20,11 @@ export default class TrackData extends foundry.abstract.TypeDataModel {
   /* -------------------------------------------------- */
 
   /** @inheritdoc */
+  static LOCALIZATION_PREFIXES = ["QUESTBOARD.TRACK"];
+
+  /* -------------------------------------------------- */
+
+  /** @inheritdoc */
   prepareDerivedData() {
     super.prepareDerivedData();
     for (const [k, v] of Object.entries(this.counters)) {

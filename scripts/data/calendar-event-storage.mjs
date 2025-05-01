@@ -116,7 +116,7 @@ export default class CalendarEventStorage extends foundry.abstract.DataModel {
 
       const timeDelta = { day: event.duration - 1 };
       const year = (date.day < event.date.day) ? (date.year - 1) : date.year;
-      const endTime = QUESTBOARD.applications.apps.CalendarView.add.call(cal, { ...event.date, year }, timeDelta);
+      const endTime = cal.add({ ...event.date, year }, timeDelta);
       return QUESTBOARD.applications.apps.CalendarView.isTimeBetween(cal, date, { ...event.date, year }, endTime);
     };
 
@@ -127,7 +127,7 @@ export default class CalendarEventStorage extends foundry.abstract.DataModel {
 
     const evalNonRepeat = event => {
       const timeDelta = { day: event.duration - 1 };
-      const endTime = QUESTBOARD.applications.apps.CalendarView.add.call(cal, event.date, timeDelta);
+      const endTime = cal.add(event.date, timeDelta);
       return QUESTBOARD.applications.apps.CalendarView.isTimeBetween(cal, date, event.date, endTime);
     };
 

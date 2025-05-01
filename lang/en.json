@@ -441,22 +441,24 @@
       },
       "FIELDS": {
         "counters": {
-          "config": {
-            "max": {
-              "label": "Max"
+          "element": {
+            "config": {
+              "max": {
+                "label": "Max"
+              },
+              "min": {
+                "label": "Min"
+              },
+              "value": {
+                "label": "Value"
+              }
             },
-            "min": {
-              "label": "Min"
+            "description": {
+              "label": "Description"
             },
-            "value": {
-              "label": "Value"
+            "name": {
+              "label": "Name"
             }
-          },
-          "description": {
-            "label": "Description"
-          },
-          "name": {
-            "label": "Name"
           }
         }
       },
