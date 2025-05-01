@@ -95,6 +95,9 @@
       "PROPERTIES": {
         "defunct": "Defunct"
       },
+      "SHEET": {
+        "LABEL": "Location Page Sheet"
+      },
       "VIEW": {
         "defunctdate": "Defunct",
         "founding": "Founded",

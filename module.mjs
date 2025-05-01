@@ -11,7 +11,7 @@ globalThis.QUESTBOARD = {
   id: "quest-board",
   /**
    * A semaphore for handling socketed requests in order.
-   * @type {InstanceType<foundry["utils"]["Semaphore"]>}
+   * @type {foundry.utils.Semaphore}
    */
   semaphore: null,
 };
