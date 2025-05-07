@@ -5,7 +5,7 @@ export default class RelationPageSheet extends AbstractPageSheet {
   static DEFAULT_OPTIONS = {
     viewClasses: ["relation-page"],
     window: {
-      icon: "fa-solid fa-fw fa-circle-user",
+      icon: "fa-solid fa-fw fa-mountain-city",
     },
     position: {
       height: "auto",
@@ -73,7 +73,7 @@ export default class RelationPageSheet extends AbstractPageSheet {
     },
     details: {
       template: "modules/quest-board/templates/relation/view/details.hbs",
-      classes: ["quest-board", "two-column"],
+      classes: ["quest-board"],
     },
     biography: {
       template: "modules/quest-board/templates/relation/view/biography.hbs",
@@ -87,6 +87,7 @@ export default class RelationPageSheet extends AbstractPageSheet {
   _configureRenderParts(options) {
     const parts = super._configureRenderParts(options);
     if (!game.user.isGM) delete parts.private;
+    if (this.document.system.type !== "person") delete parts.connections;
     return parts;
   }
 
@@ -96,6 +97,7 @@ export default class RelationPageSheet extends AbstractPageSheet {
   _prepareTabs(group) {
     const tabs = super._prepareTabs(group);
     if (!game.user.isGM) delete parts.private;
+    if (this.document.system.type !== "person") delete parts.connections;
     return tabs;
   }
 
@@ -145,7 +147,10 @@ export default class RelationPageSheet extends AbstractPageSheet {
             year: this._prepareField("system.age.birth.year"),
           },
         },
-        avatar: this._prepareField("system.avatar"),
+        avatar: {
+          src: this._prepareField("system.avatar.src"),
+          wide: this._prepareField("system.avatar.wide"),
+        },
         gender: this._prepareField("system.gender"),
         properties: this._prepareField("system.properties"),
         titles: this._prepareField("system.titles"),
@@ -235,7 +240,7 @@ export default class RelationPageSheet extends AbstractPageSheet {
   /** @inheritdoc */
   async _prepareContentContext(context, options) {
     const titles = Array.from(this.document.system.titles).join(", ");
-    const avatar = this.document.system.avatar || "icons/svg/mystery-man.svg";
+    const avatar = this.document.system.avatar.src || "icons/svg/mystery-man.svg";
     const isDead = this.document.system.properties.has("dead");
 
     const stats = [{
@@ -276,6 +281,7 @@ export default class RelationPageSheet extends AbstractPageSheet {
     const enrichOptions = { relativeTo: this.document, rollData: this.document.getRollData?.() };
     Object.assign(context, {
       titles, avatar, stats,
+      wide: this.document.system.avatar.wide,
       isGM: game.user.isGM,
       public: await foundry.applications.ux.TextEditor.enrichHTML(this.document.system.biography.public, enrichOptions),
       private: await foundry.applications.ux.TextEditor.enrichHTML(this.document.system.biography.private, enrichOptions),

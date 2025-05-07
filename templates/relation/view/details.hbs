@@ -1,8 +1,8 @@
-<section>
+<section class="{{ifThen wide 'wide' 'two-column'}}">
   <div class="avatar">
     <figure data-action="showImage">
       <img src="{{avatar}}" alt="{{name}}">
-      <figcaption>{{titles}}</figcaption>
+      {{#if titles}}<figcaption>{{titles}}</figcaption>{{/if}}
     </figure>
   </div>
   <div class="statistics">

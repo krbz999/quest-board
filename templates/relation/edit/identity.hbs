@@ -1,7 +1,8 @@
 <section class="{{tabs.identity.cssClass}}" data-group="{{tabs.identity.group}}" data-tab="{{tabs.identity.id}}">
   {{#with fields}}
   <fieldset>
-    {{formGroup avatar.field value=avatar.source rootId=@root.rootId}}
+    {{formGroup avatar.src.field value=avatar.src.source rootId=@root.rootId}}
+    {{formGroup avatar.wide.field value=avatar.wide.source rootId=@root.rootId}}
     {{formGroup titles.field value=titles.source rootId=@root.rootId}}
     {{formGroup gender.field value=gender.source rootId=@root.rootId}}
     {{formGroup properties.field value=properties.source type="checkboxes" classes="stacked" options=properties.options}}

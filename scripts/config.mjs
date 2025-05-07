@@ -41,6 +41,24 @@ dnd5e.utils.preLocalize("RELATION_PROPERTIES", { keys: ["label"] });
 /* -------------------------------------------------- */
 
 /**
+ * Subtypes of the Relation page.
+ * @enum {import("./types.mjs").RelationSubtypeConfig}
+ */
+export const RELATION_SUBTYPES = {
+  location: {
+    label: "QUESTBOARD.RELATION.SUBTYPES.location",
+  },
+  object: {
+    label: "QUESTBOARD.RELATION.SUBTYPES.object",
+  },
+  person: {
+    label: "QUESTBOARD.RELATION.SUBTYPES.person",
+  },
+};
+
+/* -------------------------------------------------- */
+
+/**
  * Properties available for a Location.
  * @enum {import("./types.mjs").LocationPropertyConfig}
  */

@@ -201,7 +201,7 @@ export default class LocationPageSheet extends AbstractPageSheet {
   /** @inheritdoc */
   async _prepareContentContext(context, options) {
     const titles = Array.from(this.document.system.titles).join(", ");
-    const avatar = this.document.system.avatar || "icons/svg/mystery-man.svg";
+    const avatar = this.document.system.avatar.src || "icons/svg/mystery-man.svg";
     const isDead = this.document.system.properties.has("defunct");
 
     const stats = [{

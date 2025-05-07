@@ -269,7 +269,13 @@
           }
         },
         "avatar": {
-          "label": "Avatar"
+          "label": "Avatar",
+          "src": {
+            "label": "File Path"
+          },
+          "wide": {
+            "label": "Wide"
+          }
         },
         "biography": {
           "private": {
@@ -321,6 +327,11 @@
       },
       "SHEET": {
         "LABEL": "Relation Page Sheet"
+      },
+      "SUBTYPES": {
+        "location": "Location",
+        "object": "Object",
+        "person": "Person"
       },
       "VIEW": {
         "age": "Age",

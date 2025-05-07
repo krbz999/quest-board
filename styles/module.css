@@ -87,11 +87,36 @@
     font-style: italic;
   }
 
-  &:is(.location-page, .relation-page) {
+  /* Quest */
+  &.quest-page {
+    .dashed .name {
+      text-decoration: line-through;
+    }
+
+    & ul.objectives {
+      list-style: none;
+      padding-left: 0;
+
+      & ul.objectives {
+        padding-left: 1rem;
+      }
+    }
+
+    & dnd5e-checkbox.disabled {
+      pointer-events: none;
+    }
+
+    & dnd5e-checkbox[checked] + span {
+      text-decoration: line-through;
+    }
+  }
+
+  /* Relation */
+  &:is(.relation-page) {
     figure {
       position: relative;
       cursor: var(--cursor-pointer);
-      margin-bottom: 0;
+      margin: 0;
 
       &::after {
         content: "";
@@ -128,71 +153,42 @@
         font-style: italic;
       }
     }
-  }
 
-  /* Location */
-  &.location-page {
-    figure {
-      --margin-inset: 6px;
-
-      &::after {
-        inset: var(--margin-inset);
-      }
-
-      figcaption {
-        position: absolute;
-        margin: calc(2 * var(--margin-inset));
-        bottom: 0;
-        left: 0;
-        right: 0;
-        border-radius: 2px;
-      }
-    }
-
-    .statistics {
-      border-bottom: 2px solid var(--dnd5e-color-gold);
-    }
-  }
-
-  /* Quest */
-  &.quest-page {
-    .dashed .name {
-      text-decoration: line-through;
-    }
-
-    & ul.objectives {
-      list-style: none;
-      padding-left: 0;
-
-      & ul.objectives {
-        padding-left: 1rem;
-      }
-    }
-
-    & dnd5e-checkbox.disabled {
-      pointer-events: none;
-    }
-
-    & dnd5e-checkbox[checked] + span {
-      text-decoration: line-through;
-    }
-  }
-
-  /* Relation */
-  &.relation-page {
     .two-column {
       display: flex;
       margin-top: 1em;
       gap: 1em;
+
+      .avatar {
+        figure {
+          max-width: 300px;
+          &::after {
+            inset: 6px 6px 0;
+          }
+        }
+      }
     }
 
-    .avatar {
-      figure {
-        max-width: 300px;
-
-        &::after {
-          inset: 6px 6px 0;
+    .wide {
+      .avatar {
+        figure {
+          --margin-inset: 6px;
+          &::after {
+            inset: var(--margin-inset);
+          }
+          figcaption {
+            position: absolute;
+            margin: calc(2 * var(--margin-inset));
+            bottom: 0;
+            left: 0;
+            right: 0;
+            border-radius: 2px;
+          }
         }
+      }
+
+      .statistics {
+        border-bottom: 2px solid var(--dnd5e-color-gold);
       }
     }
   }
