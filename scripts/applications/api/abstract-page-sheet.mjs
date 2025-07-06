@@ -61,8 +61,14 @@ export default class AbstractPageSheet extends foundry.applications.sheets.journ
       },
       permissions: {},
     }).bind(this.element);
+  }
 
-    // new Promise(r => setTimeout(r, 200)).then(() => this.element.classList.remove("dnd5e2"));
+  /* -------------------------------------------------- */
+
+  /** @inheritdoc */
+  async _postRender(context, options) {
+    await super._postRender(context, options);
+    this.element.classList.remove("dnd5e2", "dnd5e2-journal", "titlebar");
   }
 
   /* -------------------------------------------------- */
