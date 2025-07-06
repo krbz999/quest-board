@@ -11,10 +11,6 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@v2
 
-      # Combine CSS files into a single CSS file
-      - name: Combine CSS files
-        run: cat styles/*.css > module.css
-
       # Get part of the tag after the `v`.
       - name: Extract tag version number
         id: get_version
@@ -29,8 +25,8 @@ jobs:
           flags.hotReload: false
           version: ${{steps.get_version.outputs.version-without-v}}
           download: https://github.com/${{github.repository}}/releases/download/${{github.event.release.tag_name}}/module.zip
-          esmodules: "[\"module.mjs\"]"
-          styles: "[\"module.css\"]"
+          esmodules: "[\"quest-board.mjs\"]"
+          styles: "[\"quest-board.css\"]"
 
       # Set up Node
       - name: Use Node.js ${{ matrix.node-version }}
@@ -47,13 +43,13 @@ jobs:
       # Run build scripts
       - name: Build All
         run: |
-          # npm run db:pack
           npm run build
-          mv --force public/module.mjs module.mjs
+          mv --force public/quest-board.mjs quest-board.mjs
+          mv --force public/quest-board.css quest-board.css
 
       # Create zip file.
       - name: Create ZIP archive
-        run: zip -r ./module.zip module.json module.css module.mjs packs/ lang/ templates/ assets/
+        run: zip -r ./module.zip module.json quest-board.css quest-board.mjs packs/ lang/ templates/ assets/
 
       # Create a release for this specific version.
       - name: Update Release with Files
