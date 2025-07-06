@@ -217,6 +217,7 @@
         align-items: center;
         justify-content: center;
         position: relative;
+        min-width: 3rem;
 
         &.blank {
           border: none;
