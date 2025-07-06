@@ -87,73 +87,6 @@
     font-style: italic;
   }
 
-  &:is(.location-page, .relation-page) {
-    figure {
-      position: relative;
-      cursor: var(--cursor-pointer);
-      margin-bottom: 0;
-
-      &::after {
-        content: "";
-        position: absolute;
-        border: 2px solid var(--dnd5e-color-gold);
-        pointer-events: none;
-      }
-
-      img {
-        display: block;
-        object-fit: cover;
-        object-position: top center;
-        border: none;
-        width: 100%;
-        border-radius: 3px 3px 0 0;
-        border-bottom: 2px solid var(--dnd5e-color-gold);
-        pointer-events: none;
-        box-shadow: none;
-      }
-
-      figcaption {
-        background-color: var(--figcaption-bg);
-        box-shadow: 0 0 2px var(--dnd5e-color-gold);
-        margin: 0 6px;
-        padding: 6px;
-      }
-    }
-
-    .statistics {
-      flex: 1;
-
-      .label {
-        font-weight: bold;
-        font-style: italic;
-      }
-    }
-  }
-
-  /* Location */
-  &.location-page {
-    figure {
-      --margin-inset: 6px;
-
-      &::after {
-        inset: var(--margin-inset);
-      }
-
-      figcaption {
-        position: absolute;
-        margin: calc(2 * var(--margin-inset));
-        bottom: 0;
-        left: 0;
-        right: 0;
-        border-radius: 2px;
-      }
-    }
-
-    .statistics {
-      border-bottom: 2px solid var(--dnd5e-color-gold);
-    }
-  }
-
   /* Quest */
   &.quest-page {
     .dashed .name {
@@ -175,25 +108,6 @@
 
     & dnd5e-checkbox[checked] + span {
       text-decoration: line-through;
-    }
-  }
-
-  /* Relation */
-  &.relation-page {
-    .two-column {
-      display: flex;
-      margin-top: 1em;
-      gap: 1em;
-    }
-
-    .avatar {
-      figure {
-        max-width: 300px;
-
-        &::after {
-          inset: 6px 6px 0;
-        }
-      }
     }
   }
 

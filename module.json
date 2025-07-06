@@ -57,30 +57,12 @@
   },
   "documentTypes": {
     "JournalEntryPage": {
-      "location": {
-        "htmlFields": [
-          "biography.private",
-          "biography.public"
-        ],
-        "gmOnlyFields": [
-          "biography.private"
-        ]
-      },
       "quest": {
         "htmlFields": [
           "description.private"
         ],
         "gmOnlyFields": [
           "description.private"
-        ]
-      },
-      "relation": {
-        "htmlFields": [
-          "biography.private",
-          "biography.public"
-        ],
-        "gmOnlyFields": [
-          "biography.private"
         ]
       },
       "shop": {},

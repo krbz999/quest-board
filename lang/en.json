@@ -39,75 +39,6 @@
       "TITLE": "Configure Counter: {id}",
       "value": "Value"
     },
-    "LOCATION": {
-      "EDIT": {
-        "TABS": {
-          "configuration": "Configuration",
-          "connections": "Connections",
-          "identity": "Identity",
-          "public": "Description",
-          "private": "Secrets"
-        },
-        "TITLE": "Location: {name}"
-      },
-      "FIELDS": {
-        "age": {
-          "label": "Age",
-          "founding": {
-            "label": "Founding",
-            "day": {
-              "label": "Day"
-            },
-            "year": {
-              "label": "Year"
-            }
-          },
-          "defunct": {
-            "label": "Defunct",
-            "day": {
-              "label": "Day"
-            },
-            "year": {
-              "label": "Year"
-            }
-          }
-        },
-        "avatar": {
-          "label": "Image"
-        },
-        "biography": {
-          "private": {
-            "hint": "Private information written here is visible only game masters, and only game masters can edit it."
-          }
-        },
-        "properties": {
-          "label": "Properties"
-        },
-        "stats": {
-          "population": {
-            "label": "Population"
-          }
-        },
-        "titles": {
-          "label": "Titles"
-        }
-      },
-      "PROPERTIES": {
-        "defunct": "Defunct"
-      },
-      "SHEET": {
-        "LABEL": "Location Page Sheet"
-      },
-      "VIEW": {
-        "defunctdate": "Defunct",
-        "founding": "Founded",
-        "population": "Population",
-        "year": "Year {year}",
-        "HEADERS": {
-          "private": "Private Information"
-        }
-      }
-    },
     "OBJECTIVE": {
       "TITLE": "Configure Objective: {id}"
     },
@@ -233,102 +164,6 @@
       "Side": {
         "label": "Side Quest",
         "labelPl": "Side Quests"
-      }
-    },
-    "RELATION": {
-      "EDIT": {
-        "TABS": {
-          "configuration": "Configuration",
-          "connections": "Connections",
-          "identity": "Identity",
-          "private": "Secrets",
-          "public": "Biography"
-        },
-        "TITLE": "Relation: {name}"
-      },
-      "FIELDS": {
-        "age": {
-          "label": "Life Events",
-          "birth": {
-            "label": "Date of Birth",
-            "day": {
-              "label": "Day"
-            },
-            "year": {
-              "label": "Year"
-            }
-          },
-          "death": {
-            "label": "Date of Death",
-            "day": {
-              "label": "Day"
-            },
-            "year": {
-              "label": "Year"
-            }
-          }
-        },
-        "avatar": {
-          "label": "Avatar"
-        },
-        "biography": {
-          "private": {
-            "hint": "Private information written here is visible only game masters, and only game masters can edit it."
-          }
-        },
-        "gender": {
-          "label": "Gender"
-        },
-        "groups": {
-          "label": "Groups",
-          "ideologies": {
-            "label": "Ideologies"
-          },
-          "organizations": {
-            "label": "Organizations"
-          },
-          "teachings": {
-            "label": "Teachings"
-          }
-        },
-        "locations": {
-          "label": "Locations",
-          "demises": {
-            "label": "Places of Demise"
-          },
-          "origins": {
-            "label": "Places of Origin"
-          },
-          "residences": {
-            "label": "Current Residences"
-          }
-        },
-        "properties": {
-          "label": "Properties"
-        },
-        "titles": {
-          "label": "Titles"
-        }
-      },
-      "GENDERS": {
-        "male": "Male",
-        "female": "Female",
-        "other": "Other",
-        "none": "None"
-      },
-      "PROPERTIES": {
-        "dead": "Dead"
-      },
-      "SHEET": {
-        "LABEL": "Relation Page Sheet"
-      },
-      "VIEW": {
-        "age": "Age",
-        "birthdate": "Date of Birth",
-        "deathdate": "Date of Death",
-        "HEADERS": {
-          "private": "Private Information"
-        }
       }
     },
     "REWARD": {
@@ -473,9 +308,7 @@
   "TYPES": {
     "JournalEntryPage": {
       "quest-board": {
-        "location": "Location",
         "quest": "Quest",
-        "relation": "Relation",
         "shop": "Shop",
         "track": "Track"
       }
