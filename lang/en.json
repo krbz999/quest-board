@@ -71,14 +71,13 @@
         },
         "LEGENDS": {
           "currencies": "Currencies",
-          "objectives": "Objectives"
-        },
-        "TABS": {
-          "configuration": "Configuration",
-          "details": "Details",
-          "notes": "Notes",
           "objectives": "Objectives",
           "rewards": "Rewards"
+        },
+        "TABS": {
+          "configuration": "Setup",
+          "details": "Details",
+          "objectives": "Objectives"
         },
         "TITLE": "Quest: {name}",
         "WARNING": {
@@ -90,11 +89,6 @@
         "complete": {
           "hint": "Whether this quest is completed.",
           "label": "Complete"
-        },
-        "description": {
-          "private": {
-            "hint": "Private information written here is visible only game masters, and only game masters can edit it."
-          }
         },
         "objectives": {
           "element": {
@@ -146,8 +140,7 @@
         },
         "HEADERS": {
           "complete": "COMPLETE",
-          "objectives": "Objectives",
-          "private": "Private Information"
+          "objectives": "Objectives"
         },
         "optional": "Optional"
       }
@@ -195,15 +188,13 @@
           "dropItems": "Drop items here to add them to the shop's inventory.",
           "invalidItemType": "You cannot add a '{type}' item to the stock!"
         },
-        "TABS": {
-          "configuration": "Configuration",
-          "proprietor": "Proprietor",
-          "stock": "Stock"
-        },
         "TITLE": "Shop: {name}",
         "WARNING": {
           "onlyItems": "Only items can be added as shop inventory.",
           "onlyPack": "Only items stored in compendiums can be added as shop inventory."
+        },
+        "LEGENDS": {
+          "stock": "Stock"
         }
       },
       "FIELDS": {
@@ -269,11 +260,7 @@
     "TRACK": {
       "EDIT": {
         "LEGENDS": {
-          "counters": "Counters"
-        },
-        "TABS": {
-          "configuration": "Configuration",
-          "counters": "Counters"
+          "counters": "Trackers"
         },
         "TITLE": "Track: {name}"
       },
@@ -303,6 +290,9 @@
       "SHEET": {
         "LABEL": "Track Page Sheet"
       }
+    },
+    "SHARED": {
+      "identity": "Identity"
     }
   },
   "TYPES": {

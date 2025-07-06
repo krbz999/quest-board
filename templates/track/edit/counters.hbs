@@ -1,20 +1,3 @@
 <section class="{{tabs.counters.cssClass}}" data-group="{{tabs.counters.group}}" data-tab="{{tabs.counters.id}}">
-  <fieldset>
-    <legend>
-      <span>{{localize "QUESTBOARD.TRACK.EDIT.LEGENDS.counters"}}</span></span>
-      <button type="button" data-action="createCounter" class="icon fa-solid fa-square-plus"></button>
-    </legend>
-    {{#each ctx.counters}}
-    <div class="form-group" data-counter-id="{{id}}">
-      <div class="form-fields">
-        {{formInput name.field value=name.value name=name.name placeholder=(localize "Name")}}
-        {{formInput config.value.field value=config.value.value name=config.value.name placeholder="0" max=config.max.value type="number"}}
-        <span class="sep">/</span>
-        {{formInput config.max.field value=config.max.value name=config.max.name placeholder="20"}}
-        <button type="button" data-action="configureCounter" class="icon fa-solid fa-cog"></button>
-        <button type="button" data-action="deleteCounter" class="icon fa-solid fa-trash"></button>
-      </div>
-    </div>
-    {{/each}}
-  </fieldset>
+
 </section>

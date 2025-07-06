@@ -1,6 +1,8 @@
 <header class="journal-page-header">
+  {{#if page.title.show}}
   <h1 {{#if page.system.complete}}class="dashed"{{/if}}>
     <span class="name">{{page.name}}</span> {{#if page.system.complete}}&mdash; {{localize "QUESTBOARD.QUEST.VIEW.HEADERS.complete"}}{{/if}}
   </h1>
+  {{/if}}
   <p class="details">{{questType}}</p>
 </header>

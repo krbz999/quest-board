@@ -17,33 +17,16 @@ export default class TrackPageSheet extends AbstractPageSheet {
   /* -------------------------------------------------- */
 
   /** @inheritdoc */
-  static TABS = {
-    primary: {
-      tabs: [
-        { id: "configuration", icon: "fa-solid fa-gears" },
-        { id: "counters", icon: "fa-solid fa-chart-gantt" },
-      ],
-      initial: "configuration",
-      labelPrefix: "QUESTBOARD.TRACK.EDIT.TABS",
-    },
-  };
+  static TABS = {};
 
   /* -------------------------------------------------- */
 
   /** @inheritdoc */
   static EDIT_PARTS = {
-    tabs: {
-      template: "templates/generic/tab-navigation.hbs",
-    },
     configuration: {
       template: "modules/quest-board/templates/track/edit/configuration.hbs",
       templates: ["modules/quest-board/templates/shared/edit/basics.hbs"],
-      classes: ["tab"],
-    },
-    counters: {
-      template: "modules/quest-board/templates/track/edit/counters.hbs",
-      classes: ["scrollable", "tab"],
-      scrollable: [""],
+      classes: ["standard-form"],
     },
   };
 

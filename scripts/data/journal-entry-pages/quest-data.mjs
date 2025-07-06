@@ -18,9 +18,6 @@ export default class QuestData extends foundry.abstract.TypeDataModel {
         initial: "major",
         choices: () => QUESTBOARD.config.QUEST_TYPES,
       }),
-      description: new SchemaField({
-        private: new HTMLField(),
-      }),
       rewards: new SchemaField({
         items: new QUESTBOARD.data.fields.CollectionField(QUESTBOARD.data.RewardItem),
         currency: new TypedObjectField(new NumberField({ min: 0, nullable: true, integer: true })),

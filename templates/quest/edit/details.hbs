@@ -1,3 +1,9 @@
 <section class="{{tabs.details.cssClass}}" data-group="{{tabs.details.group}}" data-tab="{{tabs.details.id}}">
-  {{formGroup fields.text.fields.content value=source.text.content enriched=ctx.enriched.public height=400 toggled=true hint=(localize "QUESTBOARD.QUEST.EDIT.HINTS.content")}}
+  <div class="form-group">
+    <div class="form-fields">
+      {{formInput fields.text.fields.content value=source.text.content enriched=ctx.enriched.public height=400 toggled=false}}
+    </div>
+    <p class="hint">{{localize "QUESTBOARD.QUEST.EDIT.HINTS.content"}}</p>
+  </div>
+
 </section>

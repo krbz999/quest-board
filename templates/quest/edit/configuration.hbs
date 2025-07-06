@@ -1,9 +1,43 @@
 <section class="{{tabs.configuration.cssClass}}" data-group="{{tabs.configuration.group}}" data-tab="{{tabs.configuration.id}}">
+  {{> "modules/quest-board/templates/shared/edit/basics.hbs"}}
+  {{formGroup systemFields.type value=source.system.type rootId=rootId}}
+  {{#if isGM}}
+  {{formGroup systemFields.complete value=source.system.complete rootId=rootId}}
+  {{/if}}
+  <div class="form-group">
+    <label>{{localize "QUESTBOARD.REWARD.label"}}</label>
+    <div class="form-fields">
+      <button type="button" data-action="grantRewards" class="icon fa-solid fa-award"></button>
+    </div>
+    <p class="hint">{{localize "QUESTBOARD.REWARD.hint"}}</p>
+  </div>
+
   <fieldset>
-    {{> "modules/quest-board/templates/shared/edit/basics.hbs"}}
-    {{formGroup systemFields.type value=source.system.type rootId=rootId}}
-    {{#if isGM}}
-    {{formGroup systemFields.complete value=source.system.complete rootId=rootId}}
+    <legend>{{localize "QUESTBOARD.QUEST.EDIT.LEGENDS.currencies"}}</legend>
+    <div class="form-group">
+      {{#each ctx.currencies}}
+      {{formGroup field value=value placeholder="0" name=name rootId=@root.rootId label=placeholder classes="label-bottom"}}
+      {{/each}}
+    </div>
+  </fieldset>
+
+  <fieldset class="drop-area item-list">
+    <legend>{{localize "QUESTBOARD.QUEST.EDIT.LEGENDS.rewards"}}</legend>
+    {{#if ctx.items.length}}
+    {{#each ctx.items}}
+    <div class="form-group" data-reward-id="{{reward.id}}">
+      <div class="form-fields">
+        <span class="img">
+          <img src="{{ctx.item.img}}" alt="{{ctx.item.name}}">
+        </span>
+        <span class="label">{{{dnd5e-linkForUuid ctx.item.uuid}}}</span>
+        {{formInput quantity.field value=quantity.value name=quantity.name classes="quantity" placeholder=quantity.placeholder}}
+        <button type="button" class="icon fa-solid fa-trash" data-action="deleteReward"></button>
+      </div>
+    </div>
+    {{/each}}
+    {{else}}
+    <p class="hint empty">{{localize "QUESTBOARD.QUEST.EDIT.HINTS.dropItems"}}</p>
     {{/if}}
   </fieldset>
 </section>

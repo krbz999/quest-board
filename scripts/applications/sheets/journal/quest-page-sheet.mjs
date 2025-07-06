@@ -26,8 +26,6 @@ export default class QuestPageSheet extends AbstractPageSheet {
         { id: "configuration", icon: "fa-solid fa-gears" },
         { id: "objectives", icon: "fa-solid fa-list-check" },
         { id: "details", icon: "fa-solid fa-comment" },
-        { id: "notes", icon: "fa-solid fa-eye-slash" },
-        { id: "rewards", icon: "fa-solid fa-gem" },
       ],
       initial: "configuration",
       labelPrefix: "QUESTBOARD.QUEST.EDIT.TABS",
@@ -55,15 +53,6 @@ export default class QuestPageSheet extends AbstractPageSheet {
       template: "modules/quest-board/templates/quest/edit/details.hbs",
       classes: ["tab", "prose"],
     },
-    notes: {
-      template: "modules/quest-board/templates/quest/edit/notes.hbs",
-      classes: ["tab", "prose"],
-    },
-    rewards: {
-      template: "modules/quest-board/templates/quest/edit/rewards.hbs",
-      classes: ["scrollable", "tab"],
-      scrollable: [""],
-    },
   };
 
   /* -------------------------------------------------- */
@@ -86,10 +75,6 @@ export default class QuestPageSheet extends AbstractPageSheet {
       template: "modules/quest-board/templates/quest/view/objectives.hbs",
       classes: ["quest-board"],
     },
-    private: {
-      template: "modules/quest-board/templates/quest/view/private.hbs",
-      classes: ["quest-board"],
-    },
   };
 
   /* -------------------------------------------------- */
@@ -105,11 +90,9 @@ export default class QuestPageSheet extends AbstractPageSheet {
   async _prepareContext(options) {
     const context = await super._prepareContext(options);
 
-    const _options = { relativeTo: this.document };
     Object.assign(context.ctx, {
       enriched: {
-        public: await foundry.applications.ux.TextEditor.enrichHTML(this.document.text.content, _options),
-        private: await foundry.applications.ux.TextEditor.enrichHTML(this.document.system.description.private, _options),
+        public: await foundry.applications.ux.TextEditor.enrichHTML(this.document.text.content, { relativeTo: this.document }),
       },
       objectives: {
         fields: {
@@ -179,7 +162,7 @@ export default class QuestPageSheet extends AbstractPageSheet {
   /** @inheritdoc */
   _configureRenderParts(options) {
     const parts = super._configureRenderParts(options);
-    this.#removeGMOnlyTabs(parts);
+    if (!game.user.isGM) delete parts.rewards;
     return parts;
   }
 
@@ -188,41 +171,24 @@ export default class QuestPageSheet extends AbstractPageSheet {
   /** @inheritdoc */
   _prepareTabs(group) {
     const tabs = super._prepareTabs(group);
-    this.#removeGMOnlyTabs(tabs);
+    if (!game.user.isGM) delete tabs.rewards;
     return tabs;
-  }
-
-  /* -------------------------------------------------- */
-
-  /**
-   * Remove any properties that should be present only for game masters.
-   * @param {object} object     The main object. **will be mutated**
-   */
-  #removeGMOnlyTabs(object) {
-    if (!game.user.isGM) {
-      delete object.notes;
-      delete object.rewards;
-    }
   }
 
   /* -------------------------------------------------- */
 
   /** @inheritdoc */
   async _prepareContentContext(context, options) {
-    const enrichOptions = {
-      relativeTo: this.document,
-    };
+    const page = this.document;
+    const enrichOptions = { relativeTo: page };
 
-    context.ctx = {
-      public: {
-        enriched: await foundry.applications.ux.TextEditor.enrichHTML(this.document.text.content, enrichOptions),
-      },
-      private: {
-        enriched: this.document.isOwner
-          ? await foundry.applications.ux.TextEditor.enrichHTML(this.document.system.description.private, enrichOptions)
-          : null,
-      },
-    };
+    const ctx = context.ctx = { enriched: {} };
+
+    if (page.text.content) {
+      ctx.enriched.public = await foundry.applications.ux.TextEditor.implementation.enrichHTML(
+        page.text.content, enrichOptions,
+      );
+    }
 
     const canUpdate = this.document.canUserModify(game.user, "update");
     context.objectives = Object.entries(this.document.system.objectives).map(([k, v]) => {

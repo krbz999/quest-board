@@ -1,7 +1,9 @@
 <header class="journal-page-header">
+  {{#if page.title.show}}
   <h1>
     <span class="name">{{page.name}}</span>
   </h1>
+  {{/if}}
   <p class="details">
     {{#if customer}}
     {{localize "QUESTBOARD.SHOP.VIEW.CUSTOMER.current" name=customer.name}}

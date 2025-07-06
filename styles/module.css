@@ -1,5 +1,10 @@
 .quest-board.application .window-content {
   padding: 1rem;
+  gap: 8px;
+
+  & > section {
+    gap: 8px;
+  }
 
   & legend:has(button) {
     display: flex;

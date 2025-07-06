@@ -62,7 +62,7 @@ export default class AbstractPageSheet extends foundry.applications.sheets.journ
       permissions: {},
     }).bind(this.element);
 
-    new Promise(r => setTimeout(r, 200)).then(() => this.element.classList.remove("dnd5e2"));
+    // new Promise(r => setTimeout(r, 200)).then(() => this.element.classList.remove("dnd5e2"));
   }
 
   /* -------------------------------------------------- */

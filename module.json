@@ -55,14 +55,7 @@
   },
   "documentTypes": {
     "JournalEntryPage": {
-      "quest": {
-        "htmlFields": [
-          "description.private"
-        ],
-        "gmOnlyFields": [
-          "description.private"
-        ]
-      },
+      "quest": {},
       "shop": {},
       "track": {
         "htmlFields": [

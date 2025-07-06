@@ -1,4 +1,7 @@
-{{!--TODO: remove label once https://github.com/foundryvtt/foundryvtt/issues/12272 is resolved --}}
-{{formGroup fields.name label=(localize "Name") value=source.name rootId=rootId placeholder=(localize "Name")}}
-{{formGroup field label=label value=value rootId=@root.rootId choices=options}}
-{{formGroup fields.category label=ctx.category.label value=source.category options=ctx.category.options rootId=@root.rootId}}
+<fieldset>
+  <legend>{{localize "QUESTBOARD.SHARED.identity"}}</legend>
+  {{formGroup fields.name label=(localize "JOURNALENTRYPAGE.PageTitle") value=source.name rootId=rootId placeholder=(localize "Name")}}
+  {{formGroup fields.title.fields.show rootId=@root.rootId value=source.title.show label=(localize "JOURNALENTRYPAGE.ShowTitle")}}
+  {{formGroup fields.title.fields.level rootId=@root.rootId value=source.title.level label=(localize "JOURNALENTRYPAGE.HeadingLevel") choices=ctx.titleLevel.options}}
+  {{formGroup fields.category label=ctx.category.label value=source.category options=ctx.category.options rootId=@root.rootId}}
+</fieldset>

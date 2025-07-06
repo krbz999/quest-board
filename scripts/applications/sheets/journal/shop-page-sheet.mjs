@@ -16,38 +16,16 @@ export default class ShopPageSheet extends AbstractPageSheet {
   /* -------------------------------------------------- */
 
   /** @inheritdoc */
-  static TABS = {
-    primary: {
-      tabs: [
-        { id: "configuration", icon: "fa-solid fa-gears" },
-        { id: "proprietor", icon: "fa-solid fa-user" },
-        { id: "stock", icon: "fa-solid fa-shop" },
-      ],
-      initial: "configuration",
-      labelPrefix: "QUESTBOARD.SHOP.EDIT.TABS",
-    },
-  };
+  static TABS = {};
 
   /* -------------------------------------------------- */
 
   /** @inheritdoc */
   static EDIT_PARTS = {
-    tabs: {
-      template: "templates/generic/tab-navigation.hbs",
-    },
     configuration: {
       template: "modules/quest-board/templates/shop/edit/configuration.hbs",
       templates: ["modules/quest-board/templates/shared/edit/basics.hbs"],
-      classes: ["tab"],
-    },
-    proprietor: {
-      template: "modules/quest-board/templates/shop/edit/proprietor.hbs",
-      classes: ["tab"],
-    },
-    stock: {
-      template: "modules/quest-board/templates/shop/edit/stock.hbs",
-      classes: ["scrollable", "tab"],
-      scrollable: [""],
+      classes: ["standard-form"],
     },
   };
 
