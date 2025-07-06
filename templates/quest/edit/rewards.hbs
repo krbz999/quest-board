@@ -2,7 +2,7 @@
   <fieldset>
     <legend>{{localize "QUESTBOARD.QUEST.EDIT.LEGENDS.currencies"}}</legend>
     <div class="form-group">
-      {{#each currencies}}
+      {{#each ctx.currencies}}
       {{formGroup field value=value placeholder="0" name=name rootId=@root.rootId label=placeholder classes="label-bottom"}}
       {{/each}}
     </div>
@@ -17,8 +17,8 @@
   </div>
 
   <fieldset class="drop-area item-list">
-    {{#if items.length}}
-    {{#each items}}
+    {{#if ctx.items.length}}
+    {{#each ctx.items}}
     <div class="form-group" data-reward-id="{{reward.id}}">
       <div class="form-fields">
         <span class="img">

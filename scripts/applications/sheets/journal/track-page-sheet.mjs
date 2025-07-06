@@ -93,7 +93,7 @@ export default class TrackPageSheet extends AbstractPageSheet {
       return ctx;
     };
 
-    Object.assign(context.fields, {
+    Object.assign(context.ctx, {
       counters: Object.keys(this.document.system.counters).map(prepCounter),
     });
 

@@ -124,24 +124,25 @@ export default class ShopPageSheet extends AbstractPageSheet {
   async _prepareContext(options) {
     const context = await super._prepareContext(options);
 
-    Object.assign(context.fields, {
-      owner: this._prepareField("system.owner"),
-      each: {
-        value: this._prepareField("system.stock.element.price.each.value"),
-        denom: this._prepareField("system.stock.element.price.each.denomination"),
+    Object.assign(context.ctx, {
+      stockFields: {
+        each: {
+          value: this.document.system.schema.getField("stock.element.price.each.value"),
+          denom: this.document.system.schema.getField("stock.element.price.each.denomination"),
+        },
+        stack: {
+          value: this.document.system.schema.getField("stock.element.price.stack.value"),
+          denom: this.document.system.schema.getField("stock.element.price.stack.denomination"),
+        },
+        qty: this.document.system.schema.getField("stock.element.quantity"),
       },
-      stack: {
-        value: this._prepareField("system.stock.element.price.stack.value"),
-        denom: this._prepareField("system.stock.element.price.stack.denomination"),
-      },
-      quantity: this._prepareField("system.stock.element.quantity"),
     });
 
-    context.stock = [];
+    context.ctx.stock = [];
     for (const stock of this.document.system.stock) {
       const data = await stock.prepareEntryData();
       if (!data) continue;
-      context.stock.push({ stock, ctx: data });
+      context.ctx.stock.push({ stock, ctx: data });
     }
 
     await this.#prepareContextProprietor(context);

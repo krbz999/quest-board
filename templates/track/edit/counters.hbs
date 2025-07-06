@@ -4,7 +4,7 @@
       <span>{{localize "QUESTBOARD.TRACK.EDIT.LEGENDS.counters"}}</span></span>
       <button type="button" data-action="createCounter" class="icon fa-solid fa-square-plus"></button>
     </legend>
-    {{#each fields.counters}}
+    {{#each ctx.counters}}
     <div class="form-group" data-counter-id="{{id}}">
       <div class="form-fields">
         {{formInput name.field value=name.value name=name.name placeholder=(localize "Name")}}

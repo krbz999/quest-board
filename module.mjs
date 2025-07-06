@@ -86,3 +86,7 @@ Hooks.on("getJournalSheetEntryContext", data.journalEntryPages.QuestData.addCont
 Hooks.on("getJournalEntryPageContextOptions", data.journalEntryPages.QuestData.addContextMenuOptions);
 Hooks.on("updateWorldTime", () => ui.calendar.render());
 Hooks.once("renderPlayers", applications.apps.CalendarView.renderPlayers);
+
+/* -------------------------------------------------- */
+
+Hooks.on("hotReload", utils._hotreload);

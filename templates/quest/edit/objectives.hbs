@@ -4,11 +4,11 @@
       <span>{{localize "QUESTBOARD.QUEST.EDIT.LEGENDS.objectives"}}</span>
       <button type="button" data-action="addObjective" class="icon fa-solid fa-square-plus"></button>
     </legend>
-    {{#each objectives.objectives}}
+    {{#each ctx.objectives.objectives}}
     <div class="form-group" data-objective="{{id}}">
       <div class="form-fields">
-        {{formInput @root.objectives.fields.checked value=checked name=(concat prefix "checked") disabled=(gt objectives.length 0)}}
-        {{formInput @root.objectives.fields.text value=text name=(concat prefix "text") placeholder=@root.objectives.fields.textPlaceholder}}
+        {{formInput @root.ctx.objectives.fields.checked value=checked name=(concat prefix "checked") disabled=(gt objectives.length 0)}}
+        {{formInput @root.ctx.objectives.fields.text value=text name=(concat prefix "text") placeholder=@root.ctx.objectives.fields.textPlaceholder}}
         <button type="button" data-action="addSubobjective" class="icon fa-solid fa-plus"></button>
         <button type="button" data-action="removeObjective" class="icon fa-solid fa-minus"></button>
         <button type="button" data-action="configureObjective" class="icon fa-solid fa-cog"></button>
@@ -19,8 +19,8 @@
     {{#each objectives}}
     <div class="form-group nested" data-objective="{{id}}" data-parent-objective="{{parent}}">
       <div class="form-fields">
-        {{formInput @root.objectives.fields.checked value=checked name=(concat prefix "checked")}}
-        {{formInput @root.objectives.fields.text value=text name=(concat prefix "text") placeholder=@root.objectives.fields.textPlaceholder}}
+        {{formInput @root.ctx.objectives.fields.checked value=checked name=(concat prefix "checked")}}
+        {{formInput @root.ctx.objectives.fields.text value=text name=(concat prefix "text") placeholder=@root.ctx.objectives.fields.textPlaceholder}}
         <button type="button" data-action="removeObjective" class="icon fa-solid fa-minus"></button>
         <button type="button" data-action="configureObjective" class="icon fa-solid fa-cog"></button>
       </div>

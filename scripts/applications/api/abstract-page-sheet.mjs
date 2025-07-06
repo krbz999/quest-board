@@ -19,40 +19,18 @@ export default class AbstractPageSheet extends foundry.applications.sheets.journ
 
   /* -------------------------------------------------- */
 
-  /**
-   * Configure basic data for the form group.
-   * @param {string} path   The path to the field.
-   * @returns {import("../../types.mjs").FieldContext}
-   */
-  _prepareField(path) {
-    const field = path.startsWith("system.")
-      ? this.document.system.schema.getField(path.slice(7))
-      : this.document.schema.getField(path);
-    return {
-      field,
-      value: foundry.utils.getProperty(this.document, path),
-      source: foundry.utils.getProperty(this.document._source, path),
-    };
-  }
-
-  /* -------------------------------------------------- */
-
   /** @inheritdoc */
   async _prepareContext(options) {
-    const context = await super._prepareContext(options);
-    return Object.assign(context, {
+    return {
       isGM: game.user.isGM,
       rootId: this.document.uuid,
-      fields: {
-        // TODO: remove label once https://github.com/foundryvtt/foundryvtt/issues/12272 is resolved
-        name: { ...this._prepareField("name"), label: "Name" },
-        titleLevel: {
-          ...this._prepareField("title.level"),
-          label: game.i18n.localize("JOURNALENTRYPAGE.HeadingLevel"),
-          options: this._prepareHeadingLevels(),
-        },
+      page: this.document,
+      fields: this.document.schema.fields,
+      systemFields: this.document.system.schema.fields,
+      source: this.document._source,
+      tabs: this._prepareTabs("primary"),
+      ctx: {
         category: {
-          ...this._prepareField("category"),
           label: game.i18n.localize("JOURNALENTRYPAGE.Category"),
           options: [{
             value: "",
@@ -62,8 +40,12 @@ export default class AbstractPageSheet extends foundry.applications.sheets.journ
               .map(c => ({ value: c.id, label: c.name })),
           ),
         },
+        titleLevel: {
+          label: game.i18n.localize("JOURNALENTRYPAGE.HeadingLevel"),
+          options: this._prepareHeadingLevels(),
+        },
       },
-    });
+    };
   }
 
   /* -------------------------------------------------- */
@@ -79,6 +61,8 @@ export default class AbstractPageSheet extends foundry.applications.sheets.journ
       },
       permissions: {},
     }).bind(this.element);
+
+    new Promise(r => setTimeout(r, 200)).then(() => this.element.classList.remove("dnd5e2"));
   }
 
   /* -------------------------------------------------- */

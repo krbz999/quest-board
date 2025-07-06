@@ -1,7 +1,7 @@
 <section class="{{tabs.stock.cssClass}}" data-group="{{tabs.stock.group}}" data-tab="{{tabs.stock.id}}">
   <fieldset class="drop-area item-list">
-    {{#if stock.length}}
-    {{#each stock}}
+    {{#if ctx.stock.length}}
+    {{#each ctx.stock}}
     <div class="form-group" data-stock-id="{{stock.id}}">
       <div class="form-fields">
         <span class="img">

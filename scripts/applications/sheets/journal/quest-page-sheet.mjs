@@ -105,45 +105,36 @@ export default class QuestPageSheet extends AbstractPageSheet {
   async _prepareContext(options) {
     const context = await super._prepareContext(options);
 
-    Object.assign(context.fields, {
-      type: this._prepareField("system.type"),
-      public: this._prepareField("text.content"),
-      private: this._prepareField("system.description.private"),
-      complete: this._prepareField("system.complete"),
-    });
-
     const _options = { relativeTo: this.document };
-    context.fields.public.enriched = await foundry.applications.ux.TextEditor.enrichHTML(
-      context.fields.public.value, _options,
-    );
-    context.fields.public.hint = game.i18n.localize("QUESTBOARD.QUEST.EDIT.HINTS.content");
-    context.fields.private.enriched = await foundry.applications.ux.TextEditor.enrichHTML(
-      context.fields.private.value, _options,
-    );
-
-    context.objectives = {
-      fields: {
-        checked: this.document.system.schema.getField("objectives.element.checked"),
-        text: this.document.system.schema.getField("objectives.element.text"),
-        textPlaceholder: game.i18n.localize("QUESTBOARD.QUEST.FIELDS.objectives.element.text.placeholder"),
-        sort: this.document.system.schema.getField("objectives.element.sort"),
+    Object.assign(context.ctx, {
+      enriched: {
+        public: await foundry.applications.ux.TextEditor.enrichHTML(this.document.text.content, _options),
+        private: await foundry.applications.ux.TextEditor.enrichHTML(this.document.system.description.private, _options),
       },
-      objectives: Object.entries(this.document.system.objectives).map(([k, v]) => {
-        return {
-          ...v,
-          id: k,
-          prefix: `system.objectives.${k}.`,
-          objectives: Object.entries(v.objectives).map(([u, w]) => {
-            return {
-              ...w,
-              id: u,
-              parent: k,
-              prefix: `system.objectives.${k}.objectives.${u}.`,
-            };
-          }).sort((a, b) => a.sort - b.sort),
-        };
-      }).sort((a, b) => a.sort - b.sort),
-    };
+      objectives: {
+        fields: {
+          checked: this.document.system.schema.getField("objectives.element.checked"),
+          text: this.document.system.schema.getField("objectives.element.text"),
+          textPlaceholder: game.i18n.localize("QUESTBOARD.QUEST.FIELDS.objectives.element.text.placeholder"),
+          sort: this.document.system.schema.getField("objectives.element.sort"),
+        },
+        objectives: Object.entries(this.document.system.objectives).map(([k, v]) => {
+          return {
+            ...v,
+            id: k,
+            prefix: `system.objectives.${k}.`,
+            objectives: Object.entries(v.objectives).map(([u, w]) => {
+              return {
+                ...w,
+                id: u,
+                parent: k,
+                prefix: `system.objectives.${k}.objectives.${u}.`,
+              };
+            }).sort((a, b) => a.sort - b.sort),
+          };
+        }).sort((a, b) => a.sort - b.sort),
+      },
+    });
 
     const currency = this.document.system.currencyRewards;
     const itemRewards = [];
@@ -154,9 +145,9 @@ export default class QuestPageSheet extends AbstractPageSheet {
     }
 
     // Currencies
-    context.currencies = [];
+    context.ctx.currencies = [];
     for (const [k, v] of Object.entries(CONFIG.DND5E.currencies)) {
-      context.currencies.push({
+      context.ctx.currencies.push({
         field: this.document.system.schema.getField("rewards.currency.element"),
         name: `system.rewards.currency.${k}`,
         value: currency[k] ?? null,
@@ -164,12 +155,12 @@ export default class QuestPageSheet extends AbstractPageSheet {
       });
     }
 
-    context.items = [];
+    context.ctx.items = [];
     for (const reward of this.document.system.rewards.items) {
       const ctx = await reward.prepareEntryData();
       if (!ctx) continue;
       const ph = ctx.item.system.quantity;
-      context.items.push({
+      context.ctx.items.push({
         ctx, reward,
         quantity: {
           value: reward.quantity,
