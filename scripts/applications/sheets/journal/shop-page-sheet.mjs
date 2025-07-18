@@ -276,7 +276,7 @@ export default class ShopPageSheet extends AbstractPageSheet {
       customerUuid: this.#customer.uuid,
     };
 
-    const result = await gm.query("questboard", { type: "purchase", config: configuration });
+    const result = await gm.query("questboard", { type: "purchase", config: configuration }, { timeout: 10_000 });
     if (!result || (result.success === false)) {
       const message = [
         game.i18n.localize("QUESTBOARD.PURCHASE.WARNING.failure"),
