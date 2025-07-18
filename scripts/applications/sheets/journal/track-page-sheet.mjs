@@ -91,7 +91,7 @@ export default class TrackPageSheet extends AbstractPageSheet {
     for (const [id, v] of Object.entries(this.document.system.counters)) {
       const data = {
         id, ...v,
-        text: await foundry.applications.ux.TextEditor.enrichHTML(v.description, {
+        text: await foundry.applications.ux.TextEditor.implementation.enrichHTML(v.description, {
           rollData: this.document.getRollData(),
           relativeTo: this.document,
         }),

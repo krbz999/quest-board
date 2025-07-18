@@ -109,7 +109,7 @@ export default class TrackCounterConfig extends HandlebarsApplicationMixin(Appli
       description: {
         field: this.document.system.schema.getField("counters.element.description"),
         value: counter.description,
-        enriched: await foundry.applications.ux.TextEditor.enrichHTML(counter.description, {
+        enriched: await foundry.applications.ux.TextEditor.implementation.enrichHTML(counter.description, {
           rollData: this.document.getRollData(), relativeTo: this.document,
         }),
       },

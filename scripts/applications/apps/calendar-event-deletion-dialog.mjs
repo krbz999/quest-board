@@ -50,7 +50,9 @@ export default class CalendarEventDeletionDialog extends HandlebarsApplicationMi
     for (const uuid of uuids) {
       const page = await fromUuid(uuid);
       const name = page?.name ?? game.i18n.localize("QUESTBOARD.CALENDAR.contextDeleteEventsDialogUnknownPage");
-      const link = await foundry.applications.ux.TextEditor.enrichHTML(page ? page.link : `@UUID[${uuid}]{${name}}`);
+      const link = await foundry.applications.ux.TextEditor.implementation.enrichHTML(
+        page ? page.link : `@UUID[${uuid}]{${name}}`,
+      );
       pages.push({ page, name, uuid, link });
     }
     return { pages };

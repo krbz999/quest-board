@@ -92,7 +92,9 @@ export default class QuestPageSheet extends AbstractPageSheet {
 
     Object.assign(context.ctx, {
       enriched: {
-        public: await foundry.applications.ux.TextEditor.enrichHTML(this.document.text.content, { relativeTo: this.document }),
+        public: await foundry.applications.ux.TextEditor.implementation.enrichHTML(this.document.text.content, {
+          relativeTo: this.document,
+        }),
       },
       objectives: {
         fields: {
@@ -214,7 +216,7 @@ export default class QuestPageSheet extends AbstractPageSheet {
 
   /** @inheritdoc */
   _onDrop(event) {
-    const data = foundry.applications.ux.TextEditor.getDragEventData(event);
+    const data = foundry.applications.ux.TextEditor.implementation.getDragEventData(event);
     if (data.type !== "Item") {
       ui.notifications.error("QUESTBOARD.QUEST.EDIT.WARNING.onlyItems", { localize: true });
       return;

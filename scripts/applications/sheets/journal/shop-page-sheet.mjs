@@ -159,7 +159,7 @@ export default class ShopPageSheet extends AbstractPageSheet {
 
   /** @inheritdoc */
   _onDrop(event) {
-    const data = foundry.applications.ux.TextEditor.getDragEventData(event);
+    const data = foundry.applications.ux.TextEditor.implementation.getDragEventData(event);
     if (data.type !== "Item") {
       ui.notifications.error("QUESTBOARD.SHOP.EDIT.WARNING.onlyItems", { localize: true });
       return;
