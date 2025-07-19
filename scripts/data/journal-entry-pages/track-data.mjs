@@ -49,6 +49,13 @@ export default class TrackData extends foundry.abstract.TypeDataModel {
 
   /* -------------------------------------------------- */
 
+  /** @inheritdoc */
+  async toEmbed(config, options = {}) {
+    return null;
+  }
+
+  /* -------------------------------------------------- */
+
   /**
    * Delete a counter from the page.
    * @param {string|string[]} ids           An id or array of ids of counters to delete.

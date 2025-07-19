@@ -270,19 +270,7 @@ export default class QuestData extends foundry.abstract.TypeDataModel {
 
   /** @inheritdoc */
   async toEmbed(config, options = {}) {
-    const sheet = new QUESTBOARD.applications.sheets.journal.QuestPageSheet({
-      document: this.parent,
-      mode: "view",
-    });
-
-    sheet._configureRenderOptions(options);
-    const context = await sheet._prepareContext(options);
-    const element = await sheet._renderFrame(options);
-    const content = element.querySelector(".window-content");
-    const result = await sheet._renderHTML(context, options);
-    sheet._replaceHTML(result, content, options);
-
-    return content.children;
+    return null;
   }
 
   /* -------------------------------------------------- */

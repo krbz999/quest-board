@@ -134,4 +134,11 @@ export default class ShopData extends foundry.abstract.TypeDataModel {
       document: this.parent,
     }).render({ force: true });
   }
+
+  /* -------------------------------------------------- */
+
+  /** @inheritdoc */
+  async toEmbed(config, options = {}) {
+    return null;
+  }
 }
