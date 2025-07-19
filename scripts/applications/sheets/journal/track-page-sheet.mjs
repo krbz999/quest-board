@@ -26,7 +26,8 @@ export default class TrackPageSheet extends AbstractPageSheet {
     configuration: {
       template: "modules/quest-board/templates/track/edit/configuration.hbs",
       templates: ["modules/quest-board/templates/shared/edit/basics.hbs"],
-      classes: ["standard-form"],
+      classes: ["standard-form", "scrollable"],
+      scrollable: [".scrollable"],
     },
   };
 

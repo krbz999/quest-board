@@ -2,30 +2,32 @@
   {{> "modules/quest-board/templates/shared/edit/basics.hbs"}}
   {{formGroup systemFields.owner value=source.system.owner rootId=rootId}}
 
-  <fieldset class="drop-area item-list">
-    <legend>{{localize "QUESTBOARD.SHOP.EDIT.LEGENDS.stock"}}</legend>
-    {{#if ctx.stock.length}}
-    {{#each ctx.stock}}
-    <div class="form-group" data-stock-id="{{stock.id}}">
-      <div class="form-fields">
-        <span class="img">
-          <img src="{{ctx.item.img}}" alt="{{ctx.item.name}}">
-        </span>
-        <span class="label">{{{dnd5e-linkForUuid ctx.item.uuid}}}</span>
-        <span class="price">
-          <span class="each">{{ctx.pev}} {{ctx.ped}}</span>
-          {{#if (gt ctx.quantity 1)}}
-          <span class="stack">({{ctx.psv}} {{ctx.psd}})</span>
-          {{/if}}
-        </span>
-        <span class="quantity">&times; {{ctx.quantity}}</span>
-        <button type="button" data-action="editStock" class="icon fa-solid fa-cog"></button>
-        <button type="button" data-action="removeStock" class="icon fa-solid fa-trash"></button>
+  <section class="scrollable">
+    <fieldset class="drop-area item-list">
+      <legend>{{localize "QUESTBOARD.SHOP.EDIT.LEGENDS.stock"}}</legend>
+      {{#if ctx.stock.length}}
+      {{#each ctx.stock}}
+      <div class="form-group" data-stock-id="{{stock.id}}">
+        <div class="form-fields">
+          <span class="img">
+            <img src="{{ctx.item.img}}" alt="{{ctx.item.name}}">
+          </span>
+          <span class="label">{{{dnd5e-linkForUuid ctx.item.uuid}}}</span>
+          <span class="price">
+            <span class="each">{{ctx.pev}} {{ctx.ped}}</span>
+            {{#if (gt ctx.quantity 1)}}
+            <span class="stack">({{ctx.psv}} {{ctx.psd}})</span>
+            {{/if}}
+          </span>
+          <span class="quantity">&times; {{ctx.quantity}}</span>
+          <button type="button" data-action="editStock" class="icon fa-solid fa-cog"></button>
+          <button type="button" data-action="removeStock" class="icon fa-solid fa-trash"></button>
+        </div>
       </div>
-    </div>
-    {{/each}}
-    {{else}}
-    <p class="hint empty">{{localize "QUESTBOARD.SHOP.EDIT.HINTS.dropItems"}}</p>
-    {{/if}}
-  </fieldset>
+      {{/each}}
+      {{else}}
+      <p class="hint empty">{{localize "QUESTBOARD.SHOP.EDIT.HINTS.dropItems"}}</p>
+      {{/if}}
+    </fieldset>
+  </section>
 </section>

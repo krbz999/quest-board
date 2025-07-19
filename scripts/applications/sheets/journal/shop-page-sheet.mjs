@@ -25,7 +25,8 @@ export default class ShopPageSheet extends AbstractPageSheet {
     configuration: {
       template: "modules/quest-board/templates/shop/edit/configuration.hbs",
       templates: ["modules/quest-board/templates/shared/edit/basics.hbs"],
-      classes: ["standard-form"],
+      classes: ["standard-form", "scrollable"],
+      scrollable: [".scrollable"],
     },
   };
 
@@ -158,17 +159,55 @@ export default class ShopPageSheet extends AbstractPageSheet {
   /* -------------------------------------------------- */
 
   /** @inheritdoc */
-  _onDrop(event) {
+  async _onDrop(event) {
     const data = foundry.applications.ux.TextEditor.implementation.getDragEventData(event);
-    if (data.type !== "Item") {
+    let uuids;
+
+    // Drop a compendium.
+    if (data.type === "Compendium") {
+      const pack = game.packs.get(data.collection);
+      if (pack.metadata.type !== "Item") {
+        ui.notifications.error("QUESTBOARD.SHOP.EDIT.WARNING.onlyItems", { localize: true });
+        return;
+      }
+
+      uuids = pack.index.map(index => index.uuid);
+    }
+
+    // Drop a folder.
+    else if (data.type === "Folder") {
+      const folder = fromUuidSync(data.uuid);
+      if (folder.type !== "Item") {
+        ui.notifications.error("QUESTBOARD.SHOP.EDIT.WARNING.onlyItems", { localize: true });
+        return;
+      }
+      uuids = folder.contents.map(item => item.uuid);
+    }
+
+    // The drop must otherwise be an item.
+    else if (data.type === "Item") {
+      uuids = [data.uuid];
+    }
+
+    else {
       ui.notifications.error("QUESTBOARD.SHOP.EDIT.WARNING.onlyItems", { localize: true });
       return;
     }
-    if (!data.uuid.startsWith("Compendium.")) {
+
+    // All uuids must be in a pack.
+    if (!uuids.every(uuid => uuid.startsWith("Compendium."))) {
       ui.notifications.error("QUESTBOARD.SHOP.EDIT.WARNING.onlyPack", { localize: true });
       return;
     }
-    this.document.system.addStock(data.uuid);
+
+    if (uuids.length > 50) {
+      const confirm = await foundry.applications.api.Dialog.confirm({
+        content: `<p>${game.i18n.format("QUESTBOARD.SHOP.EDIT.areYouSure", { length: uuids.length })}</p>`,
+      });
+      if (!confirm) return;
+    }
+
+    for (const uuid of uuids) await this.document.system.addStock(uuid);
   }
 
   /* -------------------------------------------------- */

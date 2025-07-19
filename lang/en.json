@@ -64,6 +64,7 @@
     },
     "QUEST": {
       "EDIT": {
+        "areYouSure": "Are you sure you want to add {length} items as quest rewards?",
         "HINTS": {
           "content": "The public description of the quest is visible to any users able to view the page.",
           "dropItems": "Drop items here to add them as a quest reward.",
@@ -184,6 +185,7 @@
     },
     "SHOP": {
       "EDIT": {
+        "areYouSure": "Are you sure you want to add {length} items to the stock?",
         "HINTS": {
           "dropItems": "Drop items here to add them to the shop's inventory.",
           "invalidItemType": "You cannot add a '{type}' item to the stock!"

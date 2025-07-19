@@ -21,23 +21,25 @@
     </div>
   </fieldset>
 
-  <fieldset class="drop-area item-list">
-    <legend>{{localize "QUESTBOARD.QUEST.EDIT.LEGENDS.rewards"}}</legend>
-    {{#if ctx.items.length}}
-    {{#each ctx.items}}
-    <div class="form-group" data-reward-id="{{reward.id}}">
-      <div class="form-fields">
-        <span class="img">
-          <img src="{{ctx.item.img}}" alt="{{ctx.item.name}}">
-        </span>
-        <span class="label">{{{dnd5e-linkForUuid ctx.item.uuid}}}</span>
-        {{formInput quantity.field value=quantity.value name=quantity.name classes="quantity" placeholder=quantity.placeholder}}
-        <button type="button" class="icon fa-solid fa-trash" data-action="deleteReward"></button>
+  <section class="scrollable">
+    <fieldset class="drop-area item-list">
+      <legend>{{localize "QUESTBOARD.QUEST.EDIT.LEGENDS.rewards"}}</legend>
+      {{#if ctx.items.length}}
+      {{#each ctx.items}}
+      <div class="form-group" data-reward-id="{{reward.id}}">
+        <div class="form-fields">
+          <span class="img">
+            <img src="{{ctx.item.img}}" alt="{{ctx.item.name}}">
+          </span>
+          <span class="label">{{{dnd5e-linkForUuid ctx.item.uuid}}}</span>
+          {{formInput quantity.field value=quantity.value name=quantity.name classes="quantity" placeholder=quantity.placeholder}}
+          <button type="button" class="icon fa-solid fa-trash" data-action="deleteReward"></button>
+        </div>
       </div>
-    </div>
-    {{/each}}
-    {{else}}
-    <p class="hint empty">{{localize "QUESTBOARD.QUEST.EDIT.HINTS.dropItems"}}</p>
-    {{/if}}
-  </fieldset>
+      {{/each}}
+      {{else}}
+      <p class="hint empty">{{localize "QUESTBOARD.QUEST.EDIT.HINTS.dropItems"}}</p>
+      {{/if}}
+    </fieldset>
+  </section>
 </section>
