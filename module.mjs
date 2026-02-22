@@ -1,7 +1,7 @@
-import * as applications from "./scripts/applications/_module.mjs";
-import * as config from "./scripts/config.mjs";
-import * as data from "./scripts/data/_module.mjs";
-import * as utils from "./scripts/utils/_module.mjs";
+import * as applications from "./code/applications/_module.mjs";
+import * as config from "./code/config.mjs";
+import * as data from "./code/data/_module.mjs";
+import * as utils from "./code/utils/_module.mjs";
 
 globalThis.QUESTBOARD = {
   applications,
