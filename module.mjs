@@ -61,5 +61,4 @@ Hooks.once("i18nInit", () => {
 
 /* -------------------------------------------------- */
 
-Hooks.on("getJournalSheetEntryContext", data.journalEntryPages.QuestData.addContextMenuOptions);
 Hooks.on("getJournalEntryPageContextOptions", data.journalEntryPages.QuestData.addContextMenuOptions);
