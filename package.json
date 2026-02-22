@@ -6,7 +6,7 @@
     "createSymlinks": "node ./tools/create-symlinks.mjs",
     "build": "npm run build:code",
     "build:code": "rollup -c",
-    "postinstall": "npm run createSymlinks",
+    "postinstall": "npm run createSymlinks"
   },
   "author": "Zhell",
   "devDependencies": {
