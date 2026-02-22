@@ -1,10 +1,10 @@
 {
   "id": "quest-board",
   "title": "Quest Board",
-  "description": "A module for the dnd5e system that adds a new Quest journal entry page type.",
+  "description": "A module for the dnd5e system that adds new JournalEntryPage subtypes.",
   "version": "AUTOMATIC",
   "compatibility": {
-    "minimum": "13",
+    "minimum": "13.351",
     "verified": "13"
   },
   "authors": [
@@ -19,7 +19,10 @@
   "relationships": {
     "systems": [
       {
-        "id": "dnd5e"
+        "id": "dnd5e",
+        "compatibility": {
+          "minimum": "5.2.5"
+        }
       }
     ]
   },
