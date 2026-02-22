@@ -1,4 +1,3 @@
-export { default as CalendarEventStorage } from "./calendar-event-storage.mjs";
 export { default as RewardItem } from "./reward-item.mjs";
 export { default as StockItem } from "./stock-item.mjs";
 export { default as TypedObjectModel } from "./typed-object-model.mjs";

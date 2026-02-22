@@ -1,6 +1,6 @@
 # Quest Board
 
-A module for the Foundry VTT dnd5e system. This adds new `JournalEntryPage` document subtypes as well as a calendar UI.
+A module for the Foundry VTT dnd5e system. This adds new `JournalEntryPage` document subtypes.
 
 ## Quest
 The `quest-board.quest` page subtype can be used to write quests for players, or for players to keep track of campaign objectives.
@@ -28,8 +28,3 @@ A game master being logged in is required for the purchasing to function.
 The `quest-board.track` page subtype can be used by game masters and players to set up counters. Anyone with sufficient ownership can change the counters' values directly on the viewed page.
 
 Each page can be assigned a name, description, and a configurable maximum.
-
-# Calendar
-A calendar view is added and can be accessed in the bottom left above the Players. This derives all data from the calendar data model configured in `CONFIG.time.worldCalendarClass`. This module does not replace the calendar, only allows for viewing it.
-
-A game master can add events to specific dates, and all users can view these events.

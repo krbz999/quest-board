@@ -30,9 +30,6 @@ Hooks.once("init", () => {
     [`${QUESTBOARD.id}.track`]: applications.sheets.journal.TrackPageSheet.DEFAULT_OPTIONS.window.icon,
   });
 
-  CONFIG.ui.calendar = applications.apps.CalendarView;
-  CONFIG.time.formatters.natural = applications.apps.CalendarView.formatDateNatural;
-
   foundry.applications.apps.DocumentSheetConfig.registerSheet(
     foundry.documents.JournalEntryPage, QUESTBOARD.id, applications.sheets.journal.QuestPageSheet,
     { types: [`${QUESTBOARD.id}.quest`], makeDefault: true, label: "QUESTBOARD.QUEST.SHEET.LABEL" },
@@ -54,39 +51,15 @@ Hooks.once("init", () => {
   };
 
   QUESTBOARD.semaphore = new foundry.utils.Semaphore(1);
-
-  // Calendar-related data.
-  game.settings.register(QUESTBOARD.id, data.CalendarEventStorage.SETTING, {
-    type: data.CalendarEventStorage,
-    config: false,
-    scope: "world",
-    onChange: () => ui.calendar.render(),
-  });
-  game.settings.register(QUESTBOARD.id, "displayCalendar", {
-    name: "QUESTBOARD.CALENDAR.settingDisplayCalendarName",
-    hint: "QUESTBOARD.CALENDAR.settingDisplayCalendarHint",
-    type: new foundry.data.fields.BooleanField(),
-    default: true,
-    config: true,
-    requiresReload: true,
-    scope: "world",
-  });
 });
 
 /* -------------------------------------------------- */
 
 Hooks.once("i18nInit", () => {
   dnd5e.utils.performPreLocalization(config);
-  foundry.helpers.Localization.localizeDataModel(data.CalendarEventStorage);
 });
 
 /* -------------------------------------------------- */
 
 Hooks.on("getJournalSheetEntryContext", data.journalEntryPages.QuestData.addContextMenuOptions);
 Hooks.on("getJournalEntryPageContextOptions", data.journalEntryPages.QuestData.addContextMenuOptions);
-Hooks.on("updateWorldTime", () => ui.calendar.render());
-Hooks.once("renderPlayers", applications.apps.CalendarView.renderPlayers);
-
-/* -------------------------------------------------- */
-
-Hooks.on("hotReload", utils._hotreload);
