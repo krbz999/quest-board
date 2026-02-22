@@ -1,3 +1,17 @@
+/* VARIABLES */
+@scope (.theme-dark) to (.themed) {
+  .quest-board, &.quest-board {
+    --tracker-color-bg: rgba(0, 0, 255, 0.7);
+    --tracker-color-fill: 200, 110, 100;
+  }
+}
+@scope (.theme-light) to (.themed) {
+  .quest-board, &.quest-board {
+    --tracker-color-bg: rgba(125, 125, 0, 0.7);
+    --tracker-color-fill: 180, 180, 0;
+  }
+}
+
 .quest-board.application .window-content {
   padding: 1rem;
 
@@ -63,22 +77,6 @@
     margin-left: 0;
     margin-right: 0;
   }
-}
-
-/* VARIABLES */
-.theme-light .quest-board,
-.application.theme-light .quest-board,
-/* AppV1 support */
-.app.journal-entry .quest-board {
-  --figcaption-bg: #eeede0;
-  --tracker-color-bg: rgba(0, 0, 255, 0.7);
-  --tracker-color-fill: 200, 110, 100;
-}
-.theme-dark .quest-board,
-.application.theme-dark .quest-board {
-  --figcaption-bg: #222222;
-  --tracker-color-bg: rgba(125, 125, 0, 0.7);
-  --tracker-color-fill: 180, 180, 0;
 }
 
 .journal-entry-page.quest-board {
